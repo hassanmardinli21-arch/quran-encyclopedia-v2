@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الموسوعة القرآنية - التفاسير الثلاثة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment-1: #F5E6C8;
+            --parchment-2: #EFDCB8;
+            --parchment-3: #E8D5A8;
+            --parchment-dark: #C9B282;
+            --ink-primary: #4A3728;
+            --ink-secondary: #6B5540;
+            --gold: #B8860B;
+            --gold-light: #D4AF37;
+            --border-color: #A68B5B;
+            --shadow: rgba(74, 55, 40, 0.2);
+            --highlight-bg: #FFE9A8;
+            --highlight-border: #E6C34A;
+            --bookmark-color: #E8A317;
+            --bookmark-dark: #B8860B;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(184, 134, 11, 0.06) 0%, transparent 50%),
+                linear-gradient(135deg, var(--parchment-1) 0%, var(--parchment-2) 50%, var(--parchment-3) 100%);
+            background-attachment: fixed;
+            color: var(--ink-primary);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.8;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 109, 66, 0.03) 2px, rgba(139, 109, 66, 0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139, 109, 66, 0.03) 2px, rgba(139, 109, 66, 0.03) 4px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 950px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #FBF0D8 0%, #F5E6C8 100%);
+            border: 3px double var(--border-color);
+            border-radius: 12px;
+            padding: 30px 28px;
+            box-shadow: 0 0 0 1px rgba(184, 134, 11, 0.2), 0 10px 40px var(--shadow), inset 0 0 80px rgba(201, 178, 130, 0.15);
+        }
+        h1 {
+            font-family: 'Amiri', serif;
+            font-size: 2.4rem;
+            text-align: center;
+            color: var(--ink-primary);
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 0 var(--parchment-dark);
+            letter-spacing: 1px;
+        }
+        h1::before, h1::after {
+            content: '❁';
+            color: var(--gold);
+            margin: 0 12px;
+            font-size: 1.6rem;
+            vertical-align: middle;
+        }
+        .subtitle {
+            text-align: center;
+            color: var(--ink-secondary);
+            font-size: 1rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-style: italic;
+        }
+
+        /* ============ شريط العلامة (Bookmark Bar) ============ */
+        .bookmark-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            background: linear-gradient(180deg, #FFF8DC 0%, #FFE9A8 100%);
+            border: 2px solid var(--bookmark-color);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(232, 163, 23, 0.25);
+        }
+        .bookmark-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: var(--ink-primary);
+            flex: 1;
+            min-width: 200px;
+        }
+        .bookmark-info .ribbon-icon {
+            font-size: 1.3rem;
+        }
+        .bookmark-info strong {
+            color: var(--bookmark-dark);
+        }
+        .bookmark-info #bookmarkLocation {
+            font-weight: 700;
+            color: #8B6508;
+        }
+        .bookmark-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .bookmark-jump-btn, .bookmark-clear-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border: none;
+        }
+        .bookmark-jump-btn {
+            background: linear-gradient(180deg, #E8A317 0%, #B8860B 100%);
+            color: white;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .bookmark-jump-btn:hover {
+            background: linear-gradient(180deg, #B8860B 0%, #8B6508 100%);
+            transform: translateY(-1px);
+        }
+        .bookmark-clear-btn {
+            background: rgba(220, 38, 38, 0.1);
+            color: #b91c1c;
+            border: 1px solid #fca5a5;
+        }
+        .bookmark-clear-btn:hover {
+            background: rgba(220, 38, 38, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: rgba(255, 248, 220, 0.7);
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .search-box input,
+        .search-box select {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #FFFCF2;
+            color: var(--ink-primary);
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            outline: none;
+        }
+        .search-box input:focus,
+        .search-box select:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.15);
+        }
+        .search-box button {
+            padding: 12px 28px;
+            background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
+            color: #FFF8DC;
+            border: 1px solid #8B6508;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .search-box button:hover {
+            background: linear-gradient(180deg, var(--gold) 0%, #8B6508 100%);
+        }
+
+        .tafsir-toggle-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 18px;
+            background: rgba(255, 248, 220, 0.6);
+            border: 1px dashed var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tafsir-toggle-bar label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--ink-primary);
+            font-size: 0.95rem;
+            user-select: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: 0.2s;
+        }
+        .tafsir-toggle-bar label:hover {
+            background: rgba(184, 134, 11, 0.1);
+        }
+        .tafsir-toggle-bar input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+        .toggle-hint {
+            font-size: 0.85rem;
+            color: var(--ink-secondary);
+            font-style: italic;
+        }
+
+        .results-info {
+            text-align: center;
+            color: var(--ink-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            padding: 8px;
+            background: rgba(255, 248, 220, 0.5);
+            border-radius: 6px;
+            border: 1px dashed var(--border-color);
+        }
+        .ayah-card {
+            background: linear-gradient(180deg, #FFFCF2 0%, #FAF0D7 100%);
+            border: 1px solid var(--border-color);
+            border-right: 5px solid var(--gold);
+            border-radius: 10px;
+            padding: 20px 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(74, 55, 40, 0.08);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .ayah-card::before {
+            content: '۞';
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            color: var(--gold);
+            font-size: 1.4rem;
+            opacity: 0.5;
+        }
+
+        /* ============ تظليل موضع القراءة (العلامة) ============ */
+        .ayah-card.bookmarked {
+            background: linear-gradient(180deg, #FFF8DC 0%, #FFE9A8 100%);
+            border-right-color: var(--bookmark-color);
+            box-shadow:
+                0 0 0 3px rgba(232, 163, 23, 0.35),
+                0 6px 20px rgba(232, 163, 23, 0.3);
+        }
+        .ayah-card.bookmarked::before {
+            color: var(--bookmark-color);
+            opacity: 0.9;
+        }
+        .bookmark-ribbon {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: linear-gradient(180deg, #E8A317 0%, #B8860B 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            box-shadow: 0 3px 8px rgba(184, 134, 11, 0.4);
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+            z-index: 2;
+            white-space: nowrap;
+        }
+
+        .ayah-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--parchment-dark);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .ayah-header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .ayah-ref {
+            background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
+            color: #FFF8DC;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .ayah-type {
+            font-size: 0.8rem;
+            color: var(--ink-secondary);
+            background: rgba(201, 178, 130, 0.3);
+            padding: 3px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--parchment-dark);
+        }
+
+        /* ============ زر العلامة على كل آية ============ */
+        .bookmark-btn {
+            background: rgba(255, 248, 220, 0.7);
+            border: 1px solid var(--border-color);
+            color: var(--ink-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s;
+            padding: 0;
+            line-height: 1;
+        }
+        .bookmark-btn:hover {
+            background: rgba(232, 163, 23, 0.2);
+            border-color: var(--bookmark-color);
+            transform: scale(1.1);
+        }
+        .bookmark-btn.active {
+            background: linear-gradient(180deg, #E8A317 0%, #B8860B 100%);
+            border-color: #8B6508;
+            color: white;
+            box-shadow: 0 0 0 3px rgba(232, 163, 23, 0.3), 0 2px 6px rgba(184, 134, 11, 0.4);
+            transform: scale(1.05);
+        }
+        .bookmark-btn.active:hover {
+            transform: scale(1.15);
+        }
+
+        .ayah-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.5rem;
+            line-height: 2.4;
+            color: var(--ink-primary);
+            text-align: justify;
+            direction: rtl;
+            margin-bottom: 12px;
+        }
+        .tafsir-block {
+            background: rgba(255, 233, 168, 0.35);
+            border-right: 3px solid var(--gold);
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-top: 10px;
+        }
+        .tafsir-block h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #8B6508;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Cairo', sans-serif;
+        }
+        .tafsir-text {
+            font-size: 1rem;
+            color: var(--ink-secondary);
+            line-height: 2;
+        }
+        mark {
+            background: var(--highlight-bg);
+            color: #8B4513;
+            padding: 0 4px;
+            border-radius: 3px;
+            border-bottom: 2px solid var(--highlight-border);
+        }
+        .empty-msg {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--ink-secondary);
+            font-size: 1.1rem;
+            background: rgba(255, 248, 220, 0.5);
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 16px;
+            background: #FFFCF2;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--ink-primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .pagination a:hover {
+            background: var(--parchment-2);
+            border-color: var(--gold);
+        }
+        .pagination .current {
+            background: var(--gold);
+            color: #FFF8DC;
+            border-color: #8B6508;
+        }
+        .footer-ornament {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--gold);
+            font-size: 1.4rem;
+            letter-spacing: 8px;
+            opacity: 0.6;
+        }
+        .tafsir-count {
+            display: inline-block;
+            background: rgba(184, 134, 11, 0.15);
+            color: #8B6508;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border: 1px solid var(--gold);
+        }
+        .loading-msg {
+            text-align: center;
+            padding: 30px;
+            color: var(--ink-secondary);
+            font-size: 1rem;
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 1.7rem; }
+            h1::before, h1::after { margin: 0 6px; font-size: 1.2rem; }
+            .ayah-text { font-size: 1.25rem; line-height: 2.1; }
+            .container { padding: 20px 14px; }
+            .search-box { flex-direction: column; }
+            .search-box input, .search-box select, .search-box button { width: 100%; }
+            .bookmark-bar { flex-direction: column; align-items: stretch; }
+            .bookmark-actions { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>الموسوعة القرآنية</h1>
+        <p class="subtitle">﴿ وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ ﴾</p>
+
+        <!-- شريط العلامة (يظهر فقط عند وجود علامة) -->
+        <div class="bookmark-bar" id="bookmarkBar" style="display: none;">
+            <div class="bookmark-info">
+                <span class="ribbon-icon">🔖</span>
+                <strong>آخر قراءة:</strong>
+                <span id="bookmarkLocation">—</span>
+            </div>
+            <div class="bookmark-actions">
+                <button class="bookmark-jump-btn" onclick="jumpToBookmark()">📖 العودة إلى موضع القراءة</button>
+                <button class="bookmark-clear-btn" onclick="clearBookmark()">✖ حذف العلامة</button>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 ابحث عن كلمة أو آية...">
+            <select id="sourceSelect">
+                <option value="quran">📖 القرآن الكريم</option>
+                <option value="all_tafsirs">📚 البحث في جميع التفاسير</option>
+                <option value="tafsir_saadi">📗 تفسير السعدي</option>
+                <option value="tafsir_ibn_kathir">📘 تفسير ابن كثير</option>
+                <option value="tafsir_tabari">📙 تفسير الطبري</option>
+            </select>
+            <select id="surahSelect">
+                <option value="all">جميع السور</option>
+            </select>
+            <button id="searchBtn">بحث</button>
+        </div>
+
+        <div class="tafsir-toggle-bar" id="tafsirToggleBar">
+            <label>
+                <input type="checkbox" id="showTafsirToggle">
+                📚 إظهار التفاسير أسفل الآيات
+            </label>
+            <span class="toggle-hint" id="toggleHint">(التفاسير مخفية حالياً — اقرأ القرآن فقط)</span>
+        </div>
+
+        <div class="results-info" id="resultsInfo">⏳ جاري تحميل البيانات...</div>
+
+        <div id="resultsContainer">
+            <div class="loading-msg">⏳ جاري تحميل البيانات... قد يستغرق هذا بضع ثوانٍ بسبب حجم ملفات التفاسير.</div>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+
+        <div class="footer-ornament">❁ ❁ ❁</div>
+    </div>
+
+    <script>
+        const SURAH_NAMES = [
+            "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
+            "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
+            "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
+            "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر",
+            "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق",
+            "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة",
+            "الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج",
+            "نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس",
+            "التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد",
+            "الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
+            "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر",
+            "المسد","الإخلاص","الفلق","الناس"
+        ];
+
+        const TAFSIR_FILES = [
+            { key: 'saadi',      file: 'tafsir_saadi.json',      label: 'تفسير السعدي',   icon: '📗' },
+            { key: 'ibn_kathir', file: 'tafsir_ibn_kathir.json', label: 'تفسير ابن كثير', icon: '📘' },
+            { key: 'tabari',     file: 'tafsir_tabari.json',     label: 'تفسير الطبري',   icon: '📙' }
+        ];
+
+        let quranData = [];
+        let allTafsirs = {};
+
+        let currentSource = 'quran';
+        let currentKeyword = '';
+        let currentSurah = 'all';
+        let currentPage = 1;
+        let showTafsir = false;
+        let bookmark = null; // { surah, ayah, timestamp }
+        const perPage = 10;
+
+        try {
+            const saved = localStorage.getItem('showTafsir');
+            if (saved === 'true') showTafsir = true;
+        } catch (e) {}
+
+        // ==========================================
+        // العلامة (Bookmark)
+        // ==========================================
+        function loadBookmark() {
+            try {
+                const saved = localStorage.getItem('quranBookmark');
+                if (saved) bookmark = JSON.parse(saved);
+            } catch (e) { bookmark = null; }
+        }
+
+        function saveBookmark(surah, ayah) {
+            bookmark = { surah: parseInt(surah), ayah: parseInt(ayah), timestamp: Date.now() };
+            try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) {}
+            updateBookmarkBar();
+            renderResults();
+        }
+
+        function clearBookmark() {
+            if (!confirm('هل تريد حذف علامة القراءة؟')) return;
+            bookmark = null;
+            try { localStorage.removeItem('quranBookmark'); } catch (e) {}
+            updateBookmarkBar();
+            renderResults();
+        }
+
+        function toggleBookmark(surah, ayah) {
+            if (bookmark && bookmark.surah == surah && bookmark.ayah == ayah) {
+                // نفس الآية: إزالة العلامة
+                bookmark = null;
+                try { localStorage.removeItem('quranBookmark'); } catch (e) {}
+            } else {
+                bookmark = { surah: parseInt(surah), ayah: parseInt(ayah), timestamp: Date.now() };
+                try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) {}
+            }
+            updateBookmarkBar();
+            renderResults();
+        }
+
+        function updateBookmarkBar() {
+            const bar = document.getElementById('bookmarkBar');
+            if (!bookmark) {
+                bar.style.display = 'none';
+                return;
+            }
+            bar.style.display = 'flex';
+            const surahName = SURAH_NAMES[bookmark.surah - 1] || 'غير معروفة';
+            document.getElementById('bookmarkLocation').textContent = 
+                `سورة ${surahName} - آية ${bookmark.ayah}`;
+        }
+
+        function jumpToBookmark() {
+            if (!bookmark) return;
+
+            // ضبط القوائم
+            document.getElementById('sourceSelect').value = 'quran';
+            document.getElementById('surahSelect').value = bookmark.surah;
+            document.getElementById('searchInput').value = '';
+
+            currentSource = 'quran';
+            currentSurah = String(bookmark.surah);
+            currentKeyword = '';
+
+            // حساب رقم الصفحة
+            let source = quranData.filter(a => a.surah == bookmark.surah);
+            const index = source.findIndex(a => a.ayah == bookmark.ayah);
+            currentPage = index >= 0 ? Math.floor(index / perPage) + 1 : 1;
+
+            renderResults();
+
+            // التمرير إلى الآية
+            setTimeout(() => {
+                const el = document.getElementById(`ayah-${bookmark.surah}-${bookmark.ayah}`);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // تأثير بصري مؤقت
+                    el.style.transition = 'all 0.3s';
+                    el.style.transform = 'scale(1.02)';
+                    setTimeout(() => { el.style.transform = 'scale(1)'; }, 600);
+                }
+            }, 200);
+        }
+
+        function isBookmarked(surah, ayah) {
+            return bookmark && bookmark.surah == surah && bookmark.ayah == ayah;
+        }
+
+        // ==========================================
+        // إزالة التشكيل والبحث
+        // ==========================================
+        function removeTashkeel(text) {
+            if (!text) return '';
+            return text
+                .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D3-\u08E1\u08E3-\u08FF]/g, '')
+                .replace(/\u0640/g, '')
+                .replace(/[\u0622\u0623\u0625\u0671]/g, '\u0627')
+                .replace(/\u0649/g, '\u064A')
+                .replace(/\u0624/g, '\u0648')
+                .replace(/\u0629/g, '\u0647')
+                .replace(/[﴿﴾۝۞۩]/g, '');
+        }
+
+        function normalizeSearch(text) {
+            if (!text) return '';
+            return removeTashkeel(text).replace(/\s+/g, ' ').trim();
+        }
+
+        function populateSurahSelect() {
+            const sel = document.getElementById('surahSelect');
+            SURAH_NAMES.forEach((name, i) => {
+                const opt = document.createElement('option');
+                opt.value = i + 1;
+                opt.textContent = `${i + 1}. ${name}`;
+                sel.appendChild(opt);
+            });
+        }
+
+        function initTafsirToggle() {
+            const toggle = document.getElementById('showTafsirToggle');
+            const hint = document.getElementById('toggleHint');
+
+            toggle.checked = showTafsir;
+            updateToggleHint();
+
+            toggle.addEventListener('change', () => {
+                showTafsir = toggle.checked;
+                try { localStorage.setItem('showTafsir', showTafsir); } catch (e) {}
+                updateToggleHint();
+                renderResults();
+            });
+
+            function updateToggleHint() {
+                if (showTafsir) {
+                    hint.textContent = '(التفاسير ظاهرة أسفل الآيات)';
+                    hint.style.color = '#16a34a';
+                } else {
+                    hint.textContent = '(التفاسير مخفية حالياً — اقرأ القرآن فقط)';
+                    hint.style.color = '#8B6508';
+                }
+            }
+        }
+
+        async function loadTafsirFile(config) {
+            try {
+                const res = await fetch(config.file);
+                if (!res.ok) {
+                    console.warn(`⚠️ ${config.label}: الملف غير موجود (${res.status})`);
+                    allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] };
+                    return;
+                }
+
+                const text = await res.text();
+
+                if (text.startsWith('SQLite') || text.startsWith('<!DOCTYPE') || text.startsWith('<html')) {
+                    console.error(`❌ ${config.label}: الملف ليس بصيغة JSON صحيحة`);
+                    allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] };
+                    return;
+                }
+
+                let raw;
+                try {
+                    raw = JSON.parse(text);
+                } catch (e) {
+                    console.error(`❌ ${config.label}: خطأ في تحليل JSON - ${e.message}`);
+                    allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] };
+                    return;
+                }
+
+                let ayahs = [];
+
+                if (Array.isArray(raw)) {
+                    ayahs = raw.map(a => ({
+                        surah: parseInt(a.surah || a.sura || 1),
+                        number: parseInt(a.number || a.ayah || a.numberInSurah || a.id || 1),
+                        text: a.text || a.tafsir || a.content || ''
+                    }));
+                }
+                else if (raw && raw.ayahs && Array.isArray(raw.ayahs)) {
+                    ayahs = raw.ayahs.map(a => ({
+                        surah: parseInt(a.surah || a.sura || 1),
+                        number: parseInt(a.number || a.ayah || 1),
+                        text: a.text || a.tafsir || a.content || ''
+                    }));
+                }
+                else if (raw && typeof raw === 'object') {
+                    ayahs = Object.keys(raw).map(key => {
+                        if (!key.includes(':')) return null;
+                        const parts = key.split(':');
+                        if (parts.length !== 2) return null;
+                        
+                        const surah = parseInt(parts[0]);
+                        const number = parseInt(parts[1]);
+                        if (isNaN(surah) || isNaN(number)) return null;
+                        
+                        const item = raw[key];
+                        let textContent = '';
+                        if (typeof item === 'string') {
+                            textContent = item;
+                        } else if (item && typeof item === 'object') {
+                            textContent = item.text || item.tafsir || item.content || '';
+                        }
+                        
+                        textContent = textContent
+                            .replace(/<[^>]+>/g, '')
+                            .replace(/&nbsp;/g, ' ')
+                            .replace(/&amp;/g, '&')
+                            .replace(/&lt;/g, '<')
+                            .replace(/&gt;/g, '>')
+                            .replace(/&quot;/g, '"')
+                            .replace(/\s+/g, ' ')
+                            .trim();
+                        
+                        return { surah, number, text: textContent };
+                    }).filter(a => a && a.text && a.text.length > 0);
+                }
+
+                allTafsirs[config.key] = {
+                    label: config.label,
+                    icon: config.icon,
+                    ayahs: ayahs
+                };
+                console.log(`✅ تم تحميل ${config.label}: ${ayahs.length} مدخل`);
+            } catch (e) {
+                console.error(`❌ ${config.label}: خطأ غير متوقع - ${e.message}`);
+                allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] };
+            }
+        }
+
+        async function loadData() {
+            try {
+                const quranRes = await fetch('quran.json');
+                const quranRaw = await quranRes.json();
+
+                if (Array.isArray(quranRaw) && quranRaw.length > 0 && quranRaw[0].verses) {
+                    quranData = [];
+                    quranRaw.forEach(surah => {
+                        (surah.verses || []).forEach(v => {
+                            quranData.push({ surah: surah.id, ayah: v.id, text: v.text });
+                        });
+                    });
+                } else if (Array.isArray(quranRaw)) {
+                    quranData = quranRaw.map(a => ({
+                        surah: parseInt(a.surah || 1),
+                        ayah: parseInt(a.ayah || a.number || 1),
+                        text: a.text || ''
+                    }));
+                }
+
+                console.log(`✅ تم تحميل القرآن: ${quranData.length} آية`);
+
+                await Promise.all(TAFSIR_FILES.map(loadTafsirFile));
+
+                const totalTafsir = Object.values(allTafsirs).reduce((s, t) => s + t.ayahs.length, 0);
+                document.getElementById('resultsInfo').textContent =
+                    `📖 ${quranData.length} آية | 📚 ${totalTafsir} مدخل تفسيري`;
+
+                updateBookmarkBar();
+                renderResults();
+            } catch (err) {
+                document.getElementById('resultsInfo').innerHTML =
+                    '❌ <span style="color:#8B4513">تعذر تحميل البيانات: ' + err.message + '</span>';
+                console.error(err);
+            }
+        }
+
+        function searchInSingleTafsir(tafsirKey, keyword, surah) {
+            const results = [];
+            const t = allTafsirs[tafsirKey];
+            if (!t || t.ayahs.length === 0) return results;
+            
+            const cleanKeyword = normalizeSearch(keyword);
+            t.ayahs.forEach(a => {
+                if (surah !== 'all' && a.surah != surah) return;
+                if (cleanKeyword && !normalizeSearch(a.text).includes(cleanKeyword)) return;
+                results.push({
+                    tafsirKey: tafsirKey,
+                    tafsirLabel: t.label,
+                    tafsirIcon: t.icon,
+                    surah: a.surah,
+                    number: a.number,
+                    text: a.text
+                });
+            });
+            return results;
+        }
+
+        function searchInAllTafsirs(keyword, surah) {
+            const results = [];
+            Object.keys(allTafsirs).forEach(key => {
+                results.push(...searchInSingleTafsir(key, keyword, surah));
+            });
+            return results;
+        }
+
+        function performSearch() {
+            currentKeyword = document.getElementById('searchInput').value.trim();
+            currentSource = document.getElementById('sourceSelect').value;
+            currentSurah = document.getElementById('surahSelect').value;
+            currentPage = 1;
+            renderResults();
+        }
+
+        function renderResults() {
+            const container = document.getElementById('resultsContainer');
+            const paginationEl = document.getElementById('pagination');
+            const infoEl = document.getElementById('resultsInfo');
+            const toggleBar = document.getElementById('tafsirToggleBar');
+
+            let items = [];
+            let isTafsirMode = false;
+
+            if (currentSource === 'quran') {
+                let source = quranData;
+                if (currentSurah !== 'all') {
+                    const s = parseInt(currentSurah);
+                    source = source.filter(a => a.surah == s);
+                }
+                if (currentKeyword) {
+                    const cleanKeyword = normalizeSearch(currentKeyword);
+                    source = source.filter(a => normalizeSearch(a.text).includes(cleanKeyword));
+                }
+                items = source;
+            } else if (currentSource === 'all_tafsirs') {
+                isTafsirMode = true;
+                items = searchInAllTafsirs(currentKeyword, currentSurah);
+            } else {
+                isTafsirMode = true;
+                const tafsirKey = currentSource.replace('tafsir_', '');
+                items = searchInSingleTafsir(tafsirKey, currentKeyword, currentSurah);
+            }
+
+            if (currentSource === 'quran') {
+                toggleBar.style.display = 'flex';
+            } else {
+                toggleBar.style.display = 'none';
+            }
+
+            const totalPages = Math.max(1, Math.ceil(items.length / perPage));
+            if (currentPage > totalPages) currentPage = totalPages;
+            const start = (currentPage - 1) * perPage;
+            const paginated = items.slice(start, start + perPage);
+
+            infoEl.textContent = `📊 عدد النتائج: ${items.length} | صفحة ${currentPage} من ${totalPages}`;
+
+            if (paginated.length === 0) {
+                container.innerHTML = '<div class="empty-msg">📭 لا توجد نتائج مطابقة</div>';
+                paginationEl.innerHTML = '';
+                return;
+            }
+
+            if (isTafsirMode) {
+                container.innerHTML = paginated.map(item => {
+                    const surahName = SURAH_NAMES[item.surah - 1] || 'غير معروفة';
+                    return `
+                        <div class="ayah-card">
+                            <div class="ayah-header">
+                                <span class="ayah-ref">${item.tafsirIcon} ${item.tafsirLabel} - سورة ${surahName} - آية ${item.number}</span>
+                                <span class="ayah-type">تفسير</span>
+                            </div>
+                            <div class="tafsir-text">${highlight(item.text, currentKeyword)}</div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                container.innerHTML = paginated.map(item => {
+                    const surahName = SURAH_NAMES[item.surah - 1] || 'غير معروفة';
+                    const ayahText = highlight(item.text, currentKeyword);
+                    let tafsirBlocks = '';
+                    let countBadge = '';
+                    const marked = isBookmarked(item.surah, item.ayah);
+
+                    if (showTafsir) {
+                        let countFound = 0;
+                        TAFSIR_FILES.forEach(cfg => {
+                            const t = allTafsirs[cfg.key];
+                            if (!t || t.ayahs.length === 0) return;
+                            const match = t.ayahs.find(x => x.surah == item.surah && x.number == item.ayah);
+                            if (match && match.text) {
+                                countFound++;
+                                tafsirBlocks += `
+                                    <div class="tafsir-block">
+                                        <h4>${t.icon} ${t.label}</h4>
+                                        <div class="tafsir-text">${highlight(match.text, currentKeyword)}</div>
+                                    </div>
+                                `;
+                            }
+                        });
+                        if (countFound > 0) {
+                            countBadge = `<span class="tafsir-count">📚 ${countFound} تفسير</span>`;
+                        }
+                    }
+
+                    const ribbon = marked ? `<div class="bookmark-ribbon">🔖 موضع القراءة</div>` : '';
+
+                    return `
+                        <div class="ayah-card ${marked ? 'bookmarked' : ''}" id="ayah-${item.surah}-${item.ayah}">
+                            ${ribbon}
+                            <div class="ayah-header">
+                                <span class="ayah-ref">سورة ${surahName} - آية ${item.ayah}</span>
+                                <div class="ayah-header-right">
+                                    ${countBadge}
+                                    <span class="ayah-type">آية</span>
+                                    <button class="bookmark-btn ${marked ? 'active' : ''}" 
+                                            onclick="toggleBookmark(${item.surah}, ${item.ayah})" 
+                                            title="${marked ? 'إزالة علامة القراءة' : 'تعليم موضع القراءة'}">
+                                        ${marked ? '🔖' : '📑'}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="ayah-text">${ayahText}</div>
+                            ${tafsirBlocks}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            let paginationHtml = '';
+            if (totalPages > 1) {
+                if (currentPage > 1) paginationHtml += `<a data-page="${currentPage - 1}">⬅ السابق</a>`;
+                for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+                    paginationHtml += (i === currentPage)
+                        ? `<span class="current">${i}</span>`
+                        : `<a data-page="${i}">${i}</a>`;
+                }
+                if (currentPage < totalPages) paginationHtml += `<a data-page="${currentPage + 1}">التالي ➡</a>`;
+            }
+            paginationEl.innerHTML = paginationHtml;
+
+            paginationEl.querySelectorAll('a[data-page]').forEach(a => {
+                a.addEventListener('click', e => {
+                    e.preventDefault();
+                    currentPage = parseInt(a.dataset.page);
+                    renderResults();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+        }
+
+        function highlight(text, keyword) {
+            if (!keyword || !text) return text;
+            const cleanKeyword = removeTashkeel(keyword);
+            if (!cleanKeyword) return text;
+            
+            const positions = [];
+            let cleanText = '';
+            for (let i = 0; i < text.length; i++) {
+                const cleanCh = removeTashkeel(text[i]);
+                if (cleanCh.length > 0) {
+                    for (let j = 0; j < cleanCh.length; j++) {
+                        positions.push(i);
+                        cleanText += cleanCh[j];
+                    }
+                }
+            }
+            
+            const index = cleanText.indexOf(cleanKeyword);
+            if (index === -1) return text;
+            
+            const startOrig = positions[index];
+            const endOrig = positions[index + cleanKeyword.length - 1] + 1;
+            
+            return text.substring(0, startOrig) + 
+                   '<mark>' + text.substring(startOrig, endOrig) + '</mark>' + 
+                   text.substring(endOrig);
+        }
+
+        document.getElementById('searchBtn').addEventListener('click', performSearch);
+        document.getElementById('searchInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') performSearch();
+        });
+        document.getElementById('sourceSelect').addEventListener('change', performSearch);
+        document.getElementById('surahSelect').addEventListener('change', performSearch);
+
+        populateSurahSelect();
+        initTafsirToggle();
+        loadBookmark();
+        updateBookmarkBar();
+        loadData();
+    </script>
+</body>
+</html>
