@@ -632,7 +632,7 @@
                 <li>📘 تفسير ابن كثير (تفسير القرآن العظيم)</li>
                 <li>🔍 بحث ذكي في القرآن والتفاسير (يتجاهل التشكيل تلقائياً)</li>
                 <li>🔖 حفظ موضع القراءة للعودة إليه لاحقاً</li>
-                <li>🔄 مزامنة العلامة بين أجهزتك الخاصة تلقائياً</li>
+                <li>🔄 مزامنة العلامة بين أجهزتك الخاصة بخصوصية كاملة</li>
                 <li>📚 إمكانية إظهار/إخفاء التفاسير حسب الحاجة</li>
                 <li>🎨 تصميم بلون الورق العتيق للقراءة المريحة</li>
                 <li>📱 يعمل على جميع الأجهزة بدون تحميل</li>
@@ -665,38 +665,41 @@
             <button class="about-close" onclick="closeSync()" title="إغلاق">✖</button>
 
             <h2>🔄 مزامنة الأجهزة</h2>
-            <p class="about-intro">مرتبط تلقائياً — لا تحتاج لأي إعداد</p>
+            <p class="about-intro">اربط أجهزتك الخاصة (كمبيوتر، هاتف، آيباد)</p>
 
-            <div style="text-align:center; padding:14px; background:rgba(34,197,94,0.15); border:2px solid #16a34a; border-radius:8px; margin-bottom:15px; font-weight:700; color:#15803d;">
-                ✅ المزامنة مُفعّلة تلقائياً على هذا الجهاز
+            <div style="text-align:center; padding:12px; background:rgba(34,197,94,0.15); border:2px solid #16a34a; border-radius:8px; margin-bottom:15px; font-weight:700; color:#15803d;">
+                ✅ المزامنة مُفعّلة على هذا الجهاز (برمز خاص بك)
             </div>
 
             <h3>🔑 رمز المزامنة الخاص بك</h3>
-            <p style="font-size:0.9rem;">هذا الرمز مثبّت داخل التطبيق، وجميع أجهزتك تستخدمه تلقائياً.</p>
+            <p style="font-size:0.9rem;">انسخه وضعه في أجهزتك الأخرى (الهاتف، الآيباد) لتربطها معاً. <strong>لا تشاركه مع أحد آخر.</strong></p>
             <div style="display:flex; gap:8px; margin:10px 0;">
-                <input type="text" id="syncCodeDisplay" readonly value="RZ27C6EKCBVK"
-                       style="flex:1; padding:12px; font-size:1.2rem; font-weight:700; text-align:center; letter-spacing:3px;
-                              border:2px solid #B8860B; border-radius:8px; background:#FFFCF2; color:#4A3728; direction:ltr;">
-                <button onclick="copySyncCode()"
+                <input type="text" id="syncCodeDisplay" readonly
+                       style="flex:1; padding:12px; font-size:1.2rem; font-weight:700; text-align:center; letter-spacing:3px; border:2px solid #B8860B; border-radius:8px; background:#FFFCF2; color:#4A3728; direction:ltr;">
+                <button onclick="copySyncCode()" type="button"
                         style="padding:12px 20px; background:linear-gradient(180deg,#D4AF37,#B8860B); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-family:'Cairo',sans-serif;">
                     📋 نسخ
                 </button>
             </div>
 
-            <div style="text-align:center; margin-top:15px; padding:12px; background:rgba(255,233,168,0.4); border-radius:8px; font-size:0.9rem; color:#8B6508;">
-                💡 <strong>ملاحظة:</strong> لا تحتاج لإدخال الرمز في أي جهاز. فقط افتح التطبيق من أي جهاز يعمل على نفس الخادم، وسيتزامن تلقائياً.
-            </div>
+            <hr style="border:none; border-top:1px dashed #A68B5B; margin:20px 0;">
+
+            <h3>🔗 ربط هذا الجهاز بجهاز آخر</h3>
+            <p style="font-size:0.9rem;">هل لديك رمز من جهاز آخر (الكمبيوتر مثلاً)؟ الصقه هنا لتربطهما معاً:</p>
+            <input type="text" id="syncCodeInput" placeholder="أدخل رمز المزامنة (12 خانة)"
+                   style="width:100%; padding:12px; font-size:1rem; text-align:center; letter-spacing:2px; border:2px solid #B8860B; border-radius:8px; background:#FFFCF2; color:#4A3728; direction:ltr; margin-bottom:10px;">
+            <button onclick="linkToSyncCode()" type="button"
+                    style="width:100%; padding:12px; background:linear-gradient(180deg,#38bdf8,#0284c7); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-family:'Cairo',sans-serif;">
+                ✅ ربط ومزامنة
+            </button>
 
             <div class="about-footer" style="margin-top:15px;">
-                🔒 <strong>خصوصية كاملة:</strong> رمزك السري لا يعرفه أحد، ولا يتزامن معك إلا أجهزتك التي تعرف هذا الرمز.
+                🔒 <strong>خصوصية كاملة:</strong> رمزك لا يعرفه إلا أنت، ولا يتزامن معك إلا أجهزتك التي تعرف هذا الرمز.
             </div>
         </div>
     </div>
 
     <script>
-        // ================== رمز المزامنة الثابت ==================
-        const FIXED_SYNC_CODE = 'RZ27C6EKCBVK';
-
         const SURAH_NAMES = [
             "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
             "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
@@ -1201,9 +1204,23 @@
 
         // ================== دوال المزامنة ==================
 
+        function generateSyncCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            const arr = new Uint32Array(12);
+            crypto.getRandomValues(arr);
+            for (let i = 0; i < 12; i++) code += chars[arr[i] % chars.length];
+            return code;
+        }
+
         function getSyncCode() {
-            // الرمز مثبّت داخل الكود مباشرة
-            return FIXED_SYNC_CODE;
+            let code = '';
+            try { code = localStorage.getItem('syncCode') || ''; } catch (e) {}
+            if (!code || code.length < 8) {
+                code = generateSyncCode();
+                try { localStorage.setItem('syncCode', code); } catch (e) {}
+            }
+            return code;
         }
 
         async function syncBookmarkToServer(surah, ayah) {
@@ -1260,6 +1277,8 @@
         function openSync() {
             document.getElementById('syncOverlay').classList.add('active');
             document.body.style.overflow = 'hidden';
+            document.getElementById('syncCodeDisplay').value = getSyncCode();
+            document.getElementById('syncCodeInput').value = '';
         }
 
         function closeSync() {
@@ -1272,19 +1291,38 @@
         }
 
         function copySyncCode() {
-            navigator.clipboard.writeText(FIXED_SYNC_CODE).then(() => {
-                alert('✅ تم نسخ الرمز:\n' + FIXED_SYNC_CODE);
+            const code = getSyncCode();
+            if (!code) return;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('✅ تم نسخ الرمز:\n' + code + '\n\nضعه في أجهزتك الأخرى.');
             }).catch(() => {
                 const input = document.getElementById('syncCodeDisplay');
                 input.select();
                 document.execCommand('copy');
-                alert('✅ تم نسخ الرمز: ' + FIXED_SYNC_CODE);
+                alert('✅ تم نسخ الرمز: ' + code);
             });
         }
 
+        function linkToSyncCode() {
+            const input = document.getElementById('syncCodeInput');
+            const code = (input.value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+            if (!code || code.length < 8) {
+                alert('❌ الرمز قصير جداً. تأكد من نسخه كاملاً (12 خانة).');
+                return;
+            }
+            try { localStorage.setItem('syncCode', code); } catch (e) {}
+            document.getElementById('syncCodeDisplay').value = code;
+            input.value = '';
+            alert('✅ تم ربط هذا الجهاز بالرمز:\n' + code + '\n\nجاري تحديث العلامة...');
+            // جلب العلامة من الخادم فوراً
+            loadBookmarkFromServer(false);
+        }
+
         function startSync() {
+            // توليد الرمز إن لم يكن موجوداً
+            getSyncCode();
             loadBookmarkFromServer(true);
-            // كل 15 ثانية، نتحقق من التحديثات من الأجهزة الأخرى
+            // كل 15 ثانية، التحقق من التحديثات
             setInterval(() => loadBookmarkFromServer(false), 15000);
         }
 
