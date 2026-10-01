@@ -137,8 +137,6 @@
         .ayah-card { background: linear-gradient(180deg, var(--card-bg-1) 0%, var(--card-bg-2) 100%); border: 1px solid var(--border-color); border-right: 5px solid var(--gold); border-radius: 10px; padding: 20px 22px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(74, 55, 40, 0.08); position: relative; transition: all 0.3s ease; }
         .ayah-card::before { content: '۞'; position: absolute; top: 8px; left: 12px; color: var(--gold); font-size: 1.4rem; opacity: 0.5; }
         .ayah-card.bookmarked { background: var(--highlight-bg); border-right-color: var(--bookmark-color); box-shadow: 0 0 0 3px rgba(232, 163, 23, 0.35), 0 6px 20px rgba(232, 163, 23, 0.3); }
-        
-        /* ====== إبراز الآية المُختارة ====== */
         .ayah-card.focused {
             box-shadow: 0 0 0 5px #f59e0b, 0 8px 30px rgba(245, 158, 11, 0.6) !important;
             transform: scale(1.02);
@@ -149,7 +147,6 @@
             0%, 100% { box-shadow: 0 0 0 5px #f59e0b, 0 8px 30px rgba(245, 158, 11, 0.6); }
             50% { box-shadow: 0 0 0 8px #d97706, 0 8px 40px rgba(217, 119, 6, 0.8); }
         }
-        
         .bookmark-ribbon { position: absolute; top: -12px; left: 20px; background: linear-gradient(180deg, var(--bookmark-color) 0%, var(--bookmark-dark) 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 3px 8px rgba(92, 46, 14, 0.5); z-index: 2; white-space: nowrap; }
         .special-ribbon { position: absolute; top: -12px; right: 20px; background: linear-gradient(180deg, var(--special-color) 0%, var(--special-dark) 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 3px 8px rgba(124, 58, 237, 0.5); z-index: 2; white-space: nowrap; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
         .ayah-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--parchment-dark); flex-wrap: wrap; gap: 8px; }
@@ -350,10 +347,10 @@
             <p class="about-intro">دليل شامل لاستخدام جميع ميزات التطبيق</p>
             <div class="help-tip">💡 <strong>نصيحة:</strong> التطبيق يعمل على الكمبيوتر، الهاتف، والآيباد بنفس الطريقة.</div>
             <h3 class="help-section-title">🌟 الاستخدام الأساسي</h3>
-            <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">1. قراءة القرآن</div><div class="help-step-desc">اختر السورة، ثم اضغط <code>بحث</code>. يمكنك اختيار آية معينة → ستُعرض السورة كاملة مع تمرير وإبراز الآية.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">1. قراءة القرآن</div><div class="help-step-desc">اختر السورة، ثم اضغط <code>بحث</code>. عند اختيار آية معينة، ستُعرض <strong>السورة كاملة</strong> مع تمرير وإبراز الآية.</div></div></div>
             <div class="help-step"><div class="help-step-icon">🔖</div><div class="help-step-content"><div class="help-step-title">2. حفظ موضع القراءة</div><div class="help-step-desc">اضغط <code>🔖</code> على أي آية. للعودة اضغط <code>📖 العلامة المحفوظة</code>.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">📌</div><div class="help-step-content"><div class="help-step-title">3. علامة خاصة</div><div class="help-step-desc">اضغط <code>📌</code> وأدخل اسماً. يمكنك إضافة عدد غير محدود!</div></div></div>
-            <div class="help-step"><div class="help-step-icon">📋</div><div class="help-step-content"><div class="help-step-title">4. عرض علاماتي</div><div class="help-step-desc">اضغط <code>📌 علاماتي</code>. يمكنك الانتقال أو التعديل أو الحذف.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📌</div><div class="help-step-content"><div class="help-step-title">3. علامة خاصة</div><div class="help-step-desc">اضغط <code>📌</code> وأدخل اسماً. عدد غير محدود من العلامات!</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📋</div><div class="help-step-content"><div class="help-step-title">4. عرض علاماتي</div><div class="help-step-desc">اضغط <code>📌 علاماتي</code> للانتقال/التعديل/الحذف.</div></div></div>
             <h3 class="help-section-title">☁️ المزامنة</h3>
             <div class="help-step"><div class="help-step-icon">🔄</div><div class="help-step-content"><div class="help-step-title">5. مزامنة الأجهزة</div><div class="help-step-desc">انسخ الرمز من <code>🔄 مزامنة</code> وضعه في أجهزتك.</div></div></div>
             <h3 class="help-section-title">🎨 التخصيص</h3>
@@ -363,7 +360,7 @@
             <div class="help-step"><div class="help-step-icon">⚡</div><div class="help-step-content"><div class="help-step-title">8. الانتقال السريع</div><div class="help-step-desc"><code>⚡ السور</code> لفتح قائمة السور.</div></div></div>
             <div class="help-step"><div class="help-step-icon">📊</div><div class="help-step-content"><div class="help-step-title">9. شريط التقدم</div><div class="help-step-desc">النسبة بالآيات: ربع (1559)، نصف (3118)، ٣/٤ (4677)، ختم (6236).</div></div></div>
             <h3 class="help-section-title">🔍 البحث والتفاسير</h3>
-            <div class="help-step"><div class="help-step-icon">🔍</div><div class="help-step-content"><div class="help-step-title">10. البحث الذكي</div><div class="help-step-desc">يتجاهل التشكيل تلقائياً.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🔍</div><div class="help-step-content"><div class="help-step-title">10. البحث الذكي</div><div class="help-step-desc">الكلمات القصيرة (3 أحرف أو أقل) تُبحث ككلمة كاملة فقط، والكلمات الطويلة جزئياً. يتجاهل التشكيل.</div></div></div>
             <div class="help-step"><div class="help-step-icon">📚</div><div class="help-step-content"><div class="help-step-title">11. التفاسير</div><div class="help-step-desc">فعّل <code>📚 إظهار التفاسير</code>.</div></div></div>
             <h3 class="help-section-title">🤲 دعاء</h3>
             <p class="about-dua">اللهم اجعل هذا العمل خالصاً لوجهك الكريم،<br>وانفع به المسلمين.</p>
@@ -495,7 +492,7 @@
         let currentPage = 1, showTafsir = false;
         let bookmark = null, allBookmarks = [], bookmarkColorIndex = 0;
         let pendingSurah = null, pendingAyah = null;
-        let focusAyah = null;  // ← الآية المُراد التمرير إليها
+        let focusAyah = null;
         let serverSyncEnabled = true;
         let isSyncingToServer = false;
         let lastAddTime = 0;
@@ -757,7 +754,7 @@
             currentSurah = String(bookmark.surah);
             currentAyah = 'all';
             currentKeyword = '';
-            focusAyah = bookmark.ayah;   // ← اجعل التمرير للآية المحفوظة
+            focusAyah = bookmark.ayah;
             let source = quranData.filter(a => a.surah == bookmark.surah);
             const index = source.findIndex(a => a.ayah == bookmark.ayah);
             currentPage = index >= 0 ? Math.floor(index / perPage) + 1 : 1;
@@ -771,6 +768,24 @@
             return text.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D3-\u08E1\u08E3-\u08FF]/g, '').replace(/\u0640/g, '').replace(/[\u0622\u0623\u0625\u0671]/g, '\u0627').replace(/\u0649/g, '\u064A').replace(/\u0624/g, '\u0648').replace(/\u0629/g, '\u0647').replace(/[﴿﴾۝۞۩]/g, '');
         }
         function normalizeSearch(text) { return text ? removeTashkeel(text).replace(/\s+/g, ' ').trim() : ''; }
+
+        // ✅ دالة البحث الذكي مع احترام حدود الكلمات للكلمات القصيرة
+        function searchMatch(text, keyword) {
+            if (!keyword) return true;
+            const cleanText = normalizeSearch(text);
+            const cleanKeyword = normalizeSearch(keyword);
+            if (!cleanKeyword) return true;
+            
+            // للكلمات القصيرة (3 أحرف أو أقل) → ابحث ككلمة مستقلة فقط
+            if (cleanKeyword.length <= 3) {
+                const escaped = cleanKeyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp('(?:^|[\\s،؛؟.,;:!()\\[\\]{}"\'\\-ـ])' + escaped + '(?:[\\s،؛؟.,;:!()\\[\\]{}"\'\\-ـ]|$)', 'g');
+                return regex.test(cleanText);
+            }
+            
+            // للكلمات الطويلة (4+ أحرف) → البحث الجزئي كالمعتاد
+            return cleanText.includes(cleanKeyword);
+        }
 
         function populateSurahSelect() {
             const sel = document.getElementById('surahSelect');
@@ -893,10 +908,9 @@
             const results = [];
             const t = allTafsirs[tafsirKey];
             if (!t || t.ayahs.length === 0) return results;
-            const ck = normalizeSearch(keyword);
             t.ayahs.forEach(a => {
                 if (surah !== 'all' && a.surah != surah) return;
-                if (ck && !normalizeSearch(a.text).includes(ck)) return;
+                if (keyword && !searchMatch(a.text, keyword)) return;
                 results.push({ tafsirKey, tafsirLabel: t.label, tafsirIcon: t.icon, surah: a.surah, number: a.number, text: a.text });
             });
             return results;
@@ -907,18 +921,16 @@
             return results;
         }
 
-        // ========== البحث (معدّل: عند اختيار آية، اعرض السورة كاملة) ==========
+        // ✅ البحث المعدّل: عند اختيار آية، اعرض السورة كاملة
         function performSearch() {
             currentKeyword = document.getElementById('searchInput').value.trim();
             currentSource = document.getElementById('sourceSelect').value;
             currentSurah = document.getElementById('surahSelect').value;
             const selectedAyah = document.getElementById('ayahSelect').value;
 
-            // ✅ إذا اختار آية معينة: اعرض السورة كاملة وركز على الآية
             if (currentSource === 'quran' && currentSurah !== 'all' && selectedAyah !== 'all') {
                 focusAyah = parseInt(selectedAyah);
                 currentAyah = 'all';
-                // احسب الصفحة التي تحتوي على الآية
                 let source = quranData.filter(a => a.surah == parseInt(currentSurah));
                 const index = source.findIndex(a => a.ayah === focusAyah);
                 currentPage = index >= 0 ? Math.floor(index / perPage) + 1 : 1;
@@ -941,7 +953,7 @@
                 let source = quranData;
                 if (currentSurah !== 'all') { const s = parseInt(currentSurah); source = source.filter(a => a.surah == s); }
                 if (currentAyah !== 'all') { const n = parseInt(currentAyah); source = source.filter(a => a.ayah == n); }
-                if (currentKeyword) { const ck = normalizeSearch(currentKeyword); source = source.filter(a => normalizeSearch(a.text).includes(ck)); }
+                if (currentKeyword) { source = source.filter(a => searchMatch(a.text, currentKeyword)); }
                 items = source;
             } else if (currentSource === 'all_tafsirs') {
                 isTafsirMode = true;
@@ -1041,7 +1053,6 @@
                 });
             });
 
-            // ✅ التمرير والإبراز للآية المُراد التركيز عليها
             if (focusAyah && currentSurah !== 'all') {
                 setTimeout(() => {
                     const el = document.getElementById(`ayah-${currentSurah}-${focusAyah}`);
@@ -1228,7 +1239,12 @@
         document.getElementById('searchBtn').addEventListener('click', performSearch);
         document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
         document.getElementById('sourceSelect').addEventListener('change', performSearch);
-        document.getElementById('surahSelect').addEventListener('change', (e) => { updateAyahDropdown(e.target.value, 'all'); performSearch(); });
+        document.getElementById('surahSelect').addEventListener('change', (e) => {
+            updateAyahDropdown(e.target.value, 'all');
+            // امسح حقل البحث عند تغيير السورة
+            document.getElementById('searchInput').value = '';
+            performSearch();
+        });
         document.getElementById('ayahSelect').addEventListener('change', performSearch);
 
         window.addEventListener('scroll', updateJumpBtnText);
