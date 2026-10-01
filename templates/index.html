@@ -1,148 +1,1084 @@
-from flask import Flask, render_template, send_from_directory, request, jsonify
-import os
-import sqlite3
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الموسوعة القرآنية - التفاسير</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment-1: #F5E6C8; --parchment-2: #EFDCB8; --parchment-3: #E8D5A8;
+            --parchment-dark: #C9B282; --ink-primary: #4A3728; --ink-secondary: #6B5540;
+            --gold: #B8860B; --gold-light: #D4AF37; --border-color: #A68B5B;
+            --shadow: rgba(74, 55, 40, 0.2); --highlight-bg: #FFE9A8; --highlight-border: #E6C34A;
+            --bookmark-color: #8B4513; --bookmark-dark: #5C2E0E;
+            --special-color: #7c3aed; --special-dark: #4c1d95;
+            --card-bg-1: #FFFCF2; --card-bg-2: #FAF0D7;
+            --container-bg-1: #FBF0D8; --container-bg-2: #F5E6C8;
+            --input-bg: #FFFCF2;
+        }
+        body.dark-mode {
+            --parchment-1: #1a1a1a; --parchment-2: #222222; --parchment-3: #2a2a2a;
+            --parchment-dark: #3a3a3a; --ink-primary: #E8DFC8; --ink-secondary: #B0A88C;
+            --gold: #D4AF37; --gold-light: #E8C766; --border-color: #4A3F2E;
+            --shadow: rgba(0, 0, 0, 0.5); --highlight-bg: #5C4A1E; --highlight-border: #B8860B;
+            --card-bg-1: #2a2620; --card-bg-2: #211e18;
+            --container-bg-1: #1f1c17; --container-bg-2: #2a2519; --input-bg: #2a2620;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(184, 134, 11, 0.06) 0%, transparent 50%),
+                linear-gradient(135deg, var(--parchment-1) 0%, var(--parchment-2) 50%, var(--parchment-3) 100%);
+            background-attachment: fixed; color: var(--ink-primary);
+            min-height: 100vh; padding: 20px; line-height: 1.8;
+            transition: background 0.4s, color 0.4s;
+        }
+        body::before {
+            content: ''; position: fixed; inset: 0;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 109, 66, 0.03) 2px, rgba(139, 109, 66, 0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139, 109, 66, 0.03) 2px, rgba(139, 109, 66, 0.03) 4px);
+            pointer-events: none; z-index: 0;
+        }
+        body.dark-mode::before { opacity: 0.3; }
+        .container {
+            position: relative; z-index: 1; max-width: 950px; margin: 0 auto;
+            background: linear-gradient(180deg, var(--container-bg-1) 0%, var(--container-bg-2) 100%);
+            border: 3px double var(--border-color); border-radius: 12px;
+            padding: 30px 28px; box-shadow: 0 0 0 1px rgba(184, 134, 11, 0.2), 0 10px 40px var(--shadow);
+            transition: background 0.4s;
+        }
+        h1 { font-family: 'Amiri', serif; font-size: 2.4rem; text-align: center; color: var(--ink-primary); margin-bottom: 8px; text-shadow: 1px 1px 0 var(--parchment-dark); }
+        h1::before, h1::after { content: '❁'; color: var(--gold); margin: 0 12px; font-size: 1.6rem; vertical-align: middle; }
+        .subtitle { text-align: center; color: var(--ink-secondary); font-size: 1rem; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); font-style: italic; }
+        .top-buttons { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .about-btn {
+            padding: 8px 16px; background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
+            color: #FFF8DC; border: 1px solid #8B6508; border-radius: 20px;
+            font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.9rem;
+            cursor: pointer; text-shadow: 1px 1px 0 rgba(0,0,0,0.2); transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(184, 134, 11, 0.3);
+        }
+        .about-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(184, 134, 11, 0.4); }
+        .about-btn.sync { background: linear-gradient(180deg,#38bdf8,#0284c7); border-color:#075985; }
+        .about-btn.dark { background: linear-gradient(180deg,#6b7280,#374151); border-color:#1f2937; }
+        .about-btn.nav { background: linear-gradient(180deg,#a78bfa,#7c3aed); border-color:#5b21b6; }
+        .about-btn.bm-color { background: linear-gradient(180deg,#f59e0b,#b45309); border-color:#78350f; }
+        .about-btn.my-bm { background: linear-gradient(180deg,#a78bfa,#7c3aed); border-color:#5b21b6; }
 
-app = Flask(__name__)
+        .progress-wrap { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 8px 16px; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+        .progress-label { font-size: 0.85rem; font-weight: 700; color: var(--ink-primary); white-space: nowrap; }
+        .progress-bar { flex: 1; height: 14px; background: rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--bookmark-color) 0%, var(--gold) 100%); width: 0%; transition: width 0.5s; border-radius: 10px; }
+        .progress-percent { font-size: 0.9rem; font-weight: 700; color: var(--bookmark-dark); min-width: 45px; text-align: left; }
+        body.dark-mode .progress-percent { color: var(--gold-light); }
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'sync_bookmarks.db')
+        .bookmark-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 18px; background: linear-gradient(180deg, var(--bookmark-color) 0%, var(--bookmark-dark) 100%); border: 2px solid #3D1F08; border-radius: 10px; margin-bottom: 15px; flex-wrap: wrap; box-shadow: 0 4px 12px rgba(92, 46, 14, 0.4); }
+        .bookmark-info { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #FFFFFF; flex: 1; min-width: 200px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); }
+        .bookmark-info .ribbon-icon { font-size: 1.3rem; }
+        .bookmark-info strong { color: #FFD98A; }
+        .bookmark-info #bookmarkLocation { font-weight: 700; color: #FFFFFF; }
+        .bookmark-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .bookmark-jump-btn, .bookmark-clear-btn { padding: 8px 14px; border-radius: 8px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; border: none; }
+        .bookmark-jump-btn { background: linear-gradient(180deg, #E8A317 0%, #B8860B 100%); color: white; }
+        .bookmark-jump-btn:hover { transform: translateY(-1px); }
+        .bookmark-clear-btn { background: rgba(220, 38, 38, 0.85); color: white; border: 1px solid #fca5a5; }
 
+        .search-box { display: flex; flex-wrap: wrap; gap: 10px; background: var(--input-bg); padding: 15px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 15px; }
+        .search-box input, .search-box select { flex: 1; min-width: 120px; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--ink-primary); font-family: 'Cairo', sans-serif; font-size: 1rem; outline: none; }
+        .search-box input:focus, .search-box select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.15); }
+        .search-box button { padding: 12px 28px; background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%); color: #FFF8DC; border: 1px solid #8B6508; border-radius: 8px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; }
 
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS bookmarks (
-        sync_code TEXT PRIMARY KEY,
-        surah INTEGER NOT NULL,
-        ayah INTEGER NOT NULL,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )''')
-    c.execute('''CREATE TABLE IF NOT EXISTS special_bookmarks (
-        id TEXT PRIMARY KEY,
-        sync_code TEXT NOT NULL,
-        label TEXT NOT NULL,
-        surah INTEGER NOT NULL,
-        ayah INTEGER NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )''')
-    c.execute('CREATE INDEX IF NOT EXISTS idx_special_code ON special_bookmarks(sync_code)')
-    conn.commit()
-    conn.close()
+        .tafsir-toggle-bar { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 18px; background: var(--input-bg); border: 1px dashed var(--border-color); border-radius: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tafsir-toggle-bar label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: var(--ink-primary); font-size: 0.95rem; padding: 6px 14px; border-radius: 20px; }
+        .tafsir-toggle-bar input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--gold); }
+        .toggle-hint { font-size: 0.85rem; color: var(--ink-secondary); font-style: italic; }
 
-init_db()
+        .results-info { text-align: center; color: var(--ink-secondary); font-size: 0.95rem; margin-bottom: 20px; padding: 8px; background: var(--input-bg); border-radius: 6px; border: 1px dashed var(--border-color); }
+        .ayah-card { background: linear-gradient(180deg, var(--card-bg-1) 0%, var(--card-bg-2) 100%); border: 1px solid var(--border-color); border-right: 5px solid var(--gold); border-radius: 10px; padding: 20px 22px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(74, 55, 40, 0.08); position: relative; transition: all 0.3s ease; }
+        .ayah-card::before { content: '۞'; position: absolute; top: 8px; left: 12px; color: var(--gold); font-size: 1.4rem; opacity: 0.5; }
+        .ayah-card.bookmarked { background: var(--highlight-bg); border-right-color: var(--bookmark-color); box-shadow: 0 0 0 3px rgba(232, 163, 23, 0.35), 0 6px 20px rgba(232, 163, 23, 0.3); }
+        .bookmark-ribbon { position: absolute; top: -12px; left: 20px; background: linear-gradient(180deg, var(--bookmark-color) 0%, var(--bookmark-dark) 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 3px 8px rgba(92, 46, 14, 0.5); z-index: 2; white-space: nowrap; }
+        .special-ribbon { position: absolute; top: -12px; right: 20px; background: linear-gradient(180deg, var(--special-color) 0%, var(--special-dark) 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 3px 8px rgba(124, 58, 237, 0.5); z-index: 2; white-space: nowrap; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
+        .ayah-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--parchment-dark); flex-wrap: wrap; gap: 8px; }
+        .ayah-header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .ayah-ref { background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%); color: #FFF8DC; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
+        .ayah-type { font-size: 0.8rem; color: var(--ink-secondary); background: rgba(201, 178, 130, 0.3); padding: 3px 12px; border-radius: 12px; border: 1px solid var(--parchment-dark); }
+        .ayah-btns { display: flex; gap: 6px; }
+        .bookmark-btn, .special-btn {
+            background: rgba(255, 248, 220, 0.7); border: 1px solid var(--border-color);
+            color: var(--ink-secondary); width: 36px; height: 36px; border-radius: 50%;
+            cursor: pointer; font-size: 1.1rem; display: flex; align-items: center;
+            justify-content: center; transition: all 0.25s; padding: 0; line-height: 1;
+        }
+        .bookmark-btn:hover, .special-btn:hover { transform: scale(1.1); }
+        .bookmark-btn.active { background: linear-gradient(180deg, var(--bookmark-color) 0%, var(--bookmark-dark) 100%); border-color: #3D1F08; color: white; transform: scale(1.05); }
+        .special-btn.has-special { background: linear-gradient(180deg, var(--special-color) 0%, var(--special-dark) 100%); border-color: var(--special-dark); color: white; transform: scale(1.05); }
+        .ayah-text { font-family: 'Amiri', serif; font-size: 1.5rem; line-height: 2.4; color: var(--ink-primary); text-align: justify; direction: rtl; margin-bottom: 12px; }
+        .tafsir-block { background: var(--highlight-bg); border-right: 3px solid var(--gold); border-radius: 6px; padding: 12px 16px; margin-top: 10px; }
+        .tafsir-block h4 { font-size: 0.9rem; font-weight: 700; color: var(--gold); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; font-family: 'Cairo', sans-serif; }
+        .tafsir-text { font-size: 1rem; color: var(--ink-secondary); line-height: 2; }
+        mark { background: var(--highlight-bg); color: var(--bookmark-color); padding: 0 4px; border-radius: 3px; border-bottom: 2px solid var(--highlight-border); }
+        .empty-msg { text-align: center; padding: 50px 20px; color: var(--ink-secondary); font-size: 1.1rem; background: var(--input-bg); border: 2px dashed var(--border-color); border-radius: 10px; }
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); flex-wrap: wrap; }
+        .pagination a, .pagination span { padding: 8px 16px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; color: var(--ink-primary); text-decoration: none; font-weight: 600; cursor: pointer; }
+        .pagination a:hover { border-color: var(--gold); }
+        .pagination .current { background: var(--gold); color: #FFF8DC; border-color: #8B6508; }
+        .footer-ornament { text-align: center; margin-top: 30px; color: var(--gold); font-size: 1.4rem; letter-spacing: 8px; opacity: 0.6; }
+        .tafsir-count { display: inline-block; background: rgba(184, 134, 11, 0.15); color: var(--gold); padding: 2px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; border: 1px solid var(--gold); }
+        .loading-msg { text-align: center; padding: 30px; color: var(--ink-secondary); font-size: 1rem; }
 
+        .about-overlay { display: none; position: fixed; inset: 0; background: rgba(74, 55, 40, 0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; animation: fadeIn 0.3s ease; }
+        .about-overlay.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .about-modal { position: relative; max-width: 620px; width: 100%; max-height: 85vh; overflow-y: auto; background: linear-gradient(180deg, var(--container-bg-1) 0%, var(--container-bg-2) 100%); border: 3px double var(--border-color); border-radius: 12px; padding: 30px 28px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); animation: slideUp 0.4s ease; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .about-modal h2 { font-family: 'Amiri', serif; font-size: 2rem; text-align: center; color: var(--ink-primary); margin-bottom: 6px; }
+        .about-modal h2::before, .about-modal h2::after { content: '❁'; color: var(--gold); margin: 0 10px; font-size: 1.2rem; }
+        .about-intro { text-align: center; color: var(--gold); font-family: 'Amiri', serif; font-size: 1.1rem; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+        .about-modal h3 { font-family: 'Cairo', sans-serif; font-size: 1.15rem; color: var(--gold); margin: 20px 0 10px 0; padding-right: 10px; border-right: 4px solid var(--gold); }
+        .about-modal p { color: var(--ink-secondary); line-height: 1.9; margin-bottom: 10px; }
+        .about-modal ul { list-style: none; padding: 0; margin-bottom: 10px; }
+        .about-modal ul li { padding: 6px 12px; margin-bottom: 4px; color: var(--ink-secondary); background: var(--input-bg); border-radius: 6px; border-right: 3px solid var(--gold-light); font-size: 0.95rem; }
+        .about-dua { background: var(--highlight-bg); border: 1px dashed var(--gold); border-radius: 8px; padding: 14px 18px; font-family: 'Amiri', serif; font-size: 1.05rem; color: var(--ink-primary); text-align: center; line-height: 2; }
+        .about-footer { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); color: var(--ink-secondary); font-size: 0.9rem; line-height: 1.8; }
+        .about-close { position: absolute; top: 12px; left: 12px; width: 34px; height: 34px; border-radius: 50%; background: rgba(184, 134, 11, 0.15); border: 1px solid var(--border-color); color: var(--ink-primary); font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .about-close:hover { background: rgba(220, 38, 38, 0.15); color: #b91c1c; transform: rotate(90deg); }
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998; }
+        .sidebar-overlay.active { display: block; }
+        .sidebar { position: fixed; top: 0; right: -320px; width: 300px; height: 100vh; background: linear-gradient(180deg, var(--container-bg-1) 0%, var(--container-bg-2) 100%); border-left: 3px double var(--border-color); padding: 20px 15px; overflow-y: auto; z-index: 9999; transition: right 0.3s ease; box-shadow: -5px 0 20px rgba(0,0,0,0.3); }
+        .sidebar.active { right: 0; }
+        .sidebar h3 { text-align: center; font-family: 'Amiri', serif; color: var(--ink-primary); font-size: 1.3rem; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--gold); }
+        .sidebar-close { position: absolute; top: 10px; left: 10px; width: 30px; height: 30px; border-radius: 50%; background: rgba(220,38,38,0.15); border: 1px solid #fca5a5; color: #b91c1c; font-size: 0.9rem; cursor: pointer; }
+        .surah-nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 5px; cursor: pointer; transition: 0.2s; color: var(--ink-primary); font-weight: 600; font-size: 0.9rem; }
+        .surah-nav-item:hover { background: var(--highlight-bg); border-color: var(--gold); transform: translateX(-5px); }
+        .surah-nav-item .num { background: var(--gold); color: #FFF8DC; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
 
+        .color-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
+        .color-option { width: 100%; aspect-ratio: 1; border-radius: 10px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; position: relative; }
+        .color-option:hover { transform: scale(1.1); }
+        .color-option.selected { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,134,11,0.4); transform: scale(1.05); }
+        .color-option.selected::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.5rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.7); }
 
-@app.route('/<path:filename>')
-def serve_data(filename):
-    if not filename.endswith('.json'):
-        return jsonify({'error': 'not found'}), 404
-    filepath = os.path.join(BASE_DIR, filename)
-    if os.path.exists(filepath):
-        return send_from_directory(BASE_DIR, filename)
-    return jsonify({'error': 'not found'}), 404
+        .bm-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; border-right: 4px solid var(--special-color); }
+        .bm-item-info { flex: 1; color: var(--ink-primary); font-size: 0.9rem; }
+        .bm-item-label { font-weight: 700; color: var(--special-color); font-size: 0.9rem; }
+        .bm-item-actions { display: flex; gap: 4px; }
+        .bm-item-actions button { padding: 6px 10px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.8rem; }
+        .bm-jump { background: var(--gold); color: white; }
+        .bm-edit { background: #2563eb; color: white; }
+        .bm-del { background: rgba(220,38,38,0.85); color: white; }
 
+        .label-input-wrap { padding: 15px; background: var(--input-bg); border: 2px solid var(--special-color); border-radius: 10px; margin-bottom: 15px; }
+        .label-input-wrap input { width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--ink-primary); font-family: 'Cairo', sans-serif; font-size: 1rem; margin-bottom: 10px; }
+        .label-buttons { display: flex; gap: 8px; }
+        .label-buttons button { flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.9rem; }
+        .label-save { background: var(--special-color); color: white; }
+        .label-cancel { background: rgba(107,114,128,0.3); color: var(--ink-primary); }
 
-# ============ علامة "آخر قراءة" ============
-@app.route('/api/sync_bookmark', methods=['POST'])
-def save_bookmark():
-    data = request.get_json(silent=True) or {}
-    code = (data.get('sync_code') or '').strip().upper()
-    surah = data.get('surah')
-    ayah = data.get('ayah')
+        .quick-labels { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .quick-labels button { padding: 5px 12px; background: rgba(124, 58, 237, 0.1); border: 1px solid var(--special-color); color: var(--special-color); border-radius: 20px; font-family: 'Cairo', sans-serif; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
+        .quick-labels button:hover { background: var(--special-color); color: white; }
 
-    if not code or len(code) < 8:
-        return jsonify({'status': 'error'}), 400
-    try:
-        surah = int(surah); ayah = int(ayah)
-    except (TypeError, ValueError):
-        return jsonify({'status': 'error'}), 400
+        .sync-badge { display: inline-block; background: rgba(34,197,94,0.15); color: #16a34a; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-right: 6px; }
 
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''INSERT INTO bookmarks (sync_code, surah, ayah, updated_at)
-                 VALUES (?, ?, ?, CURRENT_TIMESTAMP)
-                 ON CONFLICT(sync_code) DO UPDATE SET
-                     surah = excluded.surah, ayah = excluded.ayah,
-                     updated_at = CURRENT_TIMESTAMP''', (code, surah, ayah))
-    conn.commit(); conn.close()
-    return jsonify({'status': 'success'})
+        @media (max-width: 600px) {
+            h1 { font-size: 1.7rem; }
+            h1::before, h1::after { margin: 0 6px; font-size: 1.2rem; }
+            .ayah-text { font-size: 1.25rem; line-height: 2.1; }
+            .container { padding: 20px 14px; }
+            .search-box { flex-direction: column; }
+            .search-box input, .search-box select, .search-box button { width: 100%; }
+            .bookmark-bar { flex-direction: column; align-items: stretch; }
+            .bookmark-actions { justify-content: center; }
+            .about-btn { font-size: 0.8rem; padding: 7px 12px; }
+            .color-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>الموسوعة القرآنية</h1>
+        <p class="subtitle">﴿ وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ ﴾</p>
 
+        <div class="top-buttons">
+            <button class="about-btn" onclick="openAbout()">ℹ️ حول</button>
+            <button class="about-btn sync" onclick="openSync()">🔄 مزامنة</button>
+            <button class="about-btn nav" onclick="openSidebar()">⚡ السور</button>
+            <button class="about-btn my-bm" onclick="openBookmarksList()">📌 علاماتي <span id="bmCount" style="background:rgba(255,255,255,0.3); padding:1px 8px; border-radius:10px; font-size:0.75rem;">0</span></button>
+            <button class="about-btn bm-color" onclick="openColorPicker()">🎨 لون</button>
+            <button class="about-btn dark" onclick="toggleDarkMode()" id="darkModeBtn">🌙 ليلي</button>
+        </div>
 
-@app.route('/api/get_bookmark/<code>', methods=['GET'])
-def get_bookmark(code):
-    code = code.strip().upper()
-    if len(code) < 8:
-        return jsonify({'status': 'error'}), 400
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('SELECT surah, ayah FROM bookmarks WHERE sync_code = ?', (code,))
-    row = c.fetchone(); conn.close()
-    if row:
-        return jsonify({'status': 'success', 'surah': row[0], 'ayah': row[1]})
-    return jsonify({'status': 'empty'})
+        <div class="progress-wrap">
+            <span class="progress-label">📊 تقدم القراءة:</span>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <span class="progress-percent" id="progressPercent">0%</span>
+        </div>
 
+        <div class="bookmark-bar" id="bookmarkBar" style="display: none;">
+            <div class="bookmark-info">
+                <span class="ribbon-icon">🔖</span>
+                <strong>آخر قراءة:</strong>
+                <span id="bookmarkLocation">—</span>
+            </div>
+            <div class="bookmark-actions">
+                <button class="bookmark-jump-btn" onclick="jumpToBookmark()">📖 العودة</button>
+                <button class="bookmark-clear-btn" onclick="clearBookmark()">✖ حذف</button>
+            </div>
+        </div>
 
-@app.route('/api/delete_bookmark', methods=['POST'])
-def delete_bookmark():
-    data = request.get_json(silent=True) or {}
-    code = (data.get('sync_code') or '').strip().upper()
-    if not code or len(code) < 8:
-        return jsonify({'status': 'error'}), 400
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('DELETE FROM bookmarks WHERE sync_code = ?', (code,))
-    conn.commit(); conn.close()
-    return jsonify({'status': 'success'})
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 ابحث...">
+            <select id="sourceSelect">
+                <option value="quran">📖 القرآن</option>
+                <option value="all_tafsirs">📚 جميع التفاسير</option>
+                <option value="tafsir_saadi">📗 السعدي</option>
+                <option value="tafsir_ibn_kathir">📘 ابن كثير</option>
+            </select>
+            <select id="surahSelect"><option value="all">جميع السور</option></select>
+            <select id="ayahSelect"><option value="all">كل الآيات</option></select>
+            <button id="searchBtn">بحث</button>
+        </div>
 
+        <div class="tafsir-toggle-bar" id="tafsirToggleBar">
+            <label><input type="checkbox" id="showTafsirToggle"> 📚 إظهار التفاسير</label>
+            <span class="toggle-hint" id="toggleHint">(مخفية)</span>
+        </div>
 
-# ============ العلامات الخاصة (📌) ============
-@app.route('/api/special_bookmarks/<code>', methods=['GET'])
-def get_special_bookmarks(code):
-    code = code.strip().upper()
-    if len(code) < 8:
-        return jsonify({'status': 'error'}), 400
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('SELECT id, label, surah, ayah FROM special_bookmarks WHERE sync_code = ?', (code,))
-    rows = c.fetchall(); conn.close()
-    bookmarks = [{'id': r[0], 'label': r[1], 'surah': r[2], 'ayah': r[3]} for r in rows]
-    return jsonify({'status': 'success', 'bookmarks': bookmarks})
+        <div class="results-info" id="resultsInfo">⏳ جاري تحميل البيانات...</div>
+        <div id="resultsContainer"><div class="loading-msg">⏳ جاري تحميل البيانات...</div></div>
+        <div class="pagination" id="pagination"></div>
+        <div class="footer-ornament">❁ ❁ ❁</div>
+    </div>
 
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="closeSidebar()">✖</button>
+        <h3>⚡ الانتقال السريع</h3>
+        <div id="sidebarList"></div>
+    </div>
 
-@app.route('/api/special_bookmarks', methods=['POST'])
-def save_special_bookmarks():
-    data = request.get_json(silent=True) or {}
-    code = (data.get('sync_code') or '').strip().upper()
-    bookmarks = data.get('bookmarks') or []
+    <div class="about-overlay" id="aboutOverlay" onclick="closeAboutOutside(event)">
+        <div class="about-modal" onclick="event.stopPropagation()">
+            <button class="about-close" onclick="closeAbout()">✖</button>
+            <h2>📖 حول التطبيق</h2>
+            <p class="about-intro">بسم الله الرحمن الرحيم</p>
+            <p><strong>الموسوعة القرآنية</strong> تطبيق إسلامي مجاني لقراءة القرآن والتفاسير.</p>
+            <h3>✨ المميزات</h3>
+            <ul>
+                <li>📖 القرآن الكريم كاملاً (6236 آية)</li>
+                <li>📗 تفسير السعدي + 📘 تفسير ابن كثير</li>
+                <li>🔍 بحث ذكي يتجاهل التشكيل</li>
+                <li>🔖 علامة "آخر قراءة" للموضع الحالي</li>
+                <li>📌 علامات خاصة متعددة مع تسميات</li>
+                <li>☁️ مزامنة تلقائية لكل علاماتك بين أجهزتك</li>
+                <li>🌙 وضع ليلي + 🎨 اختيار لون العلامة</li>
+                <li>📊 شريط تقدم القراءة</li>
+                <li>⚡ انتقال سريع للسور والآيات</li>
+            </ul>
+            <h3>🤲 دعاء</h3>
+            <p class="about-dua">اللهم اجعل هذا العمل خالصاً لوجهك الكريم،<br>وانفع به المسلمين،<br>واجعله صدقة جارية عن روح والدينا ووالديكم.</p>
+            <p class="about-footer"><strong>إعداد:</strong> حسان مارديني<br><strong>السنة:</strong> 1447 هـ / 2026 م</p>
+        </div>
+    </div>
 
-    if not code or len(code) < 8:
-        return jsonify({'status': 'error'}), 400
+    <div class="about-overlay" id="syncOverlay" onclick="closeSyncOutside(event)">
+        <div class="about-modal" onclick="event.stopPropagation()">
+            <button class="about-close" onclick="closeSync()">✖</button>
+            <h2>🔄 مزامنة الأجهزة</h2>
+            <p class="about-intro">اربط أجهزتك الخاصة — جميع علاماتك ستُزامن تلقائياً</p>
+            <div style="text-align:center; padding:12px; background:rgba(34,197,94,0.15); border:2px solid #16a34a; border-radius:8px; margin-bottom:15px; font-weight:700; color:#15803d;">
+                ✅ المزامنة مُفعّلة على هذا الجهاز
+            </div>
+            <h3>🔑 رمزك الخاص</h3>
+            <p style="font-size:0.9rem;">انسخه وضعه في أجهزتك الأخرى. <strong>لا تشاركه مع أحد.</strong></p>
+            <div style="display:flex; gap:8px; margin:10px 0;">
+                <input type="text" id="syncCodeDisplay" readonly style="flex:1; padding:12px; font-size:1.2rem; font-weight:700; text-align:center; letter-spacing:3px; border:2px solid var(--gold); border-radius:8px; background:var(--input-bg); color:var(--ink-primary); direction:ltr;">
+                <button onclick="copySyncCode()" type="button" style="padding:12px 20px; background:linear-gradient(180deg,#D4AF37,#B8860B); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-family:'Cairo',sans-serif;">📋 نسخ</button>
+            </div>
+            <div style="background:rgba(124,58,237,0.1); border:1px dashed var(--special-color); border-radius:8px; padding:12px; margin:15px 0; font-size:0.85rem; color:var(--ink-secondary);">
+                💡 <strong>ما الذي يُزامن؟</strong><br>
+                ✅ علامة "آخر قراءة"<br>
+                ✅ جميع العلامات الخاصة (📌)<br>
+                🔒 كلها <strong>خاصة برمزك فقط</strong> — لا يراها أحد آخر.
+            </div>
+            <hr style="border:none; border-top:1px dashed var(--border-color); margin:20px 0;">
+            <h3>🔗 ربط بجهاز آخر</h3>
+            <input type="text" id="syncCodeInput" placeholder="الصق رمز الجهاز الآخر" style="width:100%; padding:12px; font-size:1rem; text-align:center; letter-spacing:2px; border:2px solid var(--gold); border-radius:8px; background:var(--input-bg); color:var(--ink-primary); direction:ltr; margin-bottom:10px;">
+            <button onclick="linkToSyncCode()" type="button" style="width:100%; padding:12px; background:linear-gradient(180deg,#38bdf8,#0284c7); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-family:'Cairo',sans-serif;">✅ ربط ومزامنة</button>
+        </div>
+    </div>
 
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('DELETE FROM special_bookmarks WHERE sync_code = ?', (code,))
-    for b in bookmarks:
-        try:
-            bid = str(b.get('id', '')).strip()
-            label = str(b.get('label', '')).strip()[:200]
-            surah = int(b.get('surah', 1))
-            ayah = int(b.get('ayah', 1))
-            if not bid or not label:
-                continue
-            c.execute('''INSERT OR REPLACE INTO special_bookmarks
-                         (id, sync_code, label, surah, ayah)
-                         VALUES (?, ?, ?, ?, ?)''',
-                      (bid, code, label, surah, ayah))
-        except (ValueError, TypeError):
-            continue
-    conn.commit(); conn.close()
-    return jsonify({'status': 'success'})
+    <div class="about-overlay" id="colorOverlay" onclick="closeColorOutside(event)">
+        <div class="about-modal" onclick="event.stopPropagation()">
+            <button class="about-close" onclick="closeColorPicker()">✖</button>
+            <h2>🎨 لون العلامة</h2>
+            <p class="about-intro">اختر اللون المفضل</p>
+            <div class="color-grid" id="colorGrid"></div>
+        </div>
+    </div>
 
+    <div class="about-overlay" id="bookmarksOverlay" onclick="closeBookmarksOutside(event)">
+        <div class="about-modal" onclick="event.stopPropagation()">
+            <button class="about-close" onclick="closeBookmarksList()">✖</button>
+            <h2>📌 علاماتي الخاصة</h2>
+            <p class="about-intro">
+                <span class="sync-badge">☁️ مُزامنة</span>
+                جميع العلامات الخاصة بك (مرتبطة برمزك)
+            </p>
+            <div id="bookmarksListContainer"></div>
+        </div>
+    </div>
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    <div class="about-overlay" id="labelOverlay" onclick="closeLabelOutside(event)">
+        <div class="about-modal" onclick="event.stopPropagation()">
+            <button class="about-close" onclick="closeLabelDialog()">✖</button>
+            <h2>📌 إضافة علامة خاصة</h2>
+            <p class="about-intro" id="labelDialogRef">سورة — آية —</p>
+            <div class="label-input-wrap">
+                <label style="display:block; font-weight:700; margin-bottom:8px; color:var(--ink-primary);">✏️ اسم العلامة:</label>
+                <input type="text" id="labelInput" placeholder="مثلاً: وردي اليومي - يس" maxlength="60">
+                <div class="quick-labels" id="quickLabels"></div>
+            </div>
+            <div class="label-buttons">
+                <button class="label-save" onclick="saveLabelBookmark()">✅ حفظ العلامة</button>
+                <button class="label-cancel" onclick="closeLabelDialog()">إلغاء</button>
+            </div>
+            <p style="text-align:center; font-size:0.8rem; color:var(--ink-secondary); margin-top:10px;">
+                ☁️ ستُزامن هذه العلامة تلقائياً مع أجهزتك الأخرى
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const SURAH_NAMES = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
+
+        const TAFSIR_FILES = [
+            { key: 'saadi',      file: 'tafsir_saadi.json',      label: 'تفسير السعدي',   icon: '📗' },
+            { key: 'ibn_kathir', file: 'tafsir_ibn_kathir.json', label: 'تفسير ابن كثير', icon: '📘' }
+        ];
+
+        const BOOKMARK_COLORS = [
+            { name: 'بني محروق', light: '#8B4513', dark: '#5C2E0E' },
+            { name: 'ذهبي',       light: '#D4AF37', dark: '#8B6508' },
+            { name: 'أخضر زمردي', light: '#059669', dark: '#064e3b' },
+            { name: 'أزرق نيلي', light: '#2563eb', dark: '#1e3a8a' },
+            { name: 'أحمر قرمزي', light: '#dc2626', dark: '#7f1d1d' },
+            { name: 'بنفسجي',    light: '#7c3aed', dark: '#4c1d95' },
+            { name: 'برتقالي',   light: '#ea580c', dark: '#7c2d12' },
+            { name: 'أسود فاحم', light: '#374151', dark: '#111827' }
+        ];
+
+        const QUICK_LABELS = ['📌 وردي اليومي', '💭 للتدبر', '⭐ مهمة', '📖 حفظ', '🤲 دعاء', '🔍 للبحث'];
+
+        let quranData = [], allTafsirs = {};
+        let currentSource = 'quran', currentKeyword = '', currentSurah = 'all', currentAyah = 'all';
+        let currentPage = 1, showTafsir = false;
+        let bookmark = null, allBookmarks = [], bookmarkColorIndex = 0;
+        let pendingSurah = null, pendingAyah = null;
+        let serverSyncEnabled = true;
+        const perPage = 10;
+
+        try {
+            const saved = localStorage.getItem('showTafsir');
+            if (saved === 'true') showTafsir = true;
+            const dm = localStorage.getItem('darkMode');
+            if (dm === 'true') document.body.classList.add('dark-mode');
+            const bc = localStorage.getItem('bookmarkColor');
+            if (bc) bookmarkColorIndex = parseInt(bc);
+            const bms = localStorage.getItem('allBookmarks');
+            if (bms) allBookmarks = JSON.parse(bms);
+        } catch (e) {}
+
+        function applyBookmarkColor() {
+            const c = BOOKMARK_COLORS[bookmarkColorIndex] || BOOKMARK_COLORS[0];
+            document.documentElement.style.setProperty('--bookmark-color', c.light);
+            document.documentElement.style.setProperty('--bookmark-dark', c.dark);
+            try { localStorage.setItem('bookmarkColor', bookmarkColorIndex); } catch (e) {}
+        }
+
+        function openColorPicker() {
+            const grid = document.getElementById('colorGrid');
+            grid.innerHTML = BOOKMARK_COLORS.map((c, i) => `
+                <div class="color-option ${i === bookmarkColorIndex ? 'selected' : ''}" style="background: linear-gradient(180deg, ${c.light}, ${c.dark});" onclick="selectColor(${i})" title="${c.name}"></div>
+            `).join('');
+            document.getElementById('colorOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function selectColor(i) { bookmarkColorIndex = i; applyBookmarkColor(); closeColorPicker(); }
+        function closeColorPicker() { document.getElementById('colorOverlay').classList.remove('active'); document.body.style.overflow = ''; }
+        function closeColorOutside(e) { if (e.target.id === 'colorOverlay') closeColorPicker(); }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            try { localStorage.setItem('darkMode', isDark); } catch (e) {}
+            document.getElementById('darkModeBtn').textContent = isDark ? '☀️ نهاري' : '🌙 ليلي';
+        }
+
+        function loadBookmark() {
+            try { const s = localStorage.getItem('quranBookmark'); if (s) bookmark = JSON.parse(s); } catch (e) { bookmark = null; }
+        }
+
+        function saveAllBookmarksLocal() {
+            try { localStorage.setItem('allBookmarks', JSON.stringify(allBookmarks)); } catch (e) {}
+            updateBmCount();
+        }
+
+        function saveAllBookmarks() {
+            saveAllBookmarksLocal();
+            // مزامنة فورية مع الخادم
+            syncSpecialBookmarksToServer();
+        }
+
+        function updateBmCount() {
+            document.getElementById('bmCount').textContent = allBookmarks.length;
+        }
+
+        function clearBookmark() {
+            if (!confirm('حذف علامة آخر قراءة؟')) return;
+            bookmark = null;
+            try { localStorage.removeItem('quranBookmark'); } catch (e) {}
+            syncDeleteToServer();
+            updateBookmarkBar();
+            renderResults();
+        }
+
+        function toggleBookmark(surah, ayah) {
+            if (bookmark && bookmark.surah == surah && bookmark.ayah == ayah) {
+                bookmark = null;
+                try { localStorage.removeItem('quranBookmark'); } catch (e) {}
+                syncDeleteToServer();
+            } else {
+                bookmark = { surah: parseInt(surah), ayah: parseInt(ayah), timestamp: Date.now() };
+                try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) {}
+                syncBookmarkToServer(parseInt(surah), parseInt(ayah));
+            }
+            updateBookmarkBar();
+            updateProgress();
+            renderResults();
+        }
+
+        // ========== العلامات الخاصة ==========
+        function openLabelDialog(surah, ayah) {
+            pendingSurah = surah;
+            pendingAyah = ayah;
+            const sName = SURAH_NAMES[surah - 1] || '؟';
+            document.getElementById('labelDialogRef').textContent = `📍 سورة ${sName} - آية ${ayah}`;
+            document.getElementById('labelInput').value = '';
+            const ql = document.getElementById('quickLabels');
+            ql.innerHTML = QUICK_LABELS.map(l => `<button onclick="setQuickLabel('${l.replace(/'/g, "\\'")}')">${l}</button>`).join('');
+            document.getElementById('labelOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => document.getElementById('labelInput').focus(), 100);
+        }
+
+        function setQuickLabel(text) {
+            document.getElementById('labelInput').value = text;
+        }
+
+        function saveLabelBookmark() {
+            const label = document.getElementById('labelInput').value.trim();
+            if (!label) { alert('❌ الرجاء إدخال اسم للعلامة'); return; }
+            if (pendingSurah === null || pendingAyah === null) return;
+
+            const existing = allBookmarks.find(b => b.surah === pendingSurah && b.ayah === pendingAyah && b.label === label);
+            if (existing) {
+                if (!confirm('توجد علامة بنفس الاسم على هذه الآية. إضافتها مرة أخرى؟')) return;
+            }
+
+            allBookmarks.push({
+                id: String(Date.now()) + '_' + Math.random().toString(36).substring(2, 8),
+                label: label,
+                surah: pendingSurah,
+                ayah: pendingAyah,
+                created: Date.now()
+            });
+            saveAllBookmarks();
+            updateProgress();
+            closeLabelDialog();
+            renderResults();
+            alert('✅ تمت إضافة العلامة: ' + label + '\n☁️ جاري مزامنتها مع أجهزتك...');
+        }
+
+        function closeLabelDialog() {
+            document.getElementById('labelOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            pendingSurah = null;
+            pendingAyah = null;
+        }
+        function closeLabelOutside(e) { if (e.target.id === 'labelOverlay') closeLabelDialog(); }
+
+        function hasSpecialBookmark(surah, ayah) {
+            return allBookmarks.some(b => b.surah == surah && b.ayah == ayah);
+        }
+
+        function getSpecialLabels(surah, ayah) {
+            return allBookmarks.filter(b => b.surah == surah && b.ayah == ayah).map(b => b.label);
+        }
+
+        function jumpToSpecificBookmark(id) {
+            const b = allBookmarks.find(x => String(x.id) === String(id));
+            if (!b) return;
+            bookmark = { surah: b.surah, ayah: b.ayah, timestamp: Date.now() };
+            try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) {}
+            closeBookmarksList();
+            jumpToBookmark();
+        }
+
+        function deleteMyBookmark(id) {
+            if (!confirm('حذف هذه العلامة؟')) return;
+            allBookmarks = allBookmarks.filter(x => String(x.id) !== String(id));
+            saveAllBookmarks();
+            updateProgress();
+            openBookmarksList();
+        }
+
+        function editMyBookmark(id) {
+            const b = allBookmarks.find(x => String(x.id) === String(id));
+            if (!b) return;
+            const newLabel = prompt('تعديل اسم العلامة:', b.label);
+            if (newLabel === null || !newLabel.trim()) return;
+            b.label = newLabel.trim();
+            saveAllBookmarks();
+            openBookmarksList();
+            renderResults();
+        }
+
+        function openBookmarksList() {
+            const container = document.getElementById('bookmarksListContainer');
+            if (allBookmarks.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px; color:var(--ink-secondary);">
+                        📭 لا توجد علامات خاصة بعد.<br><br>
+                        <strong>كيف تضيف علامة؟</strong><br>
+                        1. اذهب إلى أي آية في القرآن<br>
+                        2. اضغط زر <strong>📌</strong> عليها<br>
+                        3. اكتب اسماً (مثلاً: "وردي اليومي - يس")<br>
+                        4. اضغط "حفظ"<br><br>
+                        <span class="sync-badge">☁️</span> ستُزامن تلقائياً مع أجهزتك
+                    </div>
+                `;
+            } else {
+                const sorted = [...allBookmarks].sort((a, b) => a.surah - b.surah || a.ayah - b.ayah);
+                container.innerHTML = sorted.map(b => {
+                    const sName = SURAH_NAMES[b.surah - 1] || '؟';
+                    return `
+                        <div class="bm-item">
+                            <div class="bm-item-info">
+                                <div class="bm-item-label">📌 ${b.label}</div>
+                                <div style="font-size:0.8rem; color:var(--ink-secondary);">سورة ${sName} - آية ${b.ayah}</div>
+                            </div>
+                            <div class="bm-item-actions">
+                                <button class="bm-jump" onclick="jumpToSpecificBookmark('${b.id}')" title="انتقال">📖</button>
+                                <button class="bm-edit" onclick="editMyBookmark('${b.id}')" title="تعديل">✏️</button>
+                                <button class="bm-del" onclick="deleteMyBookmark('${b.id}')" title="حذف">🗑️</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            document.getElementById('bookmarksOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeBookmarksList() {
+            document.getElementById('bookmarksOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function closeBookmarksOutside(e) { if (e.target.id === 'bookmarksOverlay') closeBookmarksList(); }
+
+        function updateProgress() {
+            const uniqueSurahs = new Set(allBookmarks.map(b => b.surah));
+            if (bookmark) uniqueSurahs.add(bookmark.surah);
+            const percent = Math.min(100, Math.round((uniqueSurahs.size / 114) * 100));
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = percent + '%';
+        }
+
+        function updateBookmarkBar() {
+            const bar = document.getElementById('bookmarkBar');
+            if (!bookmark) { bar.style.display = 'none'; return; }
+            bar.style.display = 'flex';
+            const sName = SURAH_NAMES[bookmark.surah - 1] || 'غير معروفة';
+            document.getElementById('bookmarkLocation').textContent = `سورة ${sName} - آية ${bookmark.ayah}`;
+        }
+
+        function jumpToBookmark() {
+            if (!bookmark) return;
+            document.getElementById('sourceSelect').value = 'quran';
+            document.getElementById('surahSelect').value = bookmark.surah;
+            updateAyahDropdown(bookmark.surah, 'all');
+            document.getElementById('ayahSelect').value = 'all';
+            document.getElementById('searchInput').value = '';
+            currentSource = 'quran';
+            currentSurah = String(bookmark.surah);
+            currentAyah = 'all';
+            currentKeyword = '';
+            let source = quranData.filter(a => a.surah == bookmark.surah);
+            const index = source.findIndex(a => a.ayah == bookmark.ayah);
+            currentPage = index >= 0 ? Math.floor(index / perPage) + 1 : 1;
+            renderResults();
+            setTimeout(() => {
+                const el = document.getElementById(`ayah-${bookmark.surah}-${bookmark.ayah}`);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.style.transform = 'scale(1.02)';
+                    setTimeout(() => { el.style.transform = 'scale(1)'; }, 600);
+                }
+            }, 400);
+        }
+
+        function isBookmarked(surah, ayah) { return bookmark && bookmark.surah == surah && bookmark.ayah == ayah; }
+
+        function removeTashkeel(text) {
+            if (!text) return '';
+            return text.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D3-\u08E1\u08E3-\u08FF]/g, '').replace(/\u0640/g, '').replace(/[\u0622\u0623\u0625\u0671]/g, '\u0627').replace(/\u0649/g, '\u064A').replace(/\u0624/g, '\u0648').replace(/\u0629/g, '\u0647').replace(/[﴿﴾۝۞۩]/g, '');
+        }
+        function normalizeSearch(text) { return text ? removeTashkeel(text).replace(/\s+/g, ' ').trim() : ''; }
+
+        function populateSurahSelect() {
+            const sel = document.getElementById('surahSelect');
+            SURAH_NAMES.forEach((name, i) => {
+                const opt = document.createElement('option');
+                opt.value = i + 1;
+                opt.textContent = `${i + 1}. ${name}`;
+                sel.appendChild(opt);
+            });
+        }
+
+        function updateAyahDropdown(surahNum, keepAyah) {
+            const ayahSel = document.getElementById('ayahSelect');
+            ayahSel.innerHTML = '<option value="all">كل الآيات</option>';
+            if (!surahNum || surahNum === 'all') return;
+            const s = parseInt(surahNum);
+            quranData.filter(a => a.surah === s).forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a.ayah;
+                opt.textContent = `آية ${a.ayah}`;
+                ayahSel.appendChild(opt);
+            });
+            if (keepAyah) ayahSel.value = keepAyah;
+        }
+
+        function populateSidebar() {
+            document.getElementById('sidebarList').innerHTML = SURAH_NAMES.map((name, i) => `
+                <div class="surah-nav-item" onclick="jumpToSurah(${i + 1})">
+                    <span class="num">${i + 1}</span>
+                    <span>${name}</span>
+                </div>
+            `).join('');
+        }
+
+        function jumpToSurah(num) {
+            closeSidebar();
+            document.getElementById('sourceSelect').value = 'quran';
+            document.getElementById('surahSelect').value = num;
+            document.getElementById('searchInput').value = '';
+            updateAyahDropdown(num, 'all');
+            currentSource = 'quran'; currentSurah = String(num); currentAyah = 'all'; currentKeyword = ''; currentPage = 1;
+            renderResults();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('sidebarOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebarOverlay').classList.remove('active'); document.body.style.overflow = ''; }
+
+        function initTafsirToggle() {
+            const toggle = document.getElementById('showTafsirToggle');
+            const hint = document.getElementById('toggleHint');
+            toggle.checked = showTafsir;
+            updateHint();
+            toggle.addEventListener('change', () => {
+                showTafsir = toggle.checked;
+                try { localStorage.setItem('showTafsir', showTafsir); } catch (e) {}
+                updateHint();
+                renderResults();
+            });
+            function updateHint() {
+                hint.textContent = showTafsir ? '(ظاهرة)' : '(مخفية)';
+                hint.style.color = showTafsir ? '#16a34a' : 'var(--gold)';
+            }
+        }
+
+        async function loadTafsirFile(config) {
+            try {
+                const res = await fetch(config.file);
+                if (!res.ok) { allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] }; return; }
+                const text = await res.text();
+                if (text.startsWith('SQLite') || text.startsWith('<!DOCTYPE') || text.startsWith('<html')) { allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] }; return; }
+                let raw;
+                try { raw = JSON.parse(text); } catch (e) { allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] }; return; }
+                let ayahs = [];
+                if (Array.isArray(raw)) {
+                    ayahs = raw.map(a => ({ surah: parseInt(a.surah || a.sura || 1), number: parseInt(a.number || a.ayah || a.numberInSurah || a.id || 1), text: a.text || a.tafsir || a.content || '' }));
+                } else if (raw && raw.ayahs && Array.isArray(raw.ayahs)) {
+                    ayahs = raw.ayahs.map(a => ({ surah: parseInt(a.surah || a.sura || 1), number: parseInt(a.number || a.ayah || 1), text: a.text || a.tafsir || a.content || '' }));
+                } else if (raw && typeof raw === 'object') {
+                    ayahs = Object.keys(raw).map(key => {
+                        if (!key.includes(':')) return null;
+                        const p = key.split(':'); if (p.length !== 2) return null;
+                        const s = parseInt(p[0]), n = parseInt(p[1]);
+                        if (isNaN(s) || isNaN(n)) return null;
+                        const item = raw[key]; let t = '';
+                        if (typeof item === 'string') t = item;
+                        else if (item && typeof item === 'object') t = item.text || item.tafsir || item.content || '';
+                        t = t.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim();
+                        return { surah: s, number: n, text: t };
+                    }).filter(a => a && a.text && a.text.length > 0);
+                }
+                allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: ayahs };
+            } catch (e) { allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] }; }
+        }
+
+        async function loadData() {
+            try {
+                const quranRes = await fetch('quran.json');
+                const quranRaw = await quranRes.json();
+                if (Array.isArray(quranRaw) && quranRaw.length > 0 && quranRaw[0].verses) {
+                    quranData = [];
+                    quranRaw.forEach(s => { (s.verses || []).forEach(v => { quranData.push({ surah: s.id, ayah: v.id, text: v.text }); }); });
+                } else if (Array.isArray(quranRaw)) {
+                    quranData = quranRaw.map(a => ({ surah: parseInt(a.surah || 1), ayah: parseInt(a.ayah || a.number || 1), text: a.text || '' }));
+                }
+                await Promise.all(TAFSIR_FILES.map(loadTafsirFile));
+                const totalTafsir = Object.values(allTafsirs).reduce((s, t) => s + t.ayahs.length, 0);
+                document.getElementById('resultsInfo').textContent = `📖 ${quranData.length} آية | 📚 ${totalTafsir} مدخل تفسيري`;
+                updateBookmarkBar();
+                updateProgress();
+                updateBmCount();
+                renderResults();
+            } catch (err) {
+                document.getElementById('resultsInfo').innerHTML = '❌ <span style="color:#8B4513">تعذر تحميل البيانات: ' + err.message + '</span>';
+            }
+        }
+
+        function searchInSingleTafsir(tafsirKey, keyword, surah) {
+            const results = [];
+            const t = allTafsirs[tafsirKey];
+            if (!t || t.ayahs.length === 0) return results;
+            const ck = normalizeSearch(keyword);
+            t.ayahs.forEach(a => {
+                if (surah !== 'all' && a.surah != surah) return;
+                if (ck && !normalizeSearch(a.text).includes(ck)) return;
+                results.push({ tafsirKey, tafsirLabel: t.label, tafsirIcon: t.icon, surah: a.surah, number: a.number, text: a.text });
+            });
+            return results;
+        }
+        function searchInAllTafsirs(keyword, surah) {
+            const results = [];
+            Object.keys(allTafsirs).forEach(k => results.push(...searchInSingleTafsir(k, keyword, surah)));
+            return results;
+        }
+
+        function performSearch() {
+            currentKeyword = document.getElementById('searchInput').value.trim();
+            currentSource = document.getElementById('sourceSelect').value;
+            currentSurah = document.getElementById('surahSelect').value;
+            currentAyah = document.getElementById('ayahSelect').value;
+            currentPage = 1;
+            renderResults();
+        }
+
+        function renderResults() {
+            const container = document.getElementById('resultsContainer');
+            const paginationEl = document.getElementById('pagination');
+            const infoEl = document.getElementById('resultsInfo');
+            const toggleBar = document.getElementById('tafsirToggleBar');
+            let items = [], isTafsirMode = false;
+
+            if (currentSource === 'quran') {
+                let source = quranData;
+                if (currentSurah !== 'all') { const s = parseInt(currentSurah); source = source.filter(a => a.surah == s); }
+                if (currentAyah !== 'all') { const n = parseInt(currentAyah); source = source.filter(a => a.ayah == n); }
+                if (currentKeyword) { const ck = normalizeSearch(currentKeyword); source = source.filter(a => normalizeSearch(a.text).includes(ck)); }
+                items = source;
+            } else if (currentSource === 'all_tafsirs') {
+                isTafsirMode = true;
+                items = searchInAllTafsirs(currentKeyword, currentSurah);
+            } else {
+                isTafsirMode = true;
+                const key = currentSource.replace('tafsir_', '');
+                items = searchInSingleTafsir(key, currentKeyword, currentSurah);
+            }
+
+            toggleBar.style.display = currentSource === 'quran' ? 'flex' : 'none';
+            const totalPages = Math.max(1, Math.ceil(items.length / perPage));
+            if (currentPage > totalPages) currentPage = totalPages;
+            const paginated = items.slice((currentPage - 1) * perPage, currentPage * perPage);
+            infoEl.textContent = `📊 ${items.length} نتيجة | صفحة ${currentPage}/${totalPages}`;
+
+            if (paginated.length === 0) {
+                container.innerHTML = '<div class="empty-msg">📭 لا توجد نتائج</div>';
+                paginationEl.innerHTML = '';
+                return;
+            }
+
+            if (isTafsirMode) {
+                container.innerHTML = paginated.map(item => {
+                    const sName = SURAH_NAMES[item.surah - 1] || '؟';
+                    return `<div class="ayah-card"><div class="ayah-header"><span class="ayah-ref">${item.tafsirIcon} ${item.tafsirLabel} - ${sName} - آية ${item.number}</span><span class="ayah-type">تفسير</span></div><div class="tafsir-text">${highlight(item.text, currentKeyword)}</div></div>`;
+                }).join('');
+            } else {
+                container.innerHTML = paginated.map(item => {
+                    const sName = SURAH_NAMES[item.surah - 1] || '؟';
+                    const ayahText = highlight(item.text, currentKeyword);
+                    const marked = isBookmarked(item.surah, item.ayah);
+                    const hasSpecial = hasSpecialBookmark(item.surah, item.ayah);
+                    const specialLabels = getSpecialLabels(item.surah, item.ayah);
+                    let tafsirBlocks = '', countBadge = '';
+
+                    if (showTafsir) {
+                        let countFound = 0;
+                        TAFSIR_FILES.forEach(cfg => {
+                            const t = allTafsirs[cfg.key];
+                            if (!t || t.ayahs.length === 0) return;
+                            const match = t.ayahs.find(x => x.surah == item.surah && x.number == item.ayah);
+                            if (match && match.text) {
+                                countFound++;
+                                tafsirBlocks += `<div class="tafsir-block"><h4>${t.icon} ${t.label}</h4><div class="tafsir-text">${highlight(match.text, currentKeyword)}</div></div>`;
+                            }
+                        });
+                        if (countFound > 0) countBadge = `<span class="tafsir-count">📚 ${countFound}</span>`;
+                    }
+
+                    const bookmarkRibbon = marked ? `<div class="bookmark-ribbon">🔖 آخر قراءة</div>` : '';
+                    const specialRibbon = hasSpecial ? `<div class="special-ribbon">📌 ${specialLabels.join(' · ')}</div>` : '';
+
+                    return `
+                        <div class="ayah-card ${marked ? 'bookmarked' : ''}" id="ayah-${item.surah}-${item.ayah}">
+                            ${bookmarkRibbon}
+                            ${specialRibbon}
+                            <div class="ayah-header">
+                                <span class="ayah-ref">سورة ${sName} - آية ${item.ayah}</span>
+                                <div class="ayah-header-right">
+                                    ${countBadge}
+                                    <span class="ayah-type">آية</span>
+                                    <div class="ayah-btns">
+                                        <button class="special-btn ${hasSpecial ? 'has-special' : ''}"
+                                                onclick="openLabelDialog(${item.surah}, ${item.ayah})"
+                                                title="إضافة علامة خاصة (ورد يومي، للتدبر...)">📌</button>
+                                        <button class="bookmark-btn ${marked ? 'active' : ''}"
+                                                onclick="toggleBookmark(${item.surah}, ${item.ayah})"
+                                                title="تعليم موضع آخر قراءة">🔖</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ayah-text">${ayahText}</div>
+                            ${tafsirBlocks}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            let paginationHtml = '';
+            if (totalPages > 1) {
+                if (currentPage > 1) paginationHtml += `<a data-page="${currentPage - 1}">⬅ السابق</a>`;
+                for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+                    paginationHtml += (i === currentPage) ? `<span class="current">${i}</span>` : `<a data-page="${i}">${i}</a>`;
+                }
+                if (currentPage < totalPages) paginationHtml += `<a data-page="${currentPage + 1}">التالي ➡</a>`;
+            }
+            paginationEl.innerHTML = paginationHtml;
+            paginationEl.querySelectorAll('a[data-page]').forEach(a => {
+                a.addEventListener('click', e => {
+                    e.preventDefault();
+                    currentPage = parseInt(a.dataset.page);
+                    renderResults();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+        }
+
+        function highlight(text, keyword) {
+            if (!keyword || !text) return text;
+            const ck = removeTashkeel(keyword);
+            if (!ck) return text;
+            const positions = [];
+            let cleanText = '';
+            for (let i = 0; i < text.length; i++) {
+                const c = removeTashkeel(text[i]);
+                if (c.length > 0) for (let j = 0; j < c.length; j++) { positions.push(i); cleanText += c[j]; }
+            }
+            const index = cleanText.indexOf(ck);
+            if (index === -1) return text;
+            const s = positions[index], e = positions[index + ck.length - 1] + 1;
+            return text.substring(0, s) + '<mark>' + text.substring(s, e) + '</mark>' + text.substring(e);
+        }
+
+        function openAbout() { document.getElementById('aboutOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeAbout() { document.getElementById('aboutOverlay').classList.remove('active'); document.body.style.overflow = ''; }
+        function closeAboutOutside(e) { if (e.target.id === 'aboutOverlay') closeAbout(); }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') { closeAbout(); closeSync(); closeColorPicker(); closeBookmarksList(); closeSidebar(); closeLabelDialog(); }
+        });
+
+        // ================== المزامنة ==================
+        function generateSyncCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            const arr = new Uint32Array(12);
+            crypto.getRandomValues(arr);
+            for (let i = 0; i < 12; i++) code += chars[arr[i] % chars.length];
+            return code;
+        }
+        function getSyncCode() {
+            let code = '';
+            try { code = localStorage.getItem('syncCode') || ''; } catch (e) {}
+            if (!code || code.length < 8) {
+                code = generateSyncCode();
+                try { localStorage.setItem('syncCode', code); } catch (e) {}
+            }
+            return code;
+        }
+        async function syncBookmarkToServer(surah, ayah) {
+            const code = getSyncCode(); if (!code) return;
+            try { await fetch('/api/sync_bookmark', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sync_code: code, surah, ayah }) }); } catch (e) {}
+        }
+        async function syncDeleteToServer() {
+            const code = getSyncCode(); if (!code) return;
+            try { await fetch('/api/delete_bookmark', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sync_code: code }) }); } catch (e) {}
+        }
+        async function loadBookmarkFromServer(silent) {
+            const code = getSyncCode(); if (!code) return;
+            try {
+                const res = await fetch(`/api/get_bookmark/${code}`);
+                const data = await res.json();
+                if (data.status === 'success') {
+                    if (!bookmark || bookmark.surah != data.surah || bookmark.ayah != data.ayah) {
+                        bookmark = { surah: data.surah, ayah: data.ayah, timestamp: Date.now() };
+                        try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) {}
+                        updateBookmarkBar(); updateProgress();
+                        if (!silent) renderResults();
+                    }
+                } else if (data.status === 'empty' && bookmark) {
+                    syncBookmarkToServer(bookmark.surah, bookmark.ayah);
+                }
+            } catch (e) {}
+        }
+
+        // ========== مزامنة العلامات الخاصة ==========
+        async function syncSpecialBookmarksToServer() {
+            if (!serverSyncEnabled) return;
+            const code = getSyncCode();
+            if (!code) return;
+            try {
+                await fetch('/api/special_bookmarks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sync_code: code, bookmarks: allBookmarks })
+                });
+                console.log('☁️ تمت مزامنة العلامات الخاصة:', allBookmarks.length);
+            } catch (e) {
+                console.error('❌ فشل مزامنة العلامات الخاصة:', e);
+            }
+        }
+
+        async function loadSpecialBookmarksFromServer(silent) {
+            const code = getSyncCode();
+            if (!code) return;
+            try {
+                const res = await fetch(`/api/special_bookmarks/${code}`);
+                const data = await res.json();
+                if (data.status !== 'success') return;
+
+                const serverBms = (data.bookmarks || []).map(b => ({
+                    id: String(b.id),
+                    label: b.label,
+                    surah: parseInt(b.surah),
+                    ayah: parseInt(b.ayah)
+                }));
+
+                // قارن: هل البيانات مختلفة؟
+                const localSorted = [...allBookmarks]
+                    .map(b => ({ id: String(b.id), label: b.label, surah: b.surah, ayah: b.ayah }))
+                    .sort((a, b) => a.id.localeCompare(b.id));
+                const serverSorted = [...serverBms].sort((a, b) => a.id.localeCompare(b.id));
+                const isDifferent = JSON.stringify(localSorted) !== JSON.stringify(serverSorted);
+
+                if (serverBms.length === 0 && allBookmarks.length > 0) {
+                    // الخادم فارغ والمحلي فيه بيانات → ارفع المحلي
+                    await syncSpecialBookmarksToServer();
+                } else if (isDifferent && serverBms.length > 0) {
+                    // الخادم فيه بيانات مختلفة → استخدم بيانات الخادم
+                    allBookmarks = serverBms;
+                    saveAllBookmarksLocal();
+                    updateProgress();
+                    if (!silent) {
+                        renderResults();
+                        console.log('☁️ تم تحديث العلامات الخاصة من الخادم:', serverBms.length);
+                    }
+                }
+            } catch (e) {
+                console.error('❌ فشل جلب العلامات الخاصة:', e);
+            }
+        }
+
+        // ========== المزامنة الدورية ==========
+        function startSync() {
+            getSyncCode();
+            // مزامنة أولية
+            loadBookmarkFromServer(true);
+            loadSpecialBookmarksFromServer(true);
+            // كل 15 ثانية، تحقق من التحديثات
+            setInterval(() => {
+                loadBookmarkFromServer(false);
+                loadSpecialBookmarksFromServer(false);
+            }, 15000);
+        }
+
+        function openSync() {
+            document.getElementById('syncOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('syncCodeDisplay').value = getSyncCode();
+            document.getElementById('syncCodeInput').value = '';
+        }
+        function closeSync() { document.getElementById('syncOverlay').classList.remove('active'); document.body.style.overflow = ''; }
+        function closeSyncOutside(e) { if (e.target.id === 'syncOverlay') closeSync(); }
+        function copySyncCode() {
+            const code = getSyncCode();
+            navigator.clipboard.writeText(code).then(() => alert('✅ تم النسخ:\n' + code)).catch(() => {
+                document.getElementById('syncCodeDisplay').select();
+                document.execCommand('copy');
+                alert('✅ تم النسخ: ' + code);
+            });
+        }
+        async function linkToSyncCode() {
+            const input = document.getElementById('syncCodeInput');
+            const code = (input.value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+            if (!code || code.length < 8) { alert('❌ الرمز قصير'); return; }
+            try { localStorage.setItem('syncCode', code); } catch (e) {}
+            document.getElementById('syncCodeDisplay').value = code;
+            input.value = '';
+            alert('✅ تم الربط بالرمز:\n' + code + '\n\n⏳ جاري جلب علاماتك من الخادم...');
+            // جلب بيانات الخادم فوراً
+            await loadBookmarkFromServer(false);
+            await loadSpecialBookmarksFromServer(false);
+            alert('✅ تم! سيتم عرض علاماتك تلقائياً.');
+        }
+
+        document.getElementById('searchBtn').addEventListener('click', performSearch);
+        document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
+        document.getElementById('sourceSelect').addEventListener('change', performSearch);
+        document.getElementById('surahSelect').addEventListener('change', (e) => { updateAyahDropdown(e.target.value, 'all'); performSearch(); });
+        document.getElementById('ayahSelect').addEventListener('change', performSearch);
+
+        applyBookmarkColor();
+        populateSurahSelect();
+        populateSidebar();
+        initTafsirToggle();
+        loadBookmark();
+        updateBookmarkBar();
+        updateProgress();
+        updateBmCount();
+        loadData();
+        startSync();
+
+        if (document.body.classList.contains('dark-mode')) {
+            document.getElementById('darkModeBtn').textContent = '☀️ نهاري';
+        }
+    </script>
+</body>
+</html>
