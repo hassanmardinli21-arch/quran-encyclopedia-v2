@@ -134,6 +134,33 @@
         .toggle-hint { font-size: 0.85rem; color: var(--ink-secondary); font-style: italic; }
 
         .results-info { text-align: center; color: var(--ink-secondary); font-size: 0.95rem; margin-bottom: 20px; padding: 8px; background: var(--input-bg); border-radius: 6px; border: 1px dashed var(--border-color); }
+        
+        /* ✅ بطاقة اقتراح السورة */
+        .surah-suggestion {
+            background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+            color: white; border-radius: 12px; padding: 16px 20px;
+            margin-bottom: 20px; display: flex; align-items: center;
+            justify-content: space-between; gap: 12px; flex-wrap: wrap;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            animation: suggestionIn 0.5s ease;
+        }
+        @keyframes suggestionIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .surah-suggestion-text {
+            font-family: 'Cairo', sans-serif; font-size: 1rem; font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .surah-suggestion button {
+            padding: 10px 20px; background: white; color: #047857;
+            border: none; border-radius: 8px; font-family: 'Cairo', sans-serif;
+            font-weight: 700; font-size: 0.95rem; cursor: pointer;
+            transition: 0.2s; white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .surah-suggestion button:hover { transform: scale(1.05); background: #f0fdf4; }
+
         .ayah-card { background: linear-gradient(180deg, var(--card-bg-1) 0%, var(--card-bg-2) 100%); border: 1px solid var(--border-color); border-right: 5px solid var(--gold); border-radius: 10px; padding: 20px 22px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(74, 55, 40, 0.08); position: relative; transition: all 0.3s ease; }
         .ayah-card::before { content: '۞'; position: absolute; top: 8px; left: 12px; color: var(--gold); font-size: 1.4rem; opacity: 0.5; }
         .ayah-card.bookmarked { background: var(--highlight-bg); border-right-color: var(--bookmark-color); box-shadow: 0 0 0 3px rgba(232, 163, 23, 0.35), 0 6px 20px rgba(232, 163, 23, 0.3); }
@@ -328,6 +355,7 @@
         </div>
 
         <div class="results-info" id="resultsInfo">⏳ جاري تحميل البيانات...</div>
+        <div id="surahSuggestionContainer"></div>
         <div id="resultsContainer"><div class="loading-msg">⏳ جاري تحميل البيانات...</div></div>
         <div class="pagination" id="pagination"></div>
         <div class="footer-ornament">❁ ❁ ❁</div>
@@ -360,7 +388,7 @@
             <div class="help-step"><div class="help-step-icon">⚡</div><div class="help-step-content"><div class="help-step-title">8. الانتقال السريع</div><div class="help-step-desc"><code>⚡ السور</code> لفتح قائمة السور.</div></div></div>
             <div class="help-step"><div class="help-step-icon">📊</div><div class="help-step-content"><div class="help-step-title">9. شريط التقدم</div><div class="help-step-desc">النسبة بالآيات: ربع (1559)، نصف (3118)، ٣/٤ (4677)، ختم (6236).</div></div></div>
             <h3 class="help-section-title">🔍 البحث والتفاسير</h3>
-            <div class="help-step"><div class="help-step-icon">🔍</div><div class="help-step-content"><div class="help-step-title">10. البحث الذكي</div><div class="help-step-desc">الكلمات القصيرة (3 أحرف أو أقل) تُبحث ككلمة كاملة فقط، والكلمات الطويلة جزئياً. يتجاهل التشكيل.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🔍</div><div class="help-step-content"><div class="help-step-title">10. البحث الذكي</div><div class="help-step-desc">الكلمات القصيرة (3 أحرف أو أقل) تُبحث ككلمة كاملة فقط. الكلمات الطويلة جزئياً. يتجاهل التشكيل.</div></div></div>
             <div class="help-step"><div class="help-step-icon">📚</div><div class="help-step-content"><div class="help-step-title">11. التفاسير</div><div class="help-step-desc">فعّل <code>📚 إظهار التفاسير</code>.</div></div></div>
             <h3 class="help-section-title">🤲 دعاء</h3>
             <p class="about-dua">اللهم اجعل هذا العمل خالصاً لوجهك الكريم،<br>وانفع به المسلمين.</p>
@@ -769,22 +797,77 @@
         }
         function normalizeSearch(text) { return text ? removeTashkeel(text).replace(/\s+/g, ' ').trim() : ''; }
 
-        // ✅ دالة البحث الذكي مع احترام حدود الكلمات للكلمات القصيرة
-        function searchMatch(text, keyword) {
-            if (!keyword) return true;
-            const cleanText = normalizeSearch(text);
-            const cleanKeyword = normalizeSearch(keyword);
-            if (!cleanKeyword) return true;
+        // ✅ فحص إذا كان الحرف عربياً
+        function isArabicLetter(c) {
+            if (!c) return false;
+            return /[\u0621-\u063A\u0641-\u064A]/.test(c);
+        }
+
+        // ✅ إيجاد موقع الكلمة في النص (بحدود كلمات للكلمات القصيرة)
+        function findKeywordPosition(text, keyword) {
+            if (!keyword || !text) return null;
+            const cleanKeyword = removeTashkeel(keyword);
+            if (!cleanKeyword) return null;
             
-            // للكلمات القصيرة (3 أحرف أو أقل) → ابحث ككلمة مستقلة فقط
-            if (cleanKeyword.length <= 3) {
-                const escaped = cleanKeyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                const regex = new RegExp('(?:^|[\\s،؛؟.,;:!()\\[\\]{}"\'\\-ـ])' + escaped + '(?:[\\s،؛؟.,;:!()\\[\\]{}"\'\\-ـ]|$)', 'g');
-                return regex.test(cleanText);
+            // بناء النص النظيف مع خريطة المواقع
+            const positions = [];
+            let cleanText = '';
+            for (let i = 0; i < text.length; i++) {
+                const c = removeTashkeel(text[i]);
+                if (c.length > 0) {
+                    for (let j = 0; j < c.length; j++) {
+                        positions.push(i);
+                        cleanText += c[j];
+                    }
+                }
             }
             
-            // للكلمات الطويلة (4+ أحرف) → البحث الجزئي كالمعتاد
-            return cleanText.includes(cleanKeyword);
+            const isShortKeyword = cleanKeyword.length <= 3;
+            
+            let idx = cleanText.indexOf(cleanKeyword);
+            while (idx !== -1) {
+                if (isShortKeyword) {
+                    // فحص حدود الكلمة: الحرف قبل وبعد يجب ألا يكون عربياً
+                    const before = idx === 0 ? '' : cleanText[idx - 1];
+                    const afterIdx = idx + cleanKeyword.length;
+                    const after = afterIdx >= cleanText.length ? '' : cleanText[afterIdx];
+                    
+                    if (!isArabicLetter(before) && !isArabicLetter(after)) {
+                        return { start: positions[idx], end: positions[idx + cleanKeyword.length - 1] + 1 };
+                    }
+                } else {
+                    return { start: positions[idx], end: positions[idx + cleanKeyword.length - 1] + 1 };
+                }
+                idx = cleanText.indexOf(cleanKeyword, idx + 1);
+            }
+            return null;
+        }
+
+        // ✅ فحص مطابقة البحث
+        function searchMatch(text, keyword) {
+            if (!keyword) return true;
+            return findKeywordPosition(text, keyword) !== null;
+        }
+
+        // ✅ إبراز الكلمة في النص
+        function highlight(text, keyword) {
+            if (!keyword || !text) return text;
+            const match = findKeywordPosition(text, keyword);
+            if (!match) return text;
+            return text.substring(0, match.start) + '<mark>' + text.substring(match.start, match.end) + '</mark>' + text.substring(match.end);
+        }
+
+        // ✅ البحث عن سورة بالاسم
+        function findSurahByName(keyword) {
+            if (!keyword) return null;
+            const cleanKeyword = normalizeSearch(keyword);
+            if (!cleanKeyword || cleanKeyword.length < 2) return null;
+            
+            // تطابق دقيق أولاً
+            for (let i = 0; i < SURAH_NAMES.length; i++) {
+                if (normalizeSearch(SURAH_NAMES[i]) === cleanKeyword) return i + 1;
+            }
+            return null;
         }
 
         function populateSurahSelect() {
@@ -921,7 +1004,7 @@
             return results;
         }
 
-        // ✅ البحث المعدّل: عند اختيار آية، اعرض السورة كاملة
+        // ✅ البحث المعدّل: يعرض اقتراح السورة + البحث بالكلمة الكاملة
         function performSearch() {
             currentKeyword = document.getElementById('searchInput').value.trim();
             currentSource = document.getElementById('sourceSelect').value;
@@ -940,6 +1023,29 @@
                 currentPage = 1;
             }
             renderResults();
+        }
+
+        // ✅ عرض اقتراح السورة
+        function renderSurahSuggestion() {
+            const container = document.getElementById('surahSuggestionContainer');
+            container.innerHTML = '';
+            
+            if (currentSource !== 'quran' || !currentKeyword || currentSurah !== 'all') return;
+            
+            const surahNum = findSurahByName(currentKeyword);
+            if (!surahNum) return;
+            
+            const sName = SURAH_NAMES[surahNum - 1];
+            container.innerHTML = `
+                <div class="surah-suggestion">
+                    <span class="surah-suggestion-text">
+                        📖 هل تريد عرض <strong>سورة ${sName}</strong> كاملة؟
+                    </span>
+                    <button onclick="jumpToSurah(${surahNum})">
+                        ⚡ عرض السورة
+                    </button>
+                </div>
+            `;
         }
 
         function renderResults() {
@@ -970,8 +1076,11 @@
             const paginated = items.slice((currentPage - 1) * perPage, currentPage * perPage);
             infoEl.textContent = `📊 ${items.length} نتيجة | صفحة ${currentPage}/${totalPages}`;
 
+            // ✅ عرض اقتراح السورة
+            renderSurahSuggestion();
+
             if (paginated.length === 0) {
-                container.innerHTML = '<div class="empty-msg">📭 لا توجد نتائج</div>';
+                container.innerHTML = '<div class="empty-msg">📭 لا توجد نتائج مطابقة</div>';
                 paginationEl.innerHTML = '';
                 setTimeout(updateJumpBtnText, 100);
                 return;
@@ -1065,22 +1174,6 @@
             }
 
             setTimeout(updateJumpBtnText, 100);
-        }
-
-        function highlight(text, keyword) {
-            if (!keyword || !text) return text;
-            const ck = removeTashkeel(keyword);
-            if (!ck) return text;
-            const positions = [];
-            let cleanText = '';
-            for (let i = 0; i < text.length; i++) {
-                const c = removeTashkeel(text[i]);
-                if (c.length > 0) for (let j = 0; j < c.length; j++) { positions.push(i); cleanText += c[j]; }
-            }
-            const index = cleanText.indexOf(ck);
-            if (index === -1) return text;
-            const s = positions[index], e = positions[index + ck.length - 1] + 1;
-            return text.substring(0, s) + '<mark>' + text.substring(s, e) + '</mark>' + text.substring(e);
         }
 
         function openAbout() { document.getElementById('aboutOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
@@ -1241,7 +1334,6 @@
         document.getElementById('sourceSelect').addEventListener('change', performSearch);
         document.getElementById('surahSelect').addEventListener('change', (e) => {
             updateAyahDropdown(e.target.value, 'all');
-            // امسح حقل البحث عند تغيير السورة
             document.getElementById('searchInput').value = '';
             performSearch();
         });
@@ -1265,7 +1357,4 @@
             document.getElementById('darkModeBtn').textContent = '☀️ نهاري';
         }
 
-        setTimeout(updateJumpBtnText, 500);
-    </script>
-</body>
-</html>
+        setTimeout(updateJumpBtnText
