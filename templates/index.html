@@ -26,39 +26,15 @@
             --container-bg-1: #1f1c17; --container-bg-2: #2a2519; --input-bg: #2a2620;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(184, 134, 11, 0.06) 0%, transparent 50%),
-                linear-gradient(135deg, var(--parchment-1) 0%, var(--parchment-2) 50%, var(--parchment-3) 100%);
-            background-attachment: fixed; color: var(--ink-primary);
-            min-height: 100vh; padding: 20px; line-height: 1.8;
-            transition: background 0.4s, color 0.4s;
-        }
-        body::before {
-            content: ''; position: fixed; inset: 0;
-            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 109, 66, 0.03) 2px, rgba(139, 109, 66, 0.03) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139, 109, 66, 0.03) 2px, rgba(139, 109, 66, 0.03) 4px);
-            pointer-events: none; z-index: 0;
-        }
+        body { font-family: 'Cairo', sans-serif; background: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(184, 134, 11, 0.06) 0%, transparent 50%), linear-gradient(135deg, var(--parchment-1) 0%, var(--parchment-2) 50%, var(--parchment-3) 100%); background-attachment: fixed; color: var(--ink-primary); min-height: 100vh; padding: 20px; line-height: 1.8; transition: background 0.4s, color 0.4s; }
+        body::before { content: ''; position: fixed; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 109, 66, 0.03) 2px, rgba(139, 109, 66, 0.03) 4px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139, 109, 66, 0.03) 2px, rgba(139, 109, 66, 0.03) 4px); pointer-events: none; z-index: 0; }
         body.dark-mode::before { opacity: 0.3; }
-        .container {
-            position: relative; z-index: 1; max-width: 950px; margin: 0 auto;
-            background: linear-gradient(180deg, var(--container-bg-1) 0%, var(--container-bg-2) 100%);
-            border: 3px double var(--border-color); border-radius: 12px;
-            padding: 30px 28px; box-shadow: 0 0 0 1px rgba(184, 134, 11, 0.2), 0 10px 40px var(--shadow);
-        }
+        .container { position: relative; z-index: 1; max-width: 950px; margin: 0 auto; background: linear-gradient(180deg, var(--container-bg-1) 0%, var(--container-bg-2) 100%); border: 3px double var(--border-color); border-radius: 12px; padding: 30px 28px; box-shadow: 0 0 0 1px rgba(184, 134, 11, 0.2), 0 10px 40px var(--shadow); }
         h1 { font-family: 'Amiri', serif; font-size: 2.4rem; text-align: center; color: var(--ink-primary); margin-bottom: 8px; text-shadow: 1px 1px 0 var(--parchment-dark); }
         h1::before, h1::after { content: '❁'; color: var(--gold); margin: 0 12px; font-size: 1.6rem; vertical-align: middle; }
         .subtitle { text-align: center; color: var(--ink-secondary); font-size: 1rem; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); font-style: italic; }
         .top-buttons { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
-        .about-btn {
-            padding: 8px 16px; background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
-            color: #FFF8DC; border: 1px solid #8B6508; border-radius: 20px;
-            font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.9rem;
-            cursor: pointer; text-shadow: 1px 1px 0 rgba(0,0,0,0.2); transition: 0.2s;
-            box-shadow: 0 2px 6px rgba(184, 134, 11, 0.3);
-        }
+        .about-btn { padding: 8px 16px; background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%); color: #FFF8DC; border: 1px solid #8B6508; border-radius: 20px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; text-shadow: 1px 1px 0 rgba(0,0,0,0.2); transition: 0.2s; box-shadow: 0 2px 6px rgba(184, 134, 11, 0.3); }
         .about-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(184, 134, 11, 0.4); }
         .about-btn.sync { background: linear-gradient(180deg,#38bdf8,#0284c7); border-color:#075985; }
         .about-btn.dark { background: linear-gradient(180deg,#6b7280,#374151); border-color:#1f2937; }
@@ -66,55 +42,28 @@
         .about-btn.bm-color { background: linear-gradient(180deg,#f59e0b,#b45309); border-color:#78350f; }
         .about-btn.my-bm { background: linear-gradient(180deg,#a78bfa,#7c3aed); border-color:#5b21b6; }
         .about-btn.help { background: linear-gradient(180deg,#10b981,#047857); border-color:#065f46; }
-
-        .progress-wrap {
-            background: var(--input-bg); border: 1px solid var(--border-color);
-            border-radius: 20px; padding: 12px 18px 36px 18px; margin-bottom: 20px;
-            display: flex; align-items: flex-start; gap: 12px; position: relative;
-        }
+        .progress-wrap { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 12px 18px 36px 18px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 12px; position: relative; }
         .progress-label { font-size: 0.85rem; font-weight: 700; color: var(--ink-primary); white-space: nowrap; padding-top: 12px; }
-        .progress-bar {
-            flex: 1; height: 18px; background: rgba(0,0,0,0.08);
-            border-radius: 10px; border: 1px solid var(--border-color);
-            position: relative; direction: ltr; margin-top: 10px;
-        }
+        .progress-bar { flex: 1; height: 18px; background: rgba(0,0,0,0.08); border-radius: 10px; border: 1px solid var(--border-color); position: relative; direction: ltr; margin-top: 10px; }
         body.dark-mode .progress-bar { background: rgba(255,255,255,0.08); }
-        .progress-fill {
-            height: 100%; background: linear-gradient(90deg, var(--bookmark-color) 0%, var(--gold) 100%);
-            width: 0%; transition: width 0.5s ease; border-radius: 10px; position: relative; z-index: 1;
-        }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--bookmark-color) 0%, var(--gold) 100%); width: 0%; transition: width 0.5s ease; border-radius: 10px; position: relative; z-index: 1; }
         .progress-percent { font-size: 0.9rem; font-weight: 700; color: var(--bookmark-dark); min-width: 50px; text-align: left; padding-top: 12px; transition: color 0.3s; cursor: help; }
         body.dark-mode .progress-percent { color: var(--gold-light); }
-
         .milestone { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink-secondary); border-radius: 2px; z-index: 3; transform: translateX(-50%); transition: all 0.3s; opacity: 0.5; }
         .milestone.reached { background: #16a34a; box-shadow: 0 0 8px rgba(22, 163, 74, 0.8); width: 3px; opacity: 1; }
         .milestone[data-pct="100"] { background: var(--gold); width: 3px; opacity: 0.8; }
-        .milestone[data-pct="100"].reached { background: #d4a100; box-shadow: 0 0 14px #d4a100, 0 0 24px rgba(212, 161, 0, 0.5); width: 4px; opacity: 1; animation: goldenPulse 2s ease-in-out infinite; }
-        @keyframes goldenPulse {
-            0%, 100% { box-shadow: 0 0 8px #d4a100; transform: translateX(-50%) scale(1); }
-            50% { box-shadow: 0 0 20px #d4a100, 0 0 30px rgba(212, 161, 0, 0.6); transform: translateX(-50%) scale(1.3); }
-        }
-        .milestone-label {
-            position: absolute; top: 24px; transform: translateX(-50%);
-            font-size: 0.7rem; font-weight: 700; color: var(--ink-secondary); white-space: nowrap;
-            z-index: 4; transition: color 0.3s; padding: 2px 6px;
-            background: var(--input-bg); border-radius: 6px; border: 1px solid transparent; opacity: 0.7;
-        }
+        .milestone[data-pct="100"].reached { background: #d4a100; box-shadow: 0 0 14px #d4a100; width: 4px; opacity: 1; animation: goldenPulse 2s ease-in-out infinite; }
+        @keyframes goldenPulse { 0%, 100% { box-shadow: 0 0 8px #d4a100; transform: translateX(-50%) scale(1); } 50% { box-shadow: 0 0 20px #d4a100, 0 0 30px rgba(212, 161, 0, 0.6); transform: translateX(-50%) scale(1.3); } }
+        .milestone-label { position: absolute; top: 24px; transform: translateX(-50%); font-size: 0.7rem; font-weight: 700; color: var(--ink-secondary); white-space: nowrap; z-index: 4; transition: color 0.3s; padding: 2px 6px; background: var(--input-bg); border-radius: 6px; border: 1px solid transparent; opacity: 0.7; }
         .milestone-label.reached { color: #16a34a; border-color: rgba(22, 163, 74, 0.3); opacity: 1; }
         .milestone-label[data-pct="100"] { color: var(--gold); opacity: 0.85; }
         .milestone-label[data-pct="100"].reached { color: #d4a100; border-color: rgba(212, 161, 0, 0.4); background: rgba(212, 161, 0, 0.1); opacity: 1; }
-
         .bookmark-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 18px; background: linear-gradient(180deg, var(--bookmark-color) 0%, var(--bookmark-dark) 100%); border: 2px solid #3D1F08; border-radius: 10px; margin-bottom: 15px; flex-wrap: wrap; box-shadow: 0 4px 12px rgba(92, 46, 14, 0.4); }
         .bookmark-info { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #FFFFFF; flex: 1; min-width: 200px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); flex-wrap: wrap; }
         .bookmark-info .ribbon-icon { font-size: 1.3rem; }
         .bookmark-info strong { color: #FFD98A; }
         .bookmark-info #bookmarkLocation { font-weight: 700; color: #FFFFFF; }
-        .bookmark-info #hereMsg {
-            display: none; background: #16a34a; color: white;
-            padding: 2px 10px; border-radius: 10px;
-            font-size: 0.75rem; font-weight: 700;
-            animation: pulse 2s ease-in-out infinite;
-        }
+        .bookmark-info #hereMsg { display: none; background: #16a34a; color: white; padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; animation: pulse 2s ease-in-out infinite; }
         .bookmark-actions { display: flex; gap: 8px; flex-wrap: wrap; }
         .bookmark-jump-btn, .bookmark-clear-btn { padding: 8px 14px; border-radius: 8px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; border: none; }
         .bookmark-jump-btn { background: linear-gradient(180deg, #E8A317 0%, #B8860B 100%); color: white; }
@@ -122,17 +71,14 @@
         .bookmark-jump-btn.at-location { background: linear-gradient(180deg, #16a34a 0%, #15803d 100%) !important; box-shadow: 0 0 0 2px rgba(255,255,255,0.3); animation: pulse 2s ease-in-out infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
         .bookmark-clear-btn { background: rgba(220, 38, 38, 0.85); color: white; border: 1px solid #fca5a5; }
-
         .search-box { display: flex; flex-wrap: wrap; gap: 10px; background: var(--input-bg); padding: 15px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 15px; }
         .search-box input, .search-box select { flex: 1; min-width: 120px; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--ink-primary); font-family: 'Cairo', sans-serif; font-size: 1rem; outline: none; }
         .search-box input:focus, .search-box select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.15); }
         .search-box button { padding: 12px 28px; background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%); color: #FFF8DC; border: 1px solid #8B6508; border-radius: 8px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; }
-
         .tafsir-toggle-bar { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 18px; background: var(--input-bg); border: 1px dashed var(--border-color); border-radius: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         .tafsir-toggle-bar label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: var(--ink-primary); font-size: 0.95rem; padding: 6px 14px; border-radius: 20px; }
         .tafsir-toggle-bar input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--gold); }
         .toggle-hint { font-size: 0.85rem; color: var(--ink-secondary); font-style: italic; }
-
         .results-info { text-align: center; color: var(--ink-secondary); font-size: 0.95rem; margin-bottom: 20px; padding: 8px; background: var(--input-bg); border-radius: 6px; border: 1px dashed var(--border-color); }
         
         /* ✅ بطاقة اقتراح السورة */
@@ -144,49 +90,56 @@
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
             animation: suggestionIn 0.5s ease;
         }
-        @keyframes suggestionIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .surah-suggestion-text {
-            font-family: 'Cairo', sans-serif; font-size: 1rem; font-weight: 700;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
-        .surah-suggestion button {
-            padding: 10px 20px; background: white; color: #047857;
-            border: none; border-radius: 8px; font-family: 'Cairo', sans-serif;
-            font-weight: 700; font-size: 0.95rem; cursor: pointer;
-            transition: 0.2s; white-space: nowrap;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-        }
+        @keyframes suggestionIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .surah-suggestion-text { font-family: 'Cairo', sans-serif; font-size: 1rem; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        .surah-suggestion button { padding: 10px 20px; background: white; color: #047857; border: none; border-radius: 8px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 0.2s; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
         .surah-suggestion button:hover { transform: scale(1.05); background: #f0fdf4; }
+
+        /* ✅ بطاقة عرض السياق */
+        .context-hint {
+            background: linear-gradient(180deg, rgba(59,130,246,0.12), rgba(37,99,235,0.08));
+            border: 2px dashed #3b82f6;
+            border-radius: 10px; padding: 12px 18px;
+            margin-bottom: 15px; display: flex; align-items: center;
+            justify-content: space-between; gap: 12px; flex-wrap: wrap;
+            color: #1e40af;
+        }
+        body.dark-mode .context-hint { color: #60a5fa; }
+        .context-hint-text { font-family: 'Cairo', sans-serif; font-size: 0.9rem; font-weight: 700; flex: 1; }
+        .context-hint button {
+            padding: 8px 16px; background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+            color: white; border: none; border-radius: 8px;
+            font-family: 'Cairo', sans-serif; font-weight: 700;
+            font-size: 0.9rem; cursor: pointer; transition: 0.2s;
+            white-space: nowrap; box-shadow: 0 2px 6px rgba(59,130,246,0.4);
+        }
+        .context-hint button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.5); }
+
+        /* ✅ زر عرض السياق على كل آية */
+        .show-context-btn {
+            background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white; border: none; border-radius: 20px;
+            padding: 4px 12px; font-family: 'Cairo', sans-serif;
+            font-weight: 700; font-size: 0.75rem; cursor: pointer;
+            box-shadow: 0 2px 6px rgba(59,130,246,0.4);
+            transition: 0.2s; display: inline-flex; align-items: center; gap: 4px;
+            white-space: nowrap;
+        }
+        .show-context-btn:hover { transform: translateY(-1px) scale(1.05); box-shadow: 0 4px 10px rgba(59,130,246,0.5); }
 
         .ayah-card { background: linear-gradient(180deg, var(--card-bg-1) 0%, var(--card-bg-2) 100%); border: 1px solid var(--border-color); border-right: 5px solid var(--gold); border-radius: 10px; padding: 20px 22px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(74, 55, 40, 0.08); position: relative; transition: all 0.3s ease; }
         .ayah-card::before { content: '۞'; position: absolute; top: 8px; left: 12px; color: var(--gold); font-size: 1.4rem; opacity: 0.5; }
         .ayah-card.bookmarked { background: var(--highlight-bg); border-right-color: var(--bookmark-color); box-shadow: 0 0 0 3px rgba(232, 163, 23, 0.35), 0 6px 20px rgba(232, 163, 23, 0.3); }
-        .ayah-card.focused {
-            box-shadow: 0 0 0 5px #f59e0b, 0 8px 30px rgba(245, 158, 11, 0.6) !important;
-            transform: scale(1.02);
-            animation: focusPulse 0.8s ease-in-out 3;
-            border-right-color: #f59e0b !important;
-        }
-        @keyframes focusPulse {
-            0%, 100% { box-shadow: 0 0 0 5px #f59e0b, 0 8px 30px rgba(245, 158, 11, 0.6); }
-            50% { box-shadow: 0 0 0 8px #d97706, 0 8px 40px rgba(217, 119, 6, 0.8); }
-        }
+        .ayah-card.focused { box-shadow: 0 0 0 5px #f59e0b, 0 8px 30px rgba(245, 158, 11, 0.6) !important; transform: scale(1.02); animation: focusPulse 0.8s ease-in-out 3; border-right-color: #f59e0b !important; }
+        @keyframes focusPulse { 0%, 100% { box-shadow: 0 0 0 5px #f59e0b, 0 8px 30px rgba(245, 158, 11, 0.6); } 50% { box-shadow: 0 0 0 8px #d97706, 0 8px 40px rgba(217, 119, 6, 0.8); } }
         .bookmark-ribbon { position: absolute; top: -12px; left: 20px; background: linear-gradient(180deg, var(--bookmark-color) 0%, var(--bookmark-dark) 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 3px 8px rgba(92, 46, 14, 0.5); z-index: 2; white-space: nowrap; }
         .special-ribbon { position: absolute; top: -12px; right: 20px; background: linear-gradient(180deg, var(--special-color) 0%, var(--special-dark) 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 3px 8px rgba(124, 58, 237, 0.5); z-index: 2; white-space: nowrap; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
         .ayah-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--parchment-dark); flex-wrap: wrap; gap: 8px; }
         .ayah-header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .ayah-ref { background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%); color: #FFF8DC; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
         .ayah-type { font-size: 0.8rem; color: var(--ink-secondary); background: rgba(201, 178, 130, 0.3); padding: 3px 12px; border-radius: 12px; border: 1px solid var(--parchment-dark); }
-        .ayah-btns { display: flex; gap: 6px; }
-        .bookmark-btn, .special-btn {
-            background: rgba(255, 248, 220, 0.7); border: 1px solid var(--border-color);
-            color: var(--ink-secondary); width: 36px; height: 36px; border-radius: 50%;
-            cursor: pointer; font-size: 1.1rem; display: flex; align-items: center;
-            justify-content: center; transition: all 0.25s; padding: 0; line-height: 1;
-        }
+        .ayah-btns { display: flex; gap: 6px; align-items: center; }
+        .bookmark-btn, .special-btn { background: rgba(255, 248, 220, 0.7); border: 1px solid var(--border-color); color: var(--ink-secondary); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: all 0.25s; padding: 0; line-height: 1; }
         .bookmark-btn:hover, .special-btn:hover { transform: scale(1.1); }
         .bookmark-btn.active { background: linear-gradient(180deg, var(--bookmark-color) 0%, var(--bookmark-dark) 100%); border-color: #3D1F08; color: white; transform: scale(1.05); }
         .special-btn.has-special { background: linear-gradient(180deg, var(--special-color) 0%, var(--special-dark) 100%); border-color: var(--special-dark); color: white; transform: scale(1.05); }
@@ -203,7 +156,6 @@
         .footer-ornament { text-align: center; margin-top: 30px; color: var(--gold); font-size: 1.4rem; letter-spacing: 8px; opacity: 0.6; }
         .tafsir-count { display: inline-block; background: rgba(184, 134, 11, 0.15); color: var(--gold); padding: 2px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; border: 1px solid var(--gold); }
         .loading-msg { text-align: center; padding: 30px; color: var(--ink-secondary); font-size: 1rem; }
-
         .about-overlay { display: none; position: fixed; inset: 0; background: rgba(74, 55, 40, 0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; animation: fadeIn 0.3s ease; }
         .about-overlay.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -220,7 +172,6 @@
         .about-footer { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); color: var(--ink-secondary); font-size: 0.9rem; line-height: 1.8; }
         .about-close { position: absolute; top: 12px; left: 12px; width: 34px; height: 34px; border-radius: 50%; background: rgba(184, 134, 11, 0.15); border: 1px solid var(--border-color); color: var(--ink-primary); font-size: 1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; z-index: 5; }
         .about-close:hover { background: rgba(220, 38, 38, 0.15); color: #b91c1c; transform: rotate(90deg); }
-
         .help-modal { max-width: 720px !important; }
         .help-step { display: flex; gap: 14px; padding: 14px 16px; background: var(--input-bg); border-radius: 10px; margin-bottom: 12px; border-right: 4px solid var(--gold); transition: 0.2s; }
         .help-step:hover { transform: translateX(-3px); box-shadow: 0 4px 12px rgba(184,134,11,0.15); }
@@ -233,7 +184,6 @@
         .help-tip { background: rgba(16, 185, 129, 0.1); border: 1px dashed #10b981; border-radius: 8px; padding: 12px 16px; margin: 12px 0; color: #065f46; font-size: 0.9rem; line-height: 1.8; }
         body.dark-mode .help-tip { color: #34d399; }
         .help-tip strong { color: #047857; }
-
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998; }
         .sidebar-overlay.active { display: block; }
         .sidebar { position: fixed; top: 0; right: -320px; width: 300px; height: 100vh; background: linear-gradient(180deg, var(--container-bg-1) 0%, var(--container-bg-2) 100%); border-left: 3px double var(--border-color); padding: 20px 15px; overflow-y: auto; z-index: 9999; transition: right 0.3s ease; box-shadow: -5px 0 20px rgba(0,0,0,0.3); }
@@ -243,13 +193,11 @@
         .surah-nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 5px; cursor: pointer; transition: 0.2s; color: var(--ink-primary); font-weight: 600; font-size: 0.9rem; }
         .surah-nav-item:hover { background: var(--highlight-bg); border-color: var(--gold); transform: translateX(-5px); }
         .surah-nav-item .num { background: var(--gold); color: #FFF8DC; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
-
         .color-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
         .color-option { width: 100%; aspect-ratio: 1; border-radius: 10px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; position: relative; }
         .color-option:hover { transform: scale(1.1); }
         .color-option.selected { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,134,11,0.4); transform: scale(1.05); }
         .color-option.selected::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.5rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.7); }
-
         .bm-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; border-right: 4px solid var(--special-color); }
         .bm-item-info { flex: 1; color: var(--ink-primary); font-size: 0.9rem; }
         .bm-item-label { font-weight: 700; color: var(--special-color); font-size: 0.9rem; }
@@ -258,37 +206,29 @@
         .bm-jump { background: var(--gold); color: white; }
         .bm-edit { background: #2563eb; color: white; }
         .bm-del { background: rgba(220,38,38,0.85); color: white; }
-
         .label-input-wrap { padding: 15px; background: var(--input-bg); border: 2px solid var(--special-color); border-radius: 10px; margin-bottom: 15px; }
         .label-input-wrap input { width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--ink-primary); font-family: 'Cairo', sans-serif; font-size: 1rem; margin-bottom: 10px; }
         .label-buttons { display: flex; gap: 8px; }
         .label-buttons button { flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.9rem; }
         .label-save { background: var(--special-color); color: white; }
         .label-cancel { background: rgba(107,114,128,0.3); color: var(--ink-primary); }
-
         .quick-labels { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
         .quick-labels button { padding: 5px 12px; background: rgba(124, 58, 237, 0.1); border: 1px solid var(--special-color); color: var(--special-color); border-radius: 20px; font-family: 'Cairo', sans-serif; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
         .quick-labels button:hover { background: var(--special-color); color: white; }
-
         .sync-badge { display: inline-block; background: rgba(34,197,94,0.15); color: #16a34a; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-right: 6px; }
-
         @media (max-width: 600px) {
-            h1 { font-size: 1.7rem; }
-            h1::before, h1::after { margin: 0 6px; font-size: 1.2rem; }
+            h1 { font-size: 1.7rem; } h1::before, h1::after { margin: 0 6px; font-size: 1.2rem; }
             .ayah-text { font-size: 1.25rem; line-height: 2.1; }
             .container { padding: 20px 14px; }
-            .search-box { flex-direction: column; }
-            .search-box input, .search-box select, .search-box button { width: 100%; }
-            .bookmark-bar { flex-direction: column; align-items: stretch; }
-            .bookmark-actions { justify-content: center; }
+            .search-box { flex-direction: column; } .search-box input, .search-box select, .search-box button { width: 100%; }
+            .bookmark-bar { flex-direction: column; align-items: stretch; } .bookmark-actions { justify-content: center; }
             .about-btn { font-size: 0.8rem; padding: 7px 12px; }
             .color-grid { grid-template-columns: repeat(4, 1fr); }
             .progress-wrap { padding: 10px 12px 34px 12px; gap: 6px; }
-            .progress-label { font-size: 0.75rem; }
-            .progress-percent { font-size: 0.8rem; min-width: 42px; }
+            .progress-label { font-size: 0.75rem; } .progress-percent { font-size: 0.8rem; min-width: 42px; }
             .milestone-label { font-size: 0.6rem; padding: 1px 4px; }
-            .help-step { flex-direction: column; text-align: center; }
-            .help-step-icon { margin: 0 auto; }
+            .help-step { flex-direction: column; text-align: center; } .help-step-icon { margin: 0 auto; }
+            .show-context-btn { font-size: 0.7rem; padding: 3px 10px; }
         }
     </style>
 </head>
@@ -373,23 +313,24 @@
             <button class="about-close" onclick="closeHelp()">✖</button>
             <h2>📖 طريقة الاستخدام</h2>
             <p class="about-intro">دليل شامل لاستخدام جميع ميزات التطبيق</p>
-            <div class="help-tip">💡 <strong>نصيحة:</strong> التطبيق يعمل على الكمبيوتر، الهاتف، والآيباد بنفس الطريقة.</div>
+            <div class="help-tip">💡 <strong>نصيحة:</strong> عند البحث، اضغط زر <code>📖 عرض</code> على أي آية لعرض السورة كاملة من عند تلك الآية.</div>
             <h3 class="help-section-title">🌟 الاستخدام الأساسي</h3>
-            <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">1. قراءة القرآن</div><div class="help-step-desc">اختر السورة، ثم اضغط <code>بحث</code>. عند اختيار آية معينة، ستُعرض <strong>السورة كاملة</strong> مع تمرير وإبراز الآية.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">🔖</div><div class="help-step-content"><div class="help-step-title">2. حفظ موضع القراءة</div><div class="help-step-desc">اضغط <code>🔖</code> على أي آية. للعودة اضغط <code>📖 العلامة المحفوظة</code>.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">📌</div><div class="help-step-content"><div class="help-step-title">3. علامة خاصة</div><div class="help-step-desc">اضغط <code>📌</code> وأدخل اسماً. عدد غير محدود من العلامات!</div></div></div>
-            <div class="help-step"><div class="help-step-icon">📋</div><div class="help-step-content"><div class="help-step-title">4. عرض علاماتي</div><div class="help-step-desc">اضغط <code>📌 علاماتي</code> للانتقال/التعديل/الحذف.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">1. قراءة القرآن</div><div class="help-step-desc">اختر السورة واضغط <code>بحث</code>. عند اختيار آية معينة، ستُعرض السورة كاملة مع تمرير وإبراز الآية.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">2. زر "عرض" السورة</div><div class="help-step-desc">عند البحث، يظهر زر <code>📖 عرض</code> على كل آية. اضغطه لعرض السورة كاملة من عند تلك الآية والاستمرار في القراءة.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🔖</div><div class="help-step-content"><div class="help-step-title">3. حفظ موضع القراءة</div><div class="help-step-desc">اضغط <code>🔖</code> على أي آية. للعودة اضغط <code>📖 العلامة المحفوظة</code>.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📌</div><div class="help-step-content"><div class="help-step-title">4. علامة خاصة</div><div class="help-step-desc">اضغط <code>📌</code> وأدخل اسماً. عدد غير محدود!</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📋</div><div class="help-step-content"><div class="help-step-title">5. عرض علاماتي</div><div class="help-step-desc">اضغط <code>📌 علاماتي</code> للانتقال/التعديل/الحذف.</div></div></div>
             <h3 class="help-section-title">☁️ المزامنة</h3>
-            <div class="help-step"><div class="help-step-icon">🔄</div><div class="help-step-content"><div class="help-step-title">5. مزامنة الأجهزة</div><div class="help-step-desc">انسخ الرمز من <code>🔄 مزامنة</code> وضعه في أجهزتك.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🔄</div><div class="help-step-content"><div class="help-step-title">6. مزامنة الأجهزة</div><div class="help-step-desc">انسخ الرمز من <code>🔄 مزامنة</code> وضعه في أجهزتك.</div></div></div>
             <h3 class="help-section-title">🎨 التخصيص</h3>
-            <div class="help-step"><div class="help-step-icon">🎨</div><div class="help-step-content"><div class="help-step-title">6. لون العلامة</div><div class="help-step-desc"><code>🎨 لون</code> لتغيير اللون.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">🌙</div><div class="help-step-content"><div class="help-step-title">7. الوضع الليلي</div><div class="help-step-desc"><code>🌙 ليلي</code> للتبديل.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🎨</div><div class="help-step-content"><div class="help-step-title">7. لون العلامة</div><div class="help-step-desc"><code>🎨 لون</code> لتغيير اللون.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🌙</div><div class="help-step-content"><div class="help-step-title">8. الوضع الليلي</div><div class="help-step-desc"><code>🌙 ليلي</code> للتبديل.</div></div></div>
             <h3 class="help-section-title">⚡ التنقل والتقدم</h3>
-            <div class="help-step"><div class="help-step-icon">⚡</div><div class="help-step-content"><div class="help-step-title">8. الانتقال السريع</div><div class="help-step-desc"><code>⚡ السور</code> لفتح قائمة السور.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">📊</div><div class="help-step-content"><div class="help-step-title">9. شريط التقدم</div><div class="help-step-desc">النسبة بالآيات: ربع (1559)، نصف (3118)، ٣/٤ (4677)، ختم (6236).</div></div></div>
+            <div class="help-step"><div class="help-step-icon">⚡</div><div class="help-step-content"><div class="help-step-title">9. الانتقال السريع</div><div class="help-step-desc"><code>⚡ السور</code> لفتح قائمة السور.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📊</div><div class="help-step-content"><div class="help-step-title">10. شريط التقدم</div><div class="help-step-desc">النسبة بالآيات: ربع (1559)، نصف (3118)، ٣/٤ (4677)، ختم (6236).</div></div></div>
             <h3 class="help-section-title">🔍 البحث والتفاسير</h3>
-            <div class="help-step"><div class="help-step-icon">🔍</div><div class="help-step-content"><div class="help-step-title">10. البحث الذكي</div><div class="help-step-desc">الكلمات القصيرة (3 أحرف أو أقل) تُبحث ككلمة كاملة فقط. الكلمات الطويلة جزئياً. يتجاهل التشكيل.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">📚</div><div class="help-step-content"><div class="help-step-title">11. التفاسير</div><div class="help-step-desc">فعّل <code>📚 إظهار التفاسير</code>.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🔍</div><div class="help-step-content"><div class="help-step-title">11. البحث الذكي</div><div class="help-step-desc">الكلمات القصيرة (3 أحرف أو أقل) تُبحث ككلمة كاملة. الكلمات الطويلة جزئياً. يتجاهل التشكيل.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📚</div><div class="help-step-content"><div class="help-step-title">12. التفاسير</div><div class="help-step-desc">فعّل <code>📚 إظهار التفاسير</code>.</div></div></div>
             <h3 class="help-section-title">🤲 دعاء</h3>
             <p class="about-dua">اللهم اجعل هذا العمل خالصاً لوجهك الكريم،<br>وانفع به المسلمين.</p>
         </div>
@@ -406,12 +347,12 @@
                 <li>📖 القرآن الكريم كاملاً (6236 آية)</li>
                 <li>📗 تفسير السعدي + 📘 تفسير ابن كثير</li>
                 <li>🔍 بحث ذكي يتجاهل التشكيل</li>
+                <li>📖 زر "عرض" لعرض السورة من أي آية</li>
                 <li>🔖 علامة "آخر قراءة"</li>
                 <li>📌 علامات خاصة متعددة</li>
                 <li>☁️ مزامنة تلقائية بين الأجهزة</li>
                 <li>📊 شريط تقدم دقيق (بالآيات)</li>
                 <li>🌙 وضع ليلي + 🎨 لون العلامة</li>
-                <li>⚡ انتقال سريع للسور والآيات</li>
             </ul>
             <h3>🤲 دعاء</h3>
             <p class="about-dua">اللهم اجعل هذا العمل خالصاً لوجهك الكريم،<br>وانفع به المسلمين،<br>واجعله صدقة جارية عن روح والدينا ووالديكم.</p>
@@ -424,9 +365,7 @@
             <button class="about-close" onclick="closeSync()">✖</button>
             <h2>🔄 مزامنة الأجهزة</h2>
             <p class="about-intro">اربط أجهزتك — جميع علاماتك ستُزامن تلقائياً</p>
-            <div style="text-align:center; padding:12px; background:rgba(34,197,94,0.15); border:2px solid #16a34a; border-radius:8px; margin-bottom:15px; font-weight:700; color:#15803d;">
-                ✅ المزامنة مُفعّلة على هذا الجهاز
-            </div>
+            <div style="text-align:center; padding:12px; background:rgba(34,197,94,0.15); border:2px solid #16a34a; border-radius:8px; margin-bottom:15px; font-weight:700; color:#15803d;">✅ المزامنة مُفعّلة على هذا الجهاز</div>
             <h3>🔑 رمزك الخاص</h3>
             <p style="font-size:0.9rem;">انسخه وضعه في أجهزتك الأخرى. <strong>لا تشاركه مع أحد.</strong></p>
             <div style="display:flex; gap:8px; margin:10px 0;">
@@ -472,44 +411,29 @@
                 <button class="label-save" onclick="saveLabelBookmark()">✅ حفظ العلامة</button>
                 <button class="label-cancel" onclick="closeLabelDialog()">إلغاء</button>
             </div>
-            <p style="text-align:center; font-size:0.8rem; color:var(--ink-secondary); margin-top:10px;">
-                ☁️ ستُزامن هذه العلامة تلقائياً مع أجهزتك الأخرى
-            </p>
+            <p style="text-align:center; font-size:0.8rem; color:var(--ink-secondary); margin-top:10px;">☁️ ستُزامن هذه العلامة تلقائياً مع أجهزتك الأخرى</p>
         </div>
     </div>
 
     <script>
         const SURAH_NAMES = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 
-        const SURAH_AYAH_COUNTS = [
-            7, 286, 200, 176, 120, 165, 206, 75, 129, 109,
-            123, 111, 43, 52, 99, 128, 111, 110, 98, 135,
-            112, 78, 118, 64, 77, 227, 93, 88, 69, 60,
-            34, 30, 73, 54, 45, 83, 182, 88, 75, 85,
-            54, 53, 89, 59, 37, 35, 38, 29, 18, 45,
-            60, 49, 62, 55, 78, 96, 29, 22, 24, 13,
-            14, 11, 11, 18, 12, 12, 30, 52, 52, 44,
-            28, 28, 20, 56, 40, 31, 50, 40, 46, 42,
-            29, 19, 36, 25, 22, 17, 19, 26, 30, 20,
-            15, 21, 11, 8, 8, 19, 5, 8, 8, 11,
-            11, 8, 3, 9, 5, 4, 7, 3, 6, 3,
-            5, 4, 5, 6
-        ];
+        const SURAH_AYAH_COUNTS = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
         const TOTAL_QURAN_AYAHS = 6236;
 
         const TAFSIR_FILES = [
-            { key: 'saadi',      file: 'tafsir_saadi.json',      label: 'تفسير السعدي',   icon: '📗' },
+            { key: 'saadi', file: 'tafsir_saadi.json', label: 'تفسير السعدي', icon: '📗' },
             { key: 'ibn_kathir', file: 'tafsir_ibn_kathir.json', label: 'تفسير ابن كثير', icon: '📘' }
         ];
 
         const BOOKMARK_COLORS = [
             { name: 'بني محروق', light: '#8B4513', dark: '#5C2E0E' },
-            { name: 'ذهبي',       light: '#D4AF37', dark: '#8B6508' },
+            { name: 'ذهبي', light: '#D4AF37', dark: '#8B6508' },
             { name: 'أخضر زمردي', light: '#059669', dark: '#064e3b' },
             { name: 'أزرق نيلي', light: '#2563eb', dark: '#1e3a8a' },
             { name: 'أحمر قرمزي', light: '#dc2626', dark: '#7f1d1d' },
-            { name: 'بنفسجي',    light: '#7c3aed', dark: '#4c1d95' },
-            { name: 'برتقالي',   light: '#ea580c', dark: '#7c2d12' },
+            { name: 'بنفسجي', light: '#7c3aed', dark: '#4c1d95' },
+            { name: 'برتقالي', light: '#ea580c', dark: '#7c2d12' },
             { name: 'أسود فاحم', light: '#374151', dark: '#111827' }
         ];
 
@@ -549,9 +473,7 @@
 
         function openColorPicker() {
             const grid = document.getElementById('colorGrid');
-            grid.innerHTML = BOOKMARK_COLORS.map((c, i) => `
-                <div class="color-option ${i === bookmarkColorIndex ? 'selected' : ''}" style="background: linear-gradient(180deg, ${c.light}, ${c.dark});" onclick="selectColor(${i})" title="${c.name}"></div>
-            `).join('');
+            grid.innerHTML = BOOKMARK_COLORS.map((c, i) => `<div class="color-option ${i === bookmarkColorIndex ? 'selected' : ''}" style="background: linear-gradient(180deg, ${c.light}, ${c.dark});" onclick="selectColor(${i})" title="${c.name}"></div>`).join('');
             document.getElementById('colorOverlay').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -591,9 +513,7 @@
             if (!confirm('حذف علامة آخر قراءة؟')) return;
             bookmark = null;
             try { localStorage.removeItem('quranBookmark'); } catch (e) {}
-            syncDeleteToServer();
-            updateBookmarkBar();
-            renderResults();
+            syncDeleteToServer(); updateBookmarkBar(); renderResults();
         }
 
         function toggleBookmark(surah, ayah) {
@@ -606,14 +526,11 @@
                 try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) {}
                 syncBookmarkToServer(parseInt(surah), parseInt(ayah));
             }
-            updateBookmarkBar();
-            updateProgress();
-            renderResults();
+            updateBookmarkBar(); updateProgress(); renderResults();
         }
 
         function openLabelDialog(surah, ayah) {
-            pendingSurah = surah;
-            pendingAyah = ayah;
+            pendingSurah = surah; pendingAyah = ayah;
             const sName = SURAH_NAMES[surah - 1] || '؟';
             document.getElementById('labelDialogRef').textContent = `📍 سورة ${sName} - آية ${ayah}`;
             document.getElementById('labelInput').value = '';
@@ -631,18 +548,10 @@
             if (!label) { alert('❌ الرجاء إدخال اسم للعلامة'); return; }
             if (pendingSurah === null || pendingAyah === null) return;
             const existing = allBookmarks.find(b => b.surah === pendingSurah && b.ayah === pendingAyah && b.label === label);
-            if (existing) {
-                if (!confirm('توجد علامة بنفس الاسم على هذه الآية. إضافتها مرة أخرى؟')) return;
-            }
-            allBookmarks.push({
-                id: String(Date.now()) + '_' + Math.random().toString(36).substring(2, 8),
-                label: label, surah: pendingSurah, ayah: pendingAyah, created: Date.now()
-            });
-            saveAllBookmarks();
-            updateProgress();
-            closeLabelDialog();
-            renderResults();
-            alert('✅ تمت إضافة العلامة: ' + label + '\n☁️ جاري مزامنتها مع أجهزتك...');
+            if (existing) { if (!confirm('توجد علامة بنفس الاسم. إضافتها مرة أخرى؟')) return; }
+            allBookmarks.push({ id: String(Date.now()) + '_' + Math.random().toString(36).substring(2, 8), label: label, surah: pendingSurah, ayah: pendingAyah, created: Date.now() });
+            saveAllBookmarks(); updateProgress(); closeLabelDialog(); renderResults();
+            alert('✅ تمت إضافة العلامة: ' + label + '\n☁️ جاري مزامنتها...');
         }
 
         function closeLabelDialog() {
@@ -667,9 +576,7 @@
         function deleteMyBookmark(id) {
             if (!confirm('حذف هذه العلامة؟')) return;
             allBookmarks = allBookmarks.filter(x => String(x.id) !== String(id));
-            saveAllBookmarks();
-            updateProgress();
-            openBookmarksList();
+            saveAllBookmarks(); updateProgress(); openBookmarksList();
         }
 
         function editMyBookmark(id) {
@@ -678,9 +585,7 @@
             const newLabel = prompt('تعديل اسم العلامة:', b.label);
             if (newLabel === null || !newLabel.trim()) return;
             b.label = newLabel.trim();
-            saveAllBookmarks();
-            openBookmarksList();
-            renderResults();
+            saveAllBookmarks(); openBookmarksList(); renderResults();
         }
 
         function openBookmarksList() {
@@ -691,19 +596,7 @@
                 const sorted = [...allBookmarks].sort((a, b) => a.surah - b.surah || a.ayah - b.ayah);
                 container.innerHTML = sorted.map(b => {
                     const sName = SURAH_NAMES[b.surah - 1] || '؟';
-                    return `
-                        <div class="bm-item">
-                            <div class="bm-item-info">
-                                <div class="bm-item-label">📌 ${b.label}</div>
-                                <div style="font-size:0.8rem; color:var(--ink-secondary);">سورة ${sName} - آية ${b.ayah}</div>
-                            </div>
-                            <div class="bm-item-actions">
-                                <button class="bm-jump" onclick="jumpToSpecificBookmark('${b.id}')" title="انتقال">📖</button>
-                                <button class="bm-edit" onclick="editMyBookmark('${b.id}')" title="تعديل">✏️</button>
-                                <button class="bm-del" onclick="deleteMyBookmark('${b.id}')" title="حذف">🗑️</button>
-                            </div>
-                        </div>
-                    `;
+                    return `<div class="bm-item"><div class="bm-item-info"><div class="bm-item-label">📌 ${b.label}</div><div style="font-size:0.8rem; color:var(--ink-secondary);">سورة ${sName} - آية ${b.ayah}</div></div><div class="bm-item-actions"><button class="bm-jump" onclick="jumpToSpecificBookmark('${b.id}')">📖</button><button class="bm-edit" onclick="editMyBookmark('${b.id}')">✏️</button><button class="bm-del" onclick="deleteMyBookmark('${b.id}')">🗑️</button></div></div>`;
                 }).join('');
             }
             document.getElementById('bookmarksOverlay').classList.add('active');
@@ -723,14 +616,8 @@
             const percent = Math.min(100, Math.round((totalAyahsRead / TOTAL_QURAN_AYAHS) * 100));
             document.getElementById('progressFill').style.width = percent + '%';
             const percentEl = document.getElementById('progressPercent');
-            document.querySelectorAll('.milestone').forEach(m => {
-                const pct = parseInt(m.dataset.pct);
-                if (percent >= pct) m.classList.add('reached'); else m.classList.remove('reached');
-            });
-            document.querySelectorAll('.milestone-label').forEach(l => {
-                const pct = parseInt(l.dataset.pct);
-                if (percent >= pct) l.classList.add('reached'); else l.classList.remove('reached');
-            });
+            document.querySelectorAll('.milestone').forEach(m => { const pct = parseInt(m.dataset.pct); if (percent >= pct) m.classList.add('reached'); else m.classList.remove('reached'); });
+            document.querySelectorAll('.milestone-label').forEach(l => { const pct = parseInt(l.dataset.pct); if (percent >= pct) l.classList.add('reached'); else l.classList.remove('reached'); });
             percentEl.title = `قرأت ${totalAyahsRead} آية من أصل ${TOTAL_QURAN_AYAHS} (${percent}%)`;
             if (percent >= 100) { percentEl.textContent = '🏁 ختم'; percentEl.style.color = '#d4a100'; percentEl.style.fontWeight = '900'; }
             else if (percent >= 75) { percentEl.textContent = percent + '%'; percentEl.style.color = '#16a34a'; percentEl.style.fontWeight = '700'; }
@@ -752,23 +639,11 @@
             const hereMsg = document.getElementById('hereMsg');
             if (!btn || !bookmark) { if (hereMsg) hereMsg.style.display = 'none'; return; }
             const el = document.getElementById(`ayah-${bookmark.surah}-${bookmark.ayah}`);
-            if (!el) {
-                btn.textContent = '📖 العلامة المحفوظة';
-                btn.classList.remove('at-location');
-                if (hereMsg) hereMsg.style.display = 'none';
-                return;
-            }
+            if (!el) { btn.textContent = '📖 العلامة المحفوظة'; btn.classList.remove('at-location'); if (hereMsg) hereMsg.style.display = 'none'; return; }
             const rect = el.getBoundingClientRect();
             const inView = rect.top < (window.innerHeight * 0.85) && rect.bottom > (window.innerHeight * 0.15);
-            if (inView) {
-                btn.textContent = '📖 العودة';
-                btn.classList.add('at-location');
-                if (hereMsg) hereMsg.style.display = 'inline-block';
-            } else {
-                btn.textContent = '📖 العلامة المحفوظة';
-                btn.classList.remove('at-location');
-                if (hereMsg) hereMsg.style.display = 'none';
-            }
+            if (inView) { btn.textContent = '📖 العودة'; btn.classList.add('at-location'); if (hereMsg) hereMsg.style.display = 'inline-block'; }
+            else { btn.textContent = '📖 العلامة المحفوظة'; btn.classList.remove('at-location'); if (hereMsg) hereMsg.style.display = 'none'; }
         }
 
         function jumpToBookmark() {
@@ -797,41 +672,25 @@
         }
         function normalizeSearch(text) { return text ? removeTashkeel(text).replace(/\s+/g, ' ').trim() : ''; }
 
-        // ✅ فحص إذا كان الحرف عربياً
-        function isArabicLetter(c) {
-            if (!c) return false;
-            return /[\u0621-\u063A\u0641-\u064A]/.test(c);
-        }
+        function isArabicLetter(c) { if (!c) return false; return /[\u0621-\u063A\u0641-\u064A]/.test(c); }
 
-        // ✅ إيجاد موقع الكلمة في النص (بحدود كلمات للكلمات القصيرة)
         function findKeywordPosition(text, keyword) {
             if (!keyword || !text) return null;
             const cleanKeyword = removeTashkeel(keyword);
             if (!cleanKeyword) return null;
-            
-            // بناء النص النظيف مع خريطة المواقع
             const positions = [];
             let cleanText = '';
             for (let i = 0; i < text.length; i++) {
                 const c = removeTashkeel(text[i]);
-                if (c.length > 0) {
-                    for (let j = 0; j < c.length; j++) {
-                        positions.push(i);
-                        cleanText += c[j];
-                    }
-                }
+                if (c.length > 0) { for (let j = 0; j < c.length; j++) { positions.push(i); cleanText += c[j]; } }
             }
-            
             const isShortKeyword = cleanKeyword.length <= 3;
-            
             let idx = cleanText.indexOf(cleanKeyword);
             while (idx !== -1) {
                 if (isShortKeyword) {
-                    // فحص حدود الكلمة: الحرف قبل وبعد يجب ألا يكون عربياً
                     const before = idx === 0 ? '' : cleanText[idx - 1];
                     const afterIdx = idx + cleanKeyword.length;
                     const after = afterIdx >= cleanText.length ? '' : cleanText[afterIdx];
-                    
                     if (!isArabicLetter(before) && !isArabicLetter(after)) {
                         return { start: positions[idx], end: positions[idx + cleanKeyword.length - 1] + 1 };
                     }
@@ -843,13 +702,8 @@
             return null;
         }
 
-        // ✅ فحص مطابقة البحث
-        function searchMatch(text, keyword) {
-            if (!keyword) return true;
-            return findKeywordPosition(text, keyword) !== null;
-        }
+        function searchMatch(text, keyword) { if (!keyword) return true; return findKeywordPosition(text, keyword) !== null; }
 
-        // ✅ إبراز الكلمة في النص
         function highlight(text, keyword) {
             if (!keyword || !text) return text;
             const match = findKeywordPosition(text, keyword);
@@ -857,15 +711,19 @@
             return text.substring(0, match.start) + '<mark>' + text.substring(match.start, match.end) + '</mark>' + text.substring(match.end);
         }
 
-        // ✅ البحث عن سورة بالاسم
         function findSurahByName(keyword) {
             if (!keyword) return null;
             const cleanKeyword = normalizeSearch(keyword);
             if (!cleanKeyword || cleanKeyword.length < 2) return null;
-            
             // تطابق دقيق أولاً
             for (let i = 0; i < SURAH_NAMES.length; i++) {
                 if (normalizeSearch(SURAH_NAMES[i]) === cleanKeyword) return i + 1;
+            }
+            // تطابق جزئي (سورة تحتوي على الكلمة)
+            if (cleanKeyword.length >= 3) {
+                for (let i = 0; i < SURAH_NAMES.length; i++) {
+                    if (normalizeSearch(SURAH_NAMES[i]).includes(cleanKeyword)) return i + 1;
+                }
             }
             return null;
         }
@@ -874,8 +732,7 @@
             const sel = document.getElementById('surahSelect');
             SURAH_NAMES.forEach((name, i) => {
                 const opt = document.createElement('option');
-                opt.value = i + 1;
-                opt.textContent = `${i + 1}. ${name}`;
+                opt.value = i + 1; opt.textContent = `${i + 1}. ${name}`;
                 sel.appendChild(opt);
             });
         }
@@ -887,20 +744,14 @@
             const s = parseInt(surahNum);
             quranData.filter(a => a.surah === s).forEach(a => {
                 const opt = document.createElement('option');
-                opt.value = a.ayah;
-                opt.textContent = `آية ${a.ayah}`;
+                opt.value = a.ayah; opt.textContent = `آية ${a.ayah}`;
                 ayahSel.appendChild(opt);
             });
             if (keepAyah) ayahSel.value = keepAyah;
         }
 
         function populateSidebar() {
-            document.getElementById('sidebarList').innerHTML = SURAH_NAMES.map((name, i) => `
-                <div class="surah-nav-item" onclick="jumpToSurah(${i + 1})">
-                    <span class="num">${i + 1}</span>
-                    <span>${name}</span>
-                </div>
-            `).join('');
+            document.getElementById('sidebarList').innerHTML = SURAH_NAMES.map((name, i) => `<div class="surah-nav-item" onclick="jumpToSurah(${i + 1})"><span class="num">${i + 1}</span><span>${name}</span></div>`).join('');
         }
 
         function jumpToSurah(num) {
@@ -915,6 +766,24 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // ✅ عرض السورة كاملة من عند آية معينة
+        function showFullSurah(surah, ayah) {
+            focusAyah = ayah;
+            currentSource = 'quran';
+            currentSurah = String(surah);
+            currentAyah = 'all';
+            currentKeyword = '';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('sourceSelect').value = 'quran';
+            document.getElementById('surahSelect').value = surah;
+            updateAyahDropdown(surah, 'all');
+            document.getElementById('ayahSelect').value = 'all';
+            let source = quranData.filter(a => a.surah == surah);
+            const index = source.findIndex(a => a.ayah === ayah);
+            currentPage = index >= 0 ? Math.floor(index / perPage) + 1 : 1;
+            renderResults();
+        }
+
         function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('sidebarOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebarOverlay').classList.remove('active'); document.body.style.overflow = ''; }
 
@@ -926,13 +795,9 @@
             toggle.addEventListener('change', () => {
                 showTafsir = toggle.checked;
                 try { localStorage.setItem('showTafsir', showTafsir); } catch (e) {}
-                updateHint();
-                renderResults();
+                updateHint(); renderResults();
             });
-            function updateHint() {
-                hint.textContent = showTafsir ? '(ظاهرة)' : '(مخفية)';
-                hint.style.color = showTafsir ? '#16a34a' : 'var(--gold)';
-            }
+            function updateHint() { hint.textContent = showTafsir ? '(ظاهرة)' : '(مخفية)'; hint.style.color = showTafsir ? '#16a34a' : 'var(--gold)'; }
         }
 
         async function loadTafsirFile(config) {
@@ -978,10 +843,7 @@
                 await Promise.all(TAFSIR_FILES.map(loadTafsirFile));
                 const totalTafsir = Object.values(allTafsirs).reduce((s, t) => s + t.ayahs.length, 0);
                 document.getElementById('resultsInfo').textContent = `📖 ${quranData.length} آية | 📚 ${totalTafsir} مدخل تفسيري`;
-                updateBookmarkBar();
-                updateProgress();
-                updateBmCount();
-                renderResults();
+                updateBookmarkBar(); updateProgress(); updateBmCount(); renderResults();
             } catch (err) {
                 document.getElementById('resultsInfo').innerHTML = '❌ <span style="color:#8B4513">تعذر تحميل البيانات: ' + err.message + '</span>';
             }
@@ -1004,13 +866,11 @@
             return results;
         }
 
-        // ✅ البحث المعدّل: يعرض اقتراح السورة + البحث بالكلمة الكاملة
         function performSearch() {
             currentKeyword = document.getElementById('searchInput').value.trim();
             currentSource = document.getElementById('sourceSelect').value;
             currentSurah = document.getElementById('surahSelect').value;
             const selectedAyah = document.getElementById('ayahSelect').value;
-
             if (currentSource === 'quran' && currentSurah !== 'all' && selectedAyah !== 'all') {
                 focusAyah = parseInt(selectedAyah);
                 currentAyah = 'all';
@@ -1025,27 +885,14 @@
             renderResults();
         }
 
-        // ✅ عرض اقتراح السورة
         function renderSurahSuggestion() {
             const container = document.getElementById('surahSuggestionContainer');
             container.innerHTML = '';
-            
             if (currentSource !== 'quran' || !currentKeyword || currentSurah !== 'all') return;
-            
             const surahNum = findSurahByName(currentKeyword);
             if (!surahNum) return;
-            
             const sName = SURAH_NAMES[surahNum - 1];
-            container.innerHTML = `
-                <div class="surah-suggestion">
-                    <span class="surah-suggestion-text">
-                        📖 هل تريد عرض <strong>سورة ${sName}</strong> كاملة؟
-                    </span>
-                    <button onclick="jumpToSurah(${surahNum})">
-                        ⚡ عرض السورة
-                    </button>
-                </div>
-            `;
+            container.innerHTML = `<div class="surah-suggestion"><span class="surah-suggestion-text">📖 هل تريد عرض <strong>سورة ${sName}</strong> كاملة؟</span><button onclick="jumpToSurah(${surahNum})">⚡ عرض السورة</button></div>`;
         }
 
         function renderResults() {
@@ -1054,6 +901,9 @@
             const infoEl = document.getElementById('resultsInfo');
             const toggleBar = document.getElementById('tafsirToggleBar');
             let items = [], isTafsirMode = false;
+
+            // ✅ هل نحن في وضع "بحث" (فيه تصفية)؟
+            const isSearchMode = (currentKeyword && currentKeyword.length > 0) || (currentAyah !== 'all');
 
             if (currentSource === 'quran') {
                 let source = quranData;
@@ -1076,7 +926,6 @@
             const paginated = items.slice((currentPage - 1) * perPage, currentPage * perPage);
             infoEl.textContent = `📊 ${items.length} نتيجة | صفحة ${currentPage}/${totalPages}`;
 
-            // ✅ عرض اقتراح السورة
             renderSurahSuggestion();
 
             if (paginated.length === 0) {
@@ -1117,6 +966,9 @@
                     const bookmarkRibbon = marked ? `<div class="bookmark-ribbon">🔖 آخر قراءة</div>` : '';
                     const specialRibbon = hasSpecial ? `<div class="special-ribbon">📌 ${specialLabels.join(' · ')}</div>` : '';
 
+                    // ✅ زر "عرض" يظهر فقط في وضع البحث
+                    const showContextBtn = isSearchMode ? `<button class="show-context-btn" onclick="showFullSurah(${item.surah}, ${item.ayah})" title="عرض السورة كاملة من هذه الآية">📖 عرض</button>` : '';
+
                     return `
                         <div class="ayah-card ${marked ? 'bookmarked' : ''}" id="ayah-${item.surah}-${item.ayah}">
                             ${bookmarkRibbon}
@@ -1125,14 +977,11 @@
                                 <span class="ayah-ref">سورة ${sName} - آية ${item.ayah}</span>
                                 <div class="ayah-header-right">
                                     ${countBadge}
+                                    ${showContextBtn}
                                     <span class="ayah-type">آية</span>
                                     <div class="ayah-btns">
-                                        <button class="special-btn ${hasSpecial ? 'has-special' : ''}"
-                                                onclick="openLabelDialog(${item.surah}, ${item.ayah})"
-                                                title="إضافة علامة خاصة">📌</button>
-                                        <button class="bookmark-btn ${marked ? 'active' : ''}"
-                                                onclick="toggleBookmark(${item.surah}, ${item.ayah})"
-                                                title="تعليم موضع آخر قراءة">🔖</button>
+                                        <button class="special-btn ${hasSpecial ? 'has-special' : ''}" onclick="openLabelDialog(${item.surah}, ${item.ayah})" title="إضافة علامة خاصة">📌</button>
+                                        <button class="bookmark-btn ${marked ? 'active' : ''}" onclick="toggleBookmark(${item.surah}, ${item.ayah})" title="تعليم موضع آخر قراءة">🔖</button>
                                     </div>
                                 </div>
                             </div>
@@ -1179,35 +1028,12 @@
         function openAbout() { document.getElementById('aboutOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeAbout() { document.getElementById('aboutOverlay').classList.remove('active'); document.body.style.overflow = ''; }
         function closeAboutOutside(e) { if (e.target.id === 'aboutOverlay') closeAbout(); }
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') { closeAbout(); closeSync(); closeColorPicker(); closeBookmarksList(); closeSidebar(); closeLabelDialog(); closeHelp(); }
-        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeAbout(); closeSync(); closeColorPicker(); closeBookmarksList(); closeSidebar(); closeLabelDialog(); closeHelp(); } });
 
-        function generateSyncCode() {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-            let code = '';
-            const arr = new Uint32Array(12);
-            crypto.getRandomValues(arr);
-            for (let i = 0; i < 12; i++) code += chars[arr[i] % chars.length];
-            return code;
-        }
-        function getSyncCode() {
-            let code = '';
-            try { code = localStorage.getItem('syncCode') || ''; } catch (e) {}
-            if (!code || code.length < 8) {
-                code = generateSyncCode();
-                try { localStorage.setItem('syncCode', code); } catch (e) {}
-            }
-            return code;
-        }
-        async function syncBookmarkToServer(surah, ayah) {
-            const code = getSyncCode(); if (!code) return;
-            try { await fetch('/api/sync_bookmark', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sync_code: code, surah, ayah }) }); } catch (e) {}
-        }
-        async function syncDeleteToServer() {
-            const code = getSyncCode(); if (!code) return;
-            try { await fetch('/api/delete_bookmark', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sync_code: code }) }); } catch (e) {}
-        }
+        function generateSyncCode() { const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let code = ''; const arr = new Uint32Array(12); crypto.getRandomValues(arr); for (let i = 0; i < 12; i++) code += chars[arr[i] % chars.length]; return code; }
+        function getSyncCode() { let code = ''; try { code = localStorage.getItem('syncCode') || ''; } catch (e) {} if (!code || code.length < 8) { code = generateSyncCode(); try { localStorage.setItem('syncCode', code); } catch (e) {} } return code; }
+        async function syncBookmarkToServer(surah, ayah) { const code = getSyncCode(); if (!code) return; try { await fetch('/api/sync_bookmark', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sync_code: code, surah, ayah }) }); } catch (e) {} }
+        async function syncDeleteToServer() { const code = getSyncCode(); if (!code) return; try { await fetch('/api/delete_bookmark', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sync_code: code }) }); } catch (e) {} }
         async function loadBookmarkFromServer(silent) {
             const code = getSyncCode(); if (!code) return;
             try {
@@ -1220,86 +1046,36 @@
                         updateBookmarkBar(); updateProgress();
                         if (!silent) renderResults();
                     }
-                } else if (data.status === 'empty' && bookmark) {
-                    syncBookmarkToServer(bookmark.surah, bookmark.ayah);
-                }
+                } else if (data.status === 'empty' && bookmark) { syncBookmarkToServer(bookmark.surah, bookmark.ayah); }
             } catch (e) {}
         }
-
         async function syncSpecialBookmarksToServer() {
             if (!serverSyncEnabled || isSyncingToServer) return;
-            const code = getSyncCode();
-            if (!code) return;
+            const code = getSyncCode(); if (!code) return;
             isSyncingToServer = true;
-            try {
-                await fetch('/api/special_bookmarks', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sync_code: code, bookmarks: allBookmarks })
-                });
-            } catch (e) {} finally { isSyncingToServer = false; }
+            try { await fetch('/api/special_bookmarks', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sync_code: code, bookmarks: allBookmarks }) }); } catch (e) {} finally { isSyncingToServer = false; }
         }
-
         async function loadSpecialBookmarksFromServer(silent) {
-            const code = getSyncCode();
-            if (!code) return;
+            const code = getSyncCode(); if (!code) return;
             if (Date.now() - lastAddTime < 8000) return;
             if (isSyncingToServer) return;
             try {
                 const res = await fetch(`/api/special_bookmarks/${code}`);
                 const data = await res.json();
                 if (data.status !== 'success') return;
-                const serverBms = (data.bookmarks || []).map(b => ({
-                    id: String(b.id), label: b.label, surah: parseInt(b.surah), ayah: parseInt(b.ayah)
-                }));
-                if (allBookmarks.length === 0 && serverBms.length > 0) {
-                    allBookmarks = serverBms;
-                    saveAllBookmarksLocal();
-                    updateProgress();
-                    if (!silent) renderResults();
-                    return;
-                }
-                if (serverBms.length === 0 && allBookmarks.length > 0) {
-                    await syncSpecialBookmarksToServer();
-                    return;
-                }
+                const serverBms = (data.bookmarks || []).map(b => ({ id: String(b.id), label: b.label, surah: parseInt(b.surah), ayah: parseInt(b.ayah) }));
+                if (allBookmarks.length === 0 && serverBms.length > 0) { allBookmarks = serverBms; saveAllBookmarksLocal(); updateProgress(); if (!silent) renderResults(); return; }
+                if (serverBms.length === 0 && allBookmarks.length > 0) { await syncSpecialBookmarksToServer(); return; }
                 const localIds = new Set(allBookmarks.map(b => String(b.id)));
                 const newFromServer = serverBms.filter(b => !localIds.has(String(b.id)));
-                if (newFromServer.length > 0) {
-                    allBookmarks = [...allBookmarks, ...newFromServer];
-                    saveAllBookmarksLocal();
-                    updateProgress();
-                    if (!silent) renderResults();
-                }
+                if (newFromServer.length > 0) { allBookmarks = [...allBookmarks, ...newFromServer]; saveAllBookmarksLocal(); updateProgress(); if (!silent) renderResults(); }
             } catch (e) {}
         }
-
-        function startSync() {
-            getSyncCode();
-            loadBookmarkFromServer(true);
-            loadSpecialBookmarksFromServer(true);
-            setInterval(() => {
-                loadBookmarkFromServer(false);
-                loadSpecialBookmarksFromServer(false);
-            }, 15000);
-        }
-
-        function openSync() {
-            document.getElementById('syncOverlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            document.getElementById('syncCodeDisplay').value = getSyncCode();
-            document.getElementById('syncCodeInput').value = '';
-        }
+        function startSync() { getSyncCode(); loadBookmarkFromServer(true); loadSpecialBookmarksFromServer(true); setInterval(() => { loadBookmarkFromServer(false); loadSpecialBookmarksFromServer(false); }, 15000); }
+        function openSync() { document.getElementById('syncOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; document.getElementById('syncCodeDisplay').value = getSyncCode(); document.getElementById('syncCodeInput').value = ''; }
         function closeSync() { document.getElementById('syncOverlay').classList.remove('active'); document.body.style.overflow = ''; }
         function closeSyncOutside(e) { if (e.target.id === 'syncOverlay') closeSync(); }
-        function copySyncCode() {
-            const code = getSyncCode();
-            navigator.clipboard.writeText(code).then(() => alert('✅ تم النسخ:\n' + code)).catch(() => {
-                document.getElementById('syncCodeDisplay').select();
-                document.execCommand('copy');
-                alert('✅ تم النسخ: ' + code);
-            });
-        }
+        function copySyncCode() { const code = getSyncCode(); navigator.clipboard.writeText(code).then(() => alert('✅ تم النسخ:\n' + code)).catch(() => { document.getElementById('syncCodeDisplay').select(); document.execCommand('copy'); alert('✅ تم النسخ: ' + code); }); }
         async function linkToSyncCode() {
             const input = document.getElementById('syncCodeInput');
             const code = (input.value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -1313,17 +1089,10 @@
                 const res = await fetch(`/api/special_bookmarks/${code}`);
                 const data = await res.json();
                 if (data.status === 'success' && data.bookmarks && data.bookmarks.length > 0) {
-                    const serverBms = data.bookmarks.map(b => ({
-                        id: String(b.id), label: b.label, surah: parseInt(b.surah), ayah: parseInt(b.ayah)
-                    }));
+                    const serverBms = data.bookmarks.map(b => ({ id: String(b.id), label: b.label, surah: parseInt(b.surah), ayah: parseInt(b.ayah) }));
                     const localIds = new Set(allBookmarks.map(b => String(b.id)));
                     const newOnes = serverBms.filter(b => !localIds.has(String(b.id)));
-                    if (newOnes.length > 0) {
-                        allBookmarks = [...allBookmarks, ...newOnes];
-                        saveAllBookmarksLocal();
-                        updateProgress();
-                        renderResults();
-                    }
+                    if (newOnes.length > 0) { allBookmarks = [...allBookmarks, ...newOnes]; saveAllBookmarksLocal(); updateProgress(); renderResults(); }
                 }
             } catch (e) {}
             alert('✅ تم! سيتم عرض علاماتك تلقائياً.');
@@ -1332,11 +1101,7 @@
         document.getElementById('searchBtn').addEventListener('click', performSearch);
         document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
         document.getElementById('sourceSelect').addEventListener('change', performSearch);
-        document.getElementById('surahSelect').addEventListener('change', (e) => {
-            updateAyahDropdown(e.target.value, 'all');
-            document.getElementById('searchInput').value = '';
-            performSearch();
-        });
+        document.getElementById('surahSelect').addEventListener('change', (e) => { updateAyahDropdown(e.target.value, 'all'); document.getElementById('searchInput').value = ''; performSearch(); });
         document.getElementById('ayahSelect').addEventListener('change', performSearch);
 
         window.addEventListener('scroll', updateJumpBtnText);
@@ -1353,8 +1118,8 @@
         loadData();
         startSync();
 
-        if (document.body.classList.contains('dark-mode')) {
-            document.getElementById('darkModeBtn').textContent = '☀️ نهاري';
-        }
-
-        setTimeout(updateJumpBtnText
+        if (document.body.classList.contains('dark-mode')) { document.getElementById('darkModeBtn').textContent = '☀️ نهاري'; }
+        setTimeout(updateJumpBtnText, 500);
+    </script>
+</body>
+</html>
