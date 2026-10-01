@@ -111,7 +111,6 @@
             font-style: italic;
         }
 
-        /* ====== الأزرار العلوية ====== */
         .top-buttons {
             display: flex;
             gap: 8px;
@@ -142,7 +141,6 @@
         .about-btn.nav { background: linear-gradient(180deg,#a78bfa,#7c3aed); border-color:#5b21b6; }
         .about-btn.bm-color { background: linear-gradient(180deg,#f59e0b,#b45309); border-color:#78350f; }
 
-        /* ====== شريط التقدم ====== */
         .progress-wrap {
             background: var(--input-bg);
             border: 1px solid var(--border-color);
@@ -183,7 +181,6 @@
         }
         body.dark-mode .progress-percent { color: var(--gold-light); }
 
-        /* ====== نافذة موضع القراءة ====== */
         .bookmark-bar {
             display: flex;
             justify-content: space-between;
@@ -496,7 +493,6 @@
         }
         .loading-msg { text-align: center; padding: 30px; color: var(--ink-secondary); font-size: 1rem; }
 
-        /* ====== النوافذ المنبثقة ====== */
         .about-overlay {
             display: none;
             position: fixed;
@@ -611,7 +607,6 @@
             transform: rotate(90deg);
         }
 
-        /* ====== القائمة الجانبية للسور ====== */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -691,7 +686,6 @@
             flex-shrink: 0;
         }
 
-        /* ====== منتقي لون العلامة ====== */
         .color-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -726,7 +720,6 @@
             text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
         }
 
-        /* ====== قائمة العلامات المتعددة ====== */
         .bm-item {
             display: flex;
             justify-content: space-between;
@@ -792,7 +785,6 @@
             <button class="about-btn dark" onclick="toggleDarkMode()" id="darkModeBtn">🌙 ليلي</button>
         </div>
 
-        <!-- شريط التقدم -->
         <div class="progress-wrap">
             <span class="progress-label">📊 تقدم القراءة:</span>
             <div class="progress-bar">
@@ -801,7 +793,6 @@
             <span class="progress-percent" id="progressPercent">0%</span>
         </div>
 
-        <!-- شريط موضع القراءة -->
         <div class="bookmark-bar" id="bookmarkBar" style="display: none;">
             <div class="bookmark-info">
                 <span class="ribbon-icon">🔖</span>
@@ -850,7 +841,6 @@
         <div class="footer-ornament">❁ ❁ ❁</div>
     </div>
 
-    <!-- ====== القائمة الجانبية للسور ====== -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     <div class="sidebar" id="sidebar">
         <button class="sidebar-close" onclick="closeSidebar()">✖</button>
@@ -858,7 +848,6 @@
         <div id="sidebarList"></div>
     </div>
 
-    <!-- ====== نافذة حول التطبيق ====== -->
     <div class="about-overlay" id="aboutOverlay" onclick="closeAboutOutside(event)">
         <div class="about-modal" onclick="event.stopPropagation()">
             <button class="about-close" onclick="closeAbout()">✖</button>
@@ -890,7 +879,6 @@
         </div>
     </div>
 
-    <!-- ====== نافذة المزامنة ====== -->
     <div class="about-overlay" id="syncOverlay" onclick="closeSyncOutside(event)">
         <div class="about-modal" onclick="event.stopPropagation()">
             <button class="about-close" onclick="closeSync()">✖</button>
@@ -920,7 +908,6 @@
         </div>
     </div>
 
-    <!-- ====== نافذة اختيار لون العلامة ====== -->
     <div class="about-overlay" id="colorOverlay" onclick="closeColorOutside(event)">
         <div class="about-modal" onclick="event.stopPropagation()">
             <button class="about-close" onclick="closeColorPicker()">✖</button>
@@ -933,7 +920,6 @@
         </div>
     </div>
 
-    <!-- ====== نافذة قائمة العلامات ====== -->
     <div class="about-overlay" id="bookmarksOverlay" onclick="closeBookmarksOutside(event)">
         <div class="about-modal" onclick="event.stopPropagation()">
             <button class="about-close" onclick="closeBookmarksList()">✖</button>
@@ -988,7 +974,6 @@
         let bookmarkColorIndex = 0;
         const perPage = 10;
 
-        // ====== تحميل الإعدادات ======
         try {
             const saved = localStorage.getItem('showTafsir');
             if (saved === 'true') showTafsir = true;
@@ -1000,7 +985,6 @@
             if (bms) allBookmarks = JSON.parse(bms);
         } catch (e) {}
 
-        // ====== لون العلامة ======
         function applyBookmarkColor() {
             const c = BOOKMARK_COLORS[bookmarkColorIndex] || BOOKMARK_COLORS[0];
             document.documentElement.style.setProperty('--bookmark-color', c.light);
@@ -1031,7 +1015,6 @@
             if (e.target.id === 'colorOverlay') closeColorPicker();
         }
 
-        // ====== الوضع الليلي ======
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -1039,7 +1022,6 @@
             document.getElementById('darkModeBtn').textContent = isDark ? '☀️ نهاري' : '🌙 ليلي';
         }
 
-        // ====== العلامات ======
         function loadBookmark() {
             try {
                 const saved = localStorage.getItem('quranBookmark');
@@ -1142,7 +1124,6 @@
             if (e.target.id === 'bookmarksOverlay') closeBookmarksList();
         }
 
-        // ====== شريط التقدم ======
         function updateProgress() {
             const uniqueSurahs = new Set(allBookmarks.map(b => b.surah));
             if (bookmark) uniqueSurahs.add(bookmark.surah);
@@ -1164,16 +1145,19 @@
                 `سورة ${surahName} - آية ${bookmark.ayah}`;
         }
 
+        // ✅ دالة العودة إلى العلامة (معدّلة: تعرض السورة كاملة)
         function jumpToBookmark() {
             if (!bookmark) return;
+
             document.getElementById('sourceSelect').value = 'quran';
             document.getElementById('surahSelect').value = bookmark.surah;
-            updateAyahDropdown(bookmark.surah, bookmark.ayah);
+            updateAyahDropdown(bookmark.surah, 'all');
+            document.getElementById('ayahSelect').value = 'all';
             document.getElementById('searchInput').value = '';
 
             currentSource = 'quran';
             currentSurah = String(bookmark.surah);
-            currentAyah = String(bookmark.ayah);
+            currentAyah = 'all';
             currentKeyword = '';
 
             let source = quranData.filter(a => a.surah == bookmark.surah);
@@ -1189,7 +1173,7 @@
                     el.style.transform = 'scale(1.02)';
                     setTimeout(() => { el.style.transform = 'scale(1)'; }, 600);
                 }
-            }, 300);
+            }, 400);
         }
 
         function isBookmarked(surah, ayah) {
@@ -1223,7 +1207,6 @@
             });
         }
 
-        // ====== تحديث قائمة الآيات حسب السورة المختارة ======
         function updateAyahDropdown(surahNum, keepAyah) {
             const ayahSel = document.getElementById('ayahSelect');
             ayahSel.innerHTML = '<option value="all">كل الآيات</option>';
@@ -1581,7 +1564,6 @@
             if (e.key === 'Escape') { closeAbout(); closeSync(); closeColorPicker(); closeBookmarksList(); closeSidebar(); }
         });
 
-        // ================== المزامنة ==================
         function generateSyncCode() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
             let code = '';
@@ -1682,7 +1664,6 @@
             setInterval(() => loadBookmarkFromServer(false), 15000);
         }
 
-        // ====== الأحداث ======
         document.getElementById('searchBtn').addEventListener('click', performSearch);
         document.getElementById('searchInput').addEventListener('keypress', e => {
             if (e.key === 'Enter') performSearch();
@@ -1694,7 +1675,6 @@
         });
         document.getElementById('ayahSelect').addEventListener('change', performSearch);
 
-        // ====== التهيئة ======
         applyBookmarkColor();
         populateSurahSelect();
         populateSidebar();
@@ -1705,7 +1685,6 @@
         loadData();
         startSync();
 
-        // تحديث زر الوضع الليلي
         if (document.body.classList.contains('dark-mode')) {
             document.getElementById('darkModeBtn').textContent = '☀️ نهاري';
         }
