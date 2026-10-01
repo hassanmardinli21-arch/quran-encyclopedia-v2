@@ -102,31 +102,35 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 10px rgba(184, 134, 11, 0.4);
         }
+
+        /* ====== نافذة موضع القراءة - بني محروق ====== */
         .bookmark-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 12px;
             padding: 12px 18px;
-            background: linear-gradient(180deg, #FFF8DC 0%, #FFE9A8 100%);
-            border: 2px solid var(--bookmark-color);
+            background: linear-gradient(180deg, #8B4513 0%, #5C2E0E 100%);
+            border: 2px solid #3D1F08;
             border-radius: 10px;
             margin-bottom: 15px;
             flex-wrap: wrap;
-            box-shadow: 0 2px 8px rgba(232, 163, 23, 0.25);
+            box-shadow: 0 4px 12px rgba(92, 46, 14, 0.4);
         }
         .bookmark-info {
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 0.95rem;
-            color: var(--ink-primary);
+            color: #FFFFFF;
             flex: 1;
             min-width: 200px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
         .bookmark-info .ribbon-icon { font-size: 1.3rem; }
-        .bookmark-info strong { color: var(--bookmark-dark); }
-        .bookmark-info #bookmarkLocation { font-weight: 700; color: #8B6508; }
+        .bookmark-info strong { color: #FFD98A; }
+        .bookmark-info #bookmarkLocation { font-weight: 700; color: #FFFFFF; }
+
         .bookmark-actions { display: flex; gap: 8px; flex-wrap: wrap; }
         .bookmark-jump-btn, .bookmark-clear-btn {
             padding: 8px 14px;
@@ -148,11 +152,11 @@
             transform: translateY(-1px);
         }
         .bookmark-clear-btn {
-            background: rgba(220, 38, 38, 0.1);
-            color: #b91c1c;
+            background: rgba(220, 38, 38, 0.85);
+            color: white;
             border: 1px solid #fca5a5;
         }
-        .bookmark-clear-btn:hover { background: rgba(220, 38, 38, 0.2); }
+        .bookmark-clear-btn:hover { background: rgba(220, 38, 38, 1); }
 
         .search-box {
             display: flex;
@@ -268,14 +272,14 @@
             position: absolute;
             top: -12px;
             left: 20px;
-            background: linear-gradient(180deg, #E8A317 0%, #B8860B 100%);
+            background: linear-gradient(180deg, #8B4513 0%, #5C2E0E 100%);
             color: white;
             padding: 4px 12px;
             border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 700;
-            box-shadow: 0 3px 8px rgba(184, 134, 11, 0.4);
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+            box-shadow: 0 3px 8px rgba(92, 46, 14, 0.5);
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
             z-index: 2;
             white-space: nowrap;
         }
@@ -334,10 +338,10 @@
             transform: scale(1.1);
         }
         .bookmark-btn.active {
-            background: linear-gradient(180deg, #E8A317 0%, #B8860B 100%);
-            border-color: #8B6508;
+            background: linear-gradient(180deg, #8B4513 0%, #5C2E0E 100%);
+            border-color: #3D1F08;
             color: white;
-            box-shadow: 0 0 0 3px rgba(232, 163, 23, 0.3), 0 2px 6px rgba(184, 134, 11, 0.4);
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.3), 0 2px 6px rgba(92, 46, 14, 0.5);
             transform: scale(1.05);
         }
         .bookmark-btn.active:hover { transform: scale(1.15); }
@@ -1314,15 +1318,12 @@
             document.getElementById('syncCodeDisplay').value = code;
             input.value = '';
             alert('✅ تم ربط هذا الجهاز بالرمز:\n' + code + '\n\nجاري تحديث العلامة...');
-            // جلب العلامة من الخادم فوراً
             loadBookmarkFromServer(false);
         }
 
         function startSync() {
-            // توليد الرمز إن لم يكن موجوداً
             getSyncCode();
             loadBookmarkFromServer(true);
-            // كل 15 ثانية، التحقق من التحديثات
             setInterval(() => loadBookmarkFromServer(false), 15000);
         }
 
