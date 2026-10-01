@@ -75,14 +75,29 @@
         body.dark-mode .progress-percent { color: var(--gold-light); }
 
         .bookmark-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 18px; background: linear-gradient(180deg, var(--bookmark-color) 0%, var(--bookmark-dark) 100%); border: 2px solid #3D1F08; border-radius: 10px; margin-bottom: 15px; flex-wrap: wrap; box-shadow: 0 4px 12px rgba(92, 46, 14, 0.4); }
-        .bookmark-info { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #FFFFFF; flex: 1; min-width: 200px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); }
+        .bookmark-info { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #FFFFFF; flex: 1; min-width: 200px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); flex-wrap: wrap; }
         .bookmark-info .ribbon-icon { font-size: 1.3rem; }
         .bookmark-info strong { color: #FFD98A; }
         .bookmark-info #bookmarkLocation { font-weight: 700; color: #FFFFFF; }
+        .bookmark-info #hereMsg {
+            display: none; background: #16a34a; color: white;
+            padding: 2px 10px; border-radius: 10px;
+            font-size: 0.75rem; font-weight: 700;
+            animation: pulse 2s ease-in-out infinite;
+        }
         .bookmark-actions { display: flex; gap: 8px; flex-wrap: wrap; }
         .bookmark-jump-btn, .bookmark-clear-btn { padding: 8px 14px; border-radius: 8px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; border: none; }
         .bookmark-jump-btn { background: linear-gradient(180deg, #E8A317 0%, #B8860B 100%); color: white; }
         .bookmark-jump-btn:hover { transform: translateY(-1px); }
+        .bookmark-jump-btn.at-location {
+            background: linear-gradient(180deg, #16a34a 0%, #15803d 100%) !important;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
         .bookmark-clear-btn { background: rgba(220, 38, 38, 0.85); color: white; border: 1px solid #fca5a5; }
 
         .search-box { display: flex; flex-wrap: wrap; gap: 10px; background: var(--input-bg); padding: 15px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 15px; }
@@ -223,9 +238,10 @@
                 <span class="ribbon-icon">🔖</span>
                 <strong>آخر قراءة:</strong>
                 <span id="bookmarkLocation">—</span>
+                <span id="hereMsg">✅ أنت هنا</span>
             </div>
             <div class="bookmark-actions">
-                <button class="bookmark-jump-btn" onclick="jumpToBookmark()">📖 العودة</button>
+                <button class="bookmark-jump-btn" id="jumpBtn" onclick="jumpToBookmark()">📖 العلامة المحفوظة</button>
                 <button class="bookmark-clear-btn" onclick="clearBookmark()">✖ حذف</button>
             </div>
         </div>
@@ -273,7 +289,7 @@
                 <li>📗 تفسير السعدي + 📘 تفسير ابن كثير</li>
                 <li>🔍 بحث ذكي يتجاهل التشكيل</li>
                 <li>🔖 علامة "آخر قراءة" للموضع الحالي</li>
-                <li>📌 علامات خاصة متعددة مع تسميات</li>
+                <li>📌 علامات خاصة متعددة مع تسميات (ورد يومي، للتدبر...)</li>
                 <li>☁️ مزامنة تلقائية لكل علاماتك بين أجهزتك</li>
                 <li>🌙 وضع ليلي + 🎨 اختيار لون العلامة</li>
                 <li>📊 شريط تقدم القراءة</li>
@@ -430,7 +446,6 @@
 
         function saveAllBookmarks() {
             saveAllBookmarksLocal();
-            // مزامنة فورية مع الخادم
             syncSpecialBookmarksToServer();
         }
 
@@ -462,7 +477,6 @@
             renderResults();
         }
 
-        // ========== العلامات الخاصة ==========
         function openLabelDialog(surah, ayah) {
             pendingSurah = surah;
             pendingAyah = ayah;
@@ -606,6 +620,37 @@
             document.getElementById('bookmarkLocation').textContent = `سورة ${sName} - آية ${bookmark.ayah}`;
         }
 
+        // ====== تحديث نص زر العلامة بناءً على الموقع ======
+        function updateJumpBtnText() {
+            const btn = document.getElementById('jumpBtn');
+            const hereMsg = document.getElementById('hereMsg');
+            if (!btn || !bookmark) {
+                if (hereMsg) hereMsg.style.display = 'none';
+                return;
+            }
+
+            const el = document.getElementById(`ayah-${bookmark.surah}-${bookmark.ayah}`);
+            if (!el) {
+                btn.textContent = '📖 العلامة المحفوظة';
+                btn.classList.remove('at-location');
+                if (hereMsg) hereMsg.style.display = 'none';
+                return;
+            }
+
+            const rect = el.getBoundingClientRect();
+            const inView = rect.top < (window.innerHeight * 0.85) && rect.bottom > (window.innerHeight * 0.15);
+
+            if (inView) {
+                btn.textContent = '📖 العودة';
+                btn.classList.add('at-location');
+                if (hereMsg) hereMsg.style.display = 'inline-block';
+            } else {
+                btn.textContent = '📖 العلامة المحفوظة';
+                btn.classList.remove('at-location');
+                if (hereMsg) hereMsg.style.display = 'none';
+            }
+        }
+
         function jumpToBookmark() {
             if (!bookmark) return;
             document.getElementById('sourceSelect').value = 'quran';
@@ -628,6 +673,7 @@
                     el.style.transform = 'scale(1.02)';
                     setTimeout(() => { el.style.transform = 'scale(1)'; }, 600);
                 }
+                setTimeout(updateJumpBtnText, 500);
             }, 400);
         }
 
@@ -813,6 +859,7 @@
             if (paginated.length === 0) {
                 container.innerHTML = '<div class="empty-msg">📭 لا توجد نتائج</div>';
                 paginationEl.innerHTML = '';
+                setTimeout(updateJumpBtnText, 100);
                 return;
             }
 
@@ -890,6 +937,9 @@
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             });
+
+            // تحديث نص زر العلامة بعد العرض
+            setTimeout(updateJumpBtnText, 100);
         }
 
         function highlight(text, keyword) {
@@ -915,7 +965,6 @@
             if (e.key === 'Escape') { closeAbout(); closeSync(); closeColorPicker(); closeBookmarksList(); closeSidebar(); closeLabelDialog(); }
         });
 
-        // ================== المزامنة ==================
         function generateSyncCode() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
             let code = '';
@@ -959,7 +1008,6 @@
             } catch (e) {}
         }
 
-        // ========== مزامنة العلامات الخاصة ==========
         async function syncSpecialBookmarksToServer() {
             if (!serverSyncEnabled) return;
             const code = getSyncCode();
@@ -991,7 +1039,6 @@
                     ayah: parseInt(b.ayah)
                 }));
 
-                // قارن: هل البيانات مختلفة؟
                 const localSorted = [...allBookmarks]
                     .map(b => ({ id: String(b.id), label: b.label, surah: b.surah, ayah: b.ayah }))
                     .sort((a, b) => a.id.localeCompare(b.id));
@@ -999,10 +1046,8 @@
                 const isDifferent = JSON.stringify(localSorted) !== JSON.stringify(serverSorted);
 
                 if (serverBms.length === 0 && allBookmarks.length > 0) {
-                    // الخادم فارغ والمحلي فيه بيانات → ارفع المحلي
                     await syncSpecialBookmarksToServer();
                 } else if (isDifferent && serverBms.length > 0) {
-                    // الخادم فيه بيانات مختلفة → استخدم بيانات الخادم
                     allBookmarks = serverBms;
                     saveAllBookmarksLocal();
                     updateProgress();
@@ -1016,13 +1061,10 @@
             }
         }
 
-        // ========== المزامنة الدورية ==========
         function startSync() {
             getSyncCode();
-            // مزامنة أولية
             loadBookmarkFromServer(true);
             loadSpecialBookmarksFromServer(true);
-            // كل 15 ثانية، تحقق من التحديثات
             setInterval(() => {
                 loadBookmarkFromServer(false);
                 loadSpecialBookmarksFromServer(false);
@@ -1053,7 +1095,6 @@
             document.getElementById('syncCodeDisplay').value = code;
             input.value = '';
             alert('✅ تم الربط بالرمز:\n' + code + '\n\n⏳ جاري جلب علاماتك من الخادم...');
-            // جلب بيانات الخادم فوراً
             await loadBookmarkFromServer(false);
             await loadSpecialBookmarksFromServer(false);
             alert('✅ تم! سيتم عرض علاماتك تلقائياً.');
@@ -1064,6 +1105,10 @@
         document.getElementById('sourceSelect').addEventListener('change', performSearch);
         document.getElementById('surahSelect').addEventListener('change', (e) => { updateAyahDropdown(e.target.value, 'all'); performSearch(); });
         document.getElementById('ayahSelect').addEventListener('change', performSearch);
+
+        // ====== مستمعو التمرير لزر العلامة ======
+        window.addEventListener('scroll', updateJumpBtnText);
+        window.addEventListener('resize', updateJumpBtnText);
 
         applyBookmarkColor();
         populateSurahSelect();
@@ -1079,6 +1124,8 @@
         if (document.body.classList.contains('dark-mode')) {
             document.getElementById('darkModeBtn').textContent = '☀️ نهاري';
         }
+
+        setTimeout(updateJumpBtnText, 500);
     </script>
 </body>
 </html>
