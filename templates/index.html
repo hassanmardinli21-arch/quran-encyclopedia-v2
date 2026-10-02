@@ -45,6 +45,151 @@
         .about-btn.wake { background: linear-gradient(180deg,#fbbf24,#d97706); border-color:#92400e; }
         .about-btn.wake.active { background: linear-gradient(180deg,#f59e0b,#b45309); border-color:#78350f; box-shadow: 0 0 0 2px rgba(251,191,36,0.5), 0 4px 12px rgba(217,119,6,0.5); animation: wakePulse 2s ease-in-out infinite; }
         @keyframes wakePulse { 0%,100% { box-shadow: 0 0 0 2px rgba(251,191,36,0.5), 0 4px 12px rgba(217,119,6,0.5); } 50% { box-shadow: 0 0 0 4px rgba(251,191,36,0.3), 0 4px 16px rgba(217,119,6,0.7); } }
+        .about-btn.lock { background: linear-gradient(180deg,#ef4444,#b91c1c); border-color:#7f1d1d; }
+        .about-btn.lock.active { background: linear-gradient(180deg,#dc2626,#991b1b); border-color:#7f1d1d; box-shadow: 0 0 0 2px rgba(239,68,68,0.5); animation: lockPulse 2s ease-in-out infinite; }
+        @keyframes lockPulse { 0%,100% { box-shadow: 0 0 0 2px rgba(239,68,68,0.5); } 50% { box-shadow: 0 0 0 5px rgba(239,68,68,0.3); } }
+
+        /* ====== مؤقت القراءة ====== */
+        .reading-timer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(180deg, rgba(59,130,246,0.1), rgba(37,99,235,0.05));
+            border: 1px dashed #3b82f6;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #1e40af;
+        }
+        body.dark-mode .reading-timer { color: #60a5fa; }
+        .reading-timer .timer-icon { font-size: 1.1rem; }
+        .reading-timer .timer-value {
+            font-family: 'Courier New', monospace;
+            font-size: 1.05rem;
+            background: rgba(255,255,255,0.5);
+            padding: 2px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(59,130,246,0.3);
+            color: #1d4ed8;
+        }
+        body.dark-mode .reading-timer .timer-value { background: rgba(0,0,0,0.3); color: #93c5fd; }
+
+        /* ====== قفل الشاشة ====== */
+        .screen-lock-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 9998;
+            cursor: not-allowed;
+            backdrop-filter: blur(1px);
+        }
+        .screen-lock-overlay.active { display: block; }
+        .screen-lock-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, #dc2626, #991b1b);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
+            z-index: 9999;
+            animation: slideDown 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @keyframes slideDown {
+            from { transform: translate(-50%, -100px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        .screen-lock-message button {
+            background: white;
+            color: #dc2626;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        /* ====== Toast (رسالة تأكيد) ====== */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+            max-width: 90vw;
+        }
+        .toast {
+            background: linear-gradient(180deg, #10b981, #047857);
+            color: white;
+            padding: 14px 22px;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastIn 0.4s ease, toastOut 0.4s ease 2.6s;
+            border: 2px solid rgba(255,255,255,0.3);
+            pointer-events: auto;
+            max-width: 100%;
+        }
+        .toast.toast-bookmark {
+            background: linear-gradient(180deg, var(--bookmark-color), var(--bookmark-dark));
+            box-shadow: 0 8px 25px rgba(92, 46, 14, 0.5);
+        }
+        .toast.toast-special {
+            background: linear-gradient(180deg, #7c3aed, #4c1d95);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5);
+        }
+        .toast.toast-info {
+            background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+        }
+        .toast.toast-warning {
+            background: linear-gradient(180deg, #f59e0b, #b45309);
+            box-shadow: 0 8px 25px rgba(217, 119, 6, 0.5);
+        }
+        .toast .toast-icon { font-size: 1.3rem; }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(-30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-30px) scale(0.9); }
+        }
+
+        /* ====== إبراز مؤقت للآية عند الضغط ====== */
+        .ayah-card.temp-highlight {
+            animation: tempHighlight 1.5s ease;
+        }
+        @keyframes tempHighlight {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+            30% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.7), 0 8px 30px rgba(245, 158, 11, 0.5); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
         .progress-wrap { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 12px 18px 36px 18px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 12px; position: relative; }
         .progress-label { font-size: 0.85rem; font-weight: 700; color: var(--ink-primary); white-space: nowrap; padding-top: 12px; }
         .progress-bar { flex: 1; height: 18px; background: rgba(0,0,0,0.08); border-radius: 10px; border: 1px solid var(--border-color); position: relative; direction: ltr; margin-top: 10px; }
@@ -180,144 +325,26 @@
         .quick-labels button:hover { background: var(--special-color); color: white; }
         .sync-badge { display: inline-block; background: rgba(34,197,94,0.15); color: #16a34a; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-right: 6px; }
 
-        /* ====== نافذة الترحيب بالتحديث ====== */
-        .welcome-modal {
-            max-width: 680px !important;
-        }
-        .welcome-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .welcome-icon {
-            font-size: 4rem;
-            display: block;
-            margin-bottom: 10px;
-            animation: welcomeBounce 1.5s ease-in-out infinite;
-        }
-        @keyframes welcomeBounce {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-10px) scale(1.05); }
-        }
-        .welcome-title {
-            font-family: 'Amiri', serif;
-            font-size: 2.2rem;
-            color: var(--ink-primary);
-            margin-bottom: 8px;
-            text-shadow: 1px 1px 0 var(--parchment-dark);
-        }
-        .welcome-version {
-            display: inline-block;
-            background: linear-gradient(180deg, #10b981 0%, #047857 100%);
-            color: white;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(16,185,129,0.4);
-        }
-        .welcome-message {
-            background: var(--highlight-bg);
-            border: 1px dashed var(--gold);
-            border-radius: 10px;
-            padding: 16px 20px;
-            margin: 15px 0 20px 0;
-            font-family: 'Amiri', serif;
-            font-size: 1.05rem;
-            color: var(--ink-primary);
-            text-align: center;
-            line-height: 2;
-        }
-        .welcome-features-title {
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.15rem;
-            color: var(--gold);
-            margin: 20px 0 12px 0;
-            padding-right: 10px;
-            border-right: 4px solid var(--gold);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .feature-item {
-            display: flex;
-            gap: 12px;
-            padding: 12px 14px;
-            background: var(--input-bg);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border-right: 4px solid var(--gold);
-            transition: 0.2s;
-        }
-        .feature-item:hover {
-            transform: translateX(-3px);
-            box-shadow: 0 4px 12px rgba(184,134,11,0.15);
-        }
-        .feature-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: linear-gradient(180deg, var(--gold-light), var(--gold));
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            flex-shrink: 0;
-            box-shadow: 0 2px 6px rgba(184,134,11,0.3);
-        }
+        /* نافذة الترحيب بالتحديث */
+        .welcome-modal { max-width: 680px !important; }
+        .welcome-header { text-align: center; margin-bottom: 20px; }
+        .welcome-icon { font-size: 4rem; display: block; margin-bottom: 10px; animation: welcomeBounce 1.5s ease-in-out infinite; }
+        @keyframes welcomeBounce { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-10px) scale(1.05); } }
+        .welcome-title { font-family: 'Amiri', serif; font-size: 2.2rem; color: var(--ink-primary); margin-bottom: 8px; text-shadow: 1px 1px 0 var(--parchment-dark); }
+        .welcome-version { display: inline-block; background: linear-gradient(180deg, #10b981 0%, #047857 100%); color: white; padding: 4px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(16,185,129,0.4); }
+        .welcome-message { background: var(--highlight-bg); border: 1px dashed var(--gold); border-radius: 10px; padding: 16px 20px; margin: 15px 0 20px 0; font-family: 'Amiri', serif; font-size: 1.05rem; color: var(--ink-primary); text-align: center; line-height: 2; }
+        .welcome-features-title { font-family: 'Cairo', sans-serif; font-size: 1.15rem; color: var(--gold); margin: 20px 0 12px 0; padding-right: 10px; border-right: 4px solid var(--gold); display: flex; align-items: center; gap: 8px; }
+        .feature-item { display: flex; gap: 12px; padding: 12px 14px; background: var(--input-bg); border-radius: 10px; margin-bottom: 10px; border-right: 4px solid var(--gold); transition: 0.2s; }
+        .feature-item:hover { transform: translateX(-3px); box-shadow: 0 4px 12px rgba(184,134,11,0.15); }
+        .feature-icon { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(180deg, var(--gold-light), var(--gold)); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; box-shadow: 0 2px 6px rgba(184,134,11,0.3); }
         .feature-content { flex: 1; }
-        .feature-title {
-            font-weight: 700;
-            color: var(--ink-primary);
-            font-size: 0.95rem;
-            margin-bottom: 3px;
-        }
-        .feature-desc {
-            color: var(--ink-secondary);
-            font-size: 0.85rem;
-            line-height: 1.6;
-        }
-        .feature-badge {
-            display: inline-block;
-            background: linear-gradient(180deg, #ef4444, #b91c1c);
-            color: white;
-            padding: 1px 8px;
-            border-radius: 8px;
-            font-size: 0.65rem;
-            font-weight: 700;
-            margin-right: 6px;
-            vertical-align: middle;
-        }
-        .welcome-footer-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(180deg, #10b981, #047857);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 700;
-            font-size: 1.05rem;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 4px 12px rgba(16,185,129,0.4);
-            transition: 0.2s;
-        }
-        .welcome-footer-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(16,185,129,0.5);
-        }
-        .welcome-dua {
-            text-align: center;
-            font-family: 'Amiri', serif;
-            font-size: 0.95rem;
-            color: var(--gold);
-            margin-top: 18px;
-            padding-top: 15px;
-            border-top: 1px dashed var(--border-color);
-            line-height: 1.9;
-        }
+        .feature-title { font-weight: 700; color: var(--ink-primary); font-size: 0.95rem; margin-bottom: 3px; }
+        .feature-desc { color: var(--ink-secondary); font-size: 0.85rem; line-height: 1.6; }
+        .feature-badge { display: inline-block; background: linear-gradient(180deg, #ef4444, #b91c1c); color: white; padding: 1px 8px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; margin-right: 6px; vertical-align: middle; }
+        .feature-badge.new { background: linear-gradient(180deg, #10b981, #047857); }
+        .welcome-footer-btn { width: 100%; padding: 14px; background: linear-gradient(180deg, #10b981, #047857); color: white; border: none; border-radius: 10px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 1.05rem; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 12px rgba(16,185,129,0.4); transition: 0.2s; }
+        .welcome-footer-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(16,185,129,0.5); }
+        .welcome-dua { text-align: center; font-family: 'Amiri', serif; font-size: 0.95rem; color: var(--gold); margin-top: 18px; padding-top: 15px; border-top: 1px dashed var(--border-color); line-height: 1.9; }
 
         @media (max-width: 600px) {
             h1 { font-size: 1.7rem; } h1::before, h1::after { margin: 0 6px; font-size: 1.2rem; }
@@ -336,10 +363,19 @@
             .welcome-title { font-size: 1.7rem; }
             .feature-item { padding: 10px; }
             .feature-icon { width: 36px; height: 36px; font-size: 1.1rem; }
+            .reading-timer { font-size: 0.8rem; padding: 6px 10px; }
+            .reading-timer .timer-value { font-size: 0.9rem; padding: 2px 8px; }
+            .toast { font-size: 0.85rem; padding: 10px 16px; }
         }
     </style>
 </head>
 <body>
+    <!-- Container للـ Toast -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Overlay قفل الشاشة -->
+    <div class="screen-lock-overlay" id="screenLockOverlay" onclick="unlockScreen()"></div>
+
     <div class="container">
         <h1>الموسوعة القرآنية</h1>
         <p class="subtitle">﴿ وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ ﴾</p>
@@ -352,7 +388,15 @@
             <button class="about-btn my-bm" onclick="openBookmarksList()">📌 علاماتي <span id="bmCount" style="background:rgba(255,255,255,0.3); padding:1px 8px; border-radius:10px; font-size:0.75rem;">0</span></button>
             <button class="about-btn bm-color" onclick="openColorPicker()">🎨 لون</button>
             <button class="about-btn wake" onclick="toggleWakeLock()" id="wakeBtn">☀️ إبقاء الشاشة</button>
+            <button class="about-btn lock" onclick="toggleScreenLock()" id="lockBtn">🔒 قفل الشاشة</button>
             <button class="about-btn dark" onclick="toggleDarkMode()" id="darkModeBtn">🌙 ليلي</button>
+        </div>
+
+        <!-- مؤقت القراءة -->
+        <div class="reading-timer">
+            <span class="timer-icon">⏱️</span>
+            <span>مدة القراءة:</span>
+            <span class="timer-value" id="readingTimer">00:00:00</span>
         </div>
 
         <div class="progress-wrap">
@@ -424,62 +468,62 @@
             <div class="welcome-header">
                 <span class="welcome-icon">🌟</span>
                 <h2 class="welcome-title">مرحباً بك</h2>
-                <div class="welcome-version">الإصدار الجديد v1.5</div>
+                <div class="welcome-version">الإصدار الجديد v1.6</div>
             </div>
 
             <div class="welcome-message">
                 ﴿ وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ ﴾
                 <br>
-                <span style="font-size:0.85rem; color:var(--ink-secondary);">أهلاً بك في الموسوعة القرآنية</span>
+                <span style="font-size:0.85rem; color:var(--ink-secondary);">أهلاً بك في الموسوعة القرآنية — رفيقك في قيام الليل</span>
             </div>
 
             <h3 class="welcome-features-title">✨ ما الجديد في هذا التحديث</h3>
 
             <div class="feature-item">
+                <div class="feature-icon">✅</div>
+                <div class="feature-content">
+                    <div class="feature-title"><span class="feature-badge new">جديد</span> رسالة تأكيد فورية</div>
+                    <div class="feature-desc">عند وضع علامة، تظهر رسالة خضراء واضحة في وسط الشاشة تُخبرك بمكان العلامة بالضبط (سورة + آية). مفيد جداً في الإضاءة الخافتة ليلاً.</div>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">⏱️</div>
+                <div class="feature-content">
+                    <div class="feature-title"><span class="feature-badge new">جديد</span> مؤقت مدة القراءة</div>
+                    <div class="feature-desc">يظهر أعلى الصفحة مؤقت يعرض مدة قراءتك منذ فتح التطبيق. مفيد لتعرف كم مضى من وقت قيامك.</div>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-content">
+                    <div class="feature-title"><span class="feature-badge new">جديد</span> قفل الشاشة</div>
+                    <div class="feature-desc">اضغط <strong>🔒 قفل الشاشة</strong> لمنع اللمس العرضي أثناء القراءة. مفيد إذا كنت تمسك الهاتف بوضع مريح وتخشى لمس الشاشة بالخطأ.</div>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">✨</div>
+                <div class="feature-content">
+                    <div class="feature-title"><span class="feature-badge new">جديد</span> إبراز الآية عند اللمس</div>
+                    <div class="feature-desc">عند الضغط على أي آية، تُبرَز بإطار ذهبي لثانية ونصف، فتتأكد أنك على الآية الصحيحة قبل وضع العلامة.</div>
+                </div>
+            </div>
+
+            <div class="feature-item">
                 <div class="feature-icon">☀️</div>
                 <div class="feature-content">
-                    <div class="feature-title"><span class="feature-badge">جديد</span> إبقاء الشاشة مضيئة</div>
-                    <div class="feature-desc">اضغط <strong>☀️ إبقاء الشاشة</strong> في الأعلى لمنع إطفاء الشاشة أثناء القراءة الطويلة. سيتحول الزر إلى 💡 الشاشة مضيئة عند التفعيل.</div>
-                </div>
-            </div>
-
-            <div class="feature-item">
-                <div class="feature-icon">📖</div>
-                <div class="feature-content">
-                    <div class="feature-title"><span class="feature-badge">جديد</span> زر "عرض" السورة</div>
-                    <div class="feature-desc">عند البحث عن كلمة أو آية، يظهر زر <strong>📖 عرض</strong> على كل آية. اضغطه لعرض السورة كاملة من عند تلك الآية.</div>
-                </div>
-            </div>
-
-            <div class="feature-item">
-                <div class="feature-icon">🔍</div>
-                <div class="feature-content">
-                    <div class="feature-title"><span class="feature-badge">جديد</span> بحث ذكي مُحسَّن</div>
-                    <div class="feature-desc">الكلمات القصيرة (مثل "يس") تُبحَث ككلمة كاملة فقط، وليس داخل كلمات أخرى. تظهر بطاقة اقتراح لعرض السورة عند البحث باسمها.</div>
-                </div>
-            </div>
-
-            <div class="feature-item">
-                <div class="feature-icon">📌</div>
-                <div class="feature-content">
-                    <div class="feature-title"><span class="feature-badge">جديد</span> علامات خاصة متعددة</div>
-                    <div class="feature-desc">أضف عدداً غير محدود من العلامات الخاصة (وردي اليومي، آيات للتدبر...) مع تسميات، وكلها تُزامَن بين أجهزتك.</div>
-                </div>
-            </div>
-
-            <div class="feature-item">
-                <div class="feature-icon">📊</div>
-                <div class="feature-content">
-                    <div class="feature-title"><span class="feature-badge">مُحسَّن</span> شريط تقدم دقيق</div>
-                    <div class="feature-desc">النسبة تُحسب بالآيات الفعلية: ربع (1559 آية)، نصف (3118)، ٣/٤ (4677)، ختم (6236). مؤشرات ملونة تُضيء عند وصولك كل مرحلة.</div>
+                    <div class="feature-title"><span class="feature-badge">سابق</span> إبقاء الشاشة مضيئة</div>
+                    <div class="feature-desc">اضغط <strong>☀️ إبقاء الشاشة</strong> لمنع انطفاء الشاشة أثناء القراءة الطويلة.</div>
                 </div>
             </div>
 
             <div class="feature-item">
                 <div class="feature-icon">🎯</div>
                 <div class="feature-content">
-                    <div class="feature-title"><span class="feature-badge">إصلاح</span> عدم قفز الشاشة</div>
-                    <div class="feature-desc">عند وضع علامة 🔖 أو 📌 على أي آية، تبقى الشاشة في مكانها تماماً دون قفز للأعلى.</div>
+                    <div class="feature-title"><span class="feature-badge">سابق</span> ثبات الشاشة عند وضع العلامة</div>
+                    <div class="feature-desc">عند وضع علامة 🔖 أو 📌، تبقى الشاشة في مكانها تماماً دون قفز للأعلى.</div>
                 </div>
             </div>
 
@@ -493,6 +537,7 @@
         </div>
     </div>
 
+    <!-- باقي النوافذ المنبثقة (help, about, sync, color, bookmarks, label) -->
     <div class="about-overlay" id="helpOverlay" onclick="closeHelpOutside(event)">
         <div class="about-modal help-modal" onclick="event.stopPropagation()">
             <button class="about-close" onclick="closeHelp()">✖</button>
@@ -502,22 +547,27 @@
             <h3 class="help-section-title">🌟 الاستخدام الأساسي</h3>
             <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">1. قراءة القرآن</div><div class="help-step-desc">اختر السورة واضغط <code>بحث</code>.</div></div></div>
             <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">2. زر "عرض" السورة</div><div class="help-step-desc">عند البحث، يظهر زر <code>📖 عرض</code> على كل آية لعرض السورة كاملة من عندها.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">🔖</div><div class="help-step-content"><div class="help-step-title">3. حفظ موضع القراءة</div><div class="help-step-desc">اضغط <code>🔖</code> على أي آية.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🔖</div><div class="help-step-content"><div class="help-step-title">3. حفظ موضع القراءة</div><div class="help-step-desc">اضغط <code>🔖</code> على أي آية. تظهر رسالة تأكيد.</div></div></div>
             <div class="help-step"><div class="help-step-icon">📌</div><div class="help-step-content"><div class="help-step-title">4. علامة خاصة</div><div class="help-step-desc">اضغط <code>📌</code> وأدخل اسماً. عدد غير محدود!</div></div></div>
             <div class="help-step"><div class="help-step-icon">📋</div><div class="help-step-content"><div class="help-step-title">5. عرض علاماتي</div><div class="help-step-desc">اضغط <code>📌 علاماتي</code> للانتقال/التعديل/الحذف.</div></div></div>
+            <h3 class="help-section-title">🌟 ميزات حديثة</h3>
+            <div class="help-step"><div class="help-step-icon">✅</div><div class="help-step-content"><div class="help-step-title">رسالة تأكيد فورية</div><div class="help-step-desc">تظهر عند وضع علامة. تخبرك بمكان العلامة بالضبط.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">⏱️</div><div class="help-step-content"><div class="help-step-title">مؤقت القراءة</div><div class="help-step-desc">يعرض مدة قراءتك أعلى الصفحة.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🔒</div><div class="help-step-content"><div class="help-step-title">قفل الشاشة</div><div class="help-step-desc">لمنع اللمس العرضي أثناء القراءة.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">✨</div><div class="help-step-content"><div class="help-step-title">إبراز عند اللمس</div><div class="help-step-desc">اضغط على أي آية → تُبرَز بإطار ذهبي مؤقت.</div></div></div>
             <h3 class="help-section-title">☀️ إبقاء الشاشة مضيئة</h3>
-            <div class="help-step"><div class="help-step-icon">☀️</div><div class="help-step-content"><div class="help-step-title">إبقاء الشاشة مضيئة</div><div class="help-step-desc">اضغط زر <code>☀️ إبقاء الشاشة</code> لمنع إطفاء الشاشة أثناء القراءة. سيتحول الزر إلى اللون الذهبي اللامع عند التفعيل. مفيد جداً عند القراءة الطويلة.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">☀️</div><div class="help-step-content"><div class="help-step-title">إبقاء الشاشة مضيئة</div><div class="help-step-desc">اضغط زر <code>☀️ إبقاء الشاشة</code> لمنع إطفاء الشاشة أثناء القراءة. سيتحول إلى 💡 عند التفعيل.</div></div></div>
             <h3 class="help-section-title">☁️ المزامنة</h3>
-            <div class="help-step"><div class="help-step-icon">🔄</div><div class="help-step-content"><div class="help-step-title">6. مزامنة الأجهزة</div><div class="help-step-desc">انسخ الرمز من <code>🔄 مزامنة</code> وضعه في أجهزتك.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🔄</div><div class="help-step-content"><div class="help-step-title">مزامنة الأجهزة</div><div class="help-step-desc">انسخ الرمز من <code>🔄 مزامنة</code> وضعه في أجهزتك.</div></div></div>
             <h3 class="help-section-title">🎨 التخصيص</h3>
-            <div class="help-step"><div class="help-step-icon">🎨</div><div class="help-step-content"><div class="help-step-title">7. لون العلامة</div><div class="help-step-desc"><code>🎨 لون</code> لتغيير اللون.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">🌙</div><div class="help-step-content"><div class="help-step-title">8. الوضع الليلي</div><div class="help-step-desc"><code>🌙 ليلي</code> للتبديل.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🎨</div><div class="help-step-content"><div class="help-step-title">لون العلامة</div><div class="help-step-desc"><code>🎨 لون</code> لتغيير اللون.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🌙</div><div class="help-step-content"><div class="help-step-title">الوضع الليلي</div><div class="help-step-desc"><code>🌙 ليلي</code> للتبديل.</div></div></div>
             <h3 class="help-section-title">⚡ التنقل والتقدم</h3>
-            <div class="help-step"><div class="help-step-icon">⚡</div><div class="help-step-content"><div class="help-step-title">9. الانتقال السريع</div><div class="help-step-desc"><code>⚡ السور</code> لفتح قائمة السور.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">📊</div><div class="help-step-content"><div class="help-step-title">10. شريط التقدم</div><div class="help-step-desc">النسبة بالآيات: ربع (1559)، نصف (3118)، ٣/٤ (4677)، ختم (6236).</div></div></div>
+            <div class="help-step"><div class="help-step-icon">⚡</div><div class="help-step-content"><div class="help-step-title">الانتقال السريع</div><div class="help-step-desc"><code>⚡ السور</code> لفتح قائمة السور.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📊</div><div class="help-step-content"><div class="help-step-title">شريط التقدم</div><div class="help-step-desc">النسبة بالآيات: ربع (1559)، نصف (3118)، ٣/٤ (4677)، ختم (6236).</div></div></div>
             <h3 class="help-section-title">🔍 البحث والتفاسير</h3>
-            <div class="help-step"><div class="help-step-icon">🔍</div><div class="help-step-content"><div class="help-step-title">11. البحث الذكي</div><div class="help-step-desc">الكلمات القصيرة تُبحث ككلمة كاملة. يتجاهل التشكيل.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">📚</div><div class="help-step-content"><div class="help-step-title">12. التفاسير</div><div class="help-step-desc">فعّل <code>📚 إظهار التفاسير</code>.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🔍</div><div class="help-step-content"><div class="help-step-title">البحث الذكي</div><div class="help-step-desc">الكلمات القصيرة تُبحث ككلمة كاملة. يتجاهل التشكيل.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📚</div><div class="help-step-content"><div class="help-step-title">التفاسير</div><div class="help-step-desc">فعّل <code>📚 إظهار التفاسير</code>.</div></div></div>
             <h3 class="help-section-title">🤲 دعاء</h3>
             <p class="about-dua">اللهم اجعل هذا العمل خالصاً لوجهك الكريم،<br>وانفع به المسلمين.</p>
         </div>
@@ -537,7 +587,11 @@
                 <li>📖 زر "عرض" لعرض السورة من أي آية</li>
                 <li>🔖 علامة "آخر قراءة"</li>
                 <li>📌 علامات خاصة متعددة</li>
-                <li>☀️ إبقاء الشاشة مضيئة أثناء القراءة</li>
+                <li>✅ رسالة تأكيد عند وضع العلامة</li>
+                <li>⏱️ مؤقت مدة القراءة</li>
+                <li>🔒 قفل الشاشة لمنع اللمس العرضي</li>
+                <li>✨ إبراز الآية عند اللمس</li>
+                <li>☀️ إبقاء الشاشة مضيئة</li>
                 <li>☁️ مزامنة تلقائية بين الأجهزة</li>
                 <li>📊 شريط تقدم دقيق (بالآيات)</li>
                 <li>🌙 وضع ليلي + 🎨 لون العلامة</li>
@@ -599,12 +653,11 @@
                 <button class="label-save" onclick="saveLabelBookmark()">✅ حفظ العلامة</button>
                 <button class="label-cancel" onclick="closeLabelDialog()">إلغاء</button>
             </div>
-            <p style="text-align:center; font-size:0.8rem; color:var(--ink-secondary); margin-top:10px;">☁️ ستُزامن هذه العلامة تلقائياً مع أجهزتك الأخرى</p>
         </div>
     </div>
 
     <script>
-        const APP_VERSION = 'v1.5';   // ← غيّر هذا الرقم عند كل تحديث ليظهر للجميع
+        const APP_VERSION = 'v1.6';
 
         const SURAH_NAMES = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 
@@ -640,6 +693,8 @@
         let lastAddTime = 0;
         let wakeLock = null;
         let wakeLockWanted = false;
+        let screenLocked = false;
+        let readingStartTime = Date.now();
         const perPage = 10;
 
         try {
@@ -654,52 +709,112 @@
             if (localStorage.getItem('wakeLockWanted') === 'true') wakeLockWanted = true;
         } catch (e) {}
 
-        // ========== نافذة الترحيب بالتحديث ==========
+        // ========== Toast (رسالة تأكيد) ==========
+        function showToast(message, type = 'default', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            if (type === 'bookmark') toast.classList.add('toast-bookmark');
+            else if (type === 'special') toast.classList.add('toast-special');
+            else if (type === 'info') toast.classList.add('toast-info');
+            else if (type === 'warning') toast.classList.add('toast-warning');
+            
+            let icon = '✅';
+            if (type === 'bookmark') icon = '🔖';
+            else if (type === 'special') icon = '📌';
+            else if (type === 'info') icon = 'ℹ️';
+            else if (type === 'warning') icon = '⚠️';
+            
+            toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) toast.parentNode.removeChild(toast);
+            }, duration);
+        }
+
+        // ========== مؤقت القراءة ==========
+        function updateReadingTimer() {
+            const elapsed = Math.floor((Date.now() - readingStartTime) / 1000);
+            const hours = Math.floor(elapsed / 3600);
+            const minutes = Math.floor((elapsed % 3600) / 60);
+            const seconds = elapsed % 60;
+            const pad = (n) => String(n).padStart(2, '0');
+            document.getElementById('readingTimer').textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        }
+        setInterval(updateReadingTimer, 1000);
+
+        // ========== قفل الشاشة ==========
+        function toggleScreenLock() {
+            const btn = document.getElementById('lockBtn');
+            const overlay = document.getElementById('screenLockOverlay');
+            
+            if (screenLocked) {
+                unlockScreen();
+            } else {
+                screenLocked = true;
+                overlay.classList.add('active');
+                btn.textContent = '🔓 فتح الشاشة';
+                btn.classList.add('active');
+                
+                // رسالة داخل القفل
+                const msg = document.createElement('div');
+                msg.className = 'screen-lock-message';
+                msg.id = 'lockMessage';
+                msg.innerHTML = `
+                    <span>🔒 الشاشة مقفلة - القراءة آمنة</span>
+                    <button onclick="unlockScreen()">فتح</button>
+                `;
+                document.body.appendChild(msg);
+                
+                // منع التمرير
+                document.body.style.overflow = 'hidden';
+                
+                showToast('تم قفل الشاشة 🔒', 'info', 2000);
+            }
+        }
+        
+        function unlockScreen() {
+            if (!screenLocked) return;
+            screenLocked = false;
+            document.getElementById('screenLockOverlay').classList.remove('active');
+            const btn = document.getElementById('lockBtn');
+            btn.textContent = '🔒 قفل الشاشة';
+            btn.classList.remove('active');
+            
+            const msg = document.getElementById('lockMessage');
+            if (msg) msg.remove();
+            
+            document.body.style.overflow = '';
+            showToast('تم فتح الشاشة 🔓', 'info', 1500);
+        }
+
+        // ========== نافذة الترحيب ==========
         function checkForUpdate() {
             let lastSeenVersion = '';
             try { lastSeenVersion = localStorage.getItem('appVersion') || ''; } catch (e) {}
             if (lastSeenVersion !== APP_VERSION) {
-                // نسخة جديدة → اعرض الترحيب
-                setTimeout(() => {
-                    openWelcome();
-                    // لا نحفظ النسخة هنا، بل نحفظها عند الإغلاق
-                }, 800);
+                setTimeout(() => { openWelcome(); }, 800);
                 return true;
             }
-            // لم يعد بحاجة لـ helpShown لأن نافذة الترحيب كافية
             return false;
         }
 
-        function openWelcome() {
-            document.getElementById('welcomeOverlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+        function openWelcome() { document.getElementById('welcomeOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeWelcome() {
             document.getElementById('welcomeOverlay').classList.remove('active');
             document.body.style.overflow = '';
-            try {
-                localStorage.setItem('appVersion', APP_VERSION);
-                localStorage.setItem('helpShown', 'true');
-            } catch (e) {}
+            try { localStorage.setItem('appVersion', APP_VERSION); localStorage.setItem('helpShown', 'true'); } catch (e) {}
         }
-        function closeWelcomeOutside(e) {
-            if (e.target.id === 'welcomeOverlay') closeWelcome();
-        }
+        function closeWelcomeOutside(e) { if (e.target.id === 'welcomeOverlay') closeWelcome(); }
 
         // ========== Wake Lock ==========
         async function requestWakeLock() {
             if (!('wakeLock' in navigator)) return false;
-            try {
-                wakeLock = await navigator.wakeLock.request('screen');
-                return true;
-            } catch (err) { return false; }
+            try { wakeLock = await navigator.wakeLock.request('screen'); return true; } catch (err) { return false; }
         }
-
         async function toggleWakeLock() {
-            if (!('wakeLock' in navigator)) {
-                alert('⚠️ ميزة إبقاء الشاشة مضيئة غير مدعومة في متصفحك.\n\nجرب: Chrome أو Edge الحديث، أو Safari 16.4+');
-                return;
-            }
+            if (!('wakeLock' in navigator)) { alert('⚠️ ميزة إبقاء الشاشة مضيئة غير مدعومة في متصفحك.'); return; }
             const btn = document.getElementById('wakeBtn');
             if (wakeLockWanted) {
                 wakeLockWanted = false;
@@ -707,6 +822,7 @@
                 if (wakeLock) { try { await wakeLock.release(); } catch (e) {} wakeLock = null; }
                 btn.textContent = '☀️ إبقاء الشاشة';
                 btn.classList.remove('active');
+                showToast('تم إيقاف إبقاء الشاشة', 'info', 2000);
             } else {
                 wakeLockWanted = true;
                 try { localStorage.setItem('wakeLockWanted', 'true'); } catch (e) {}
@@ -714,6 +830,7 @@
                 if (ok) {
                     btn.textContent = '💡 الشاشة مضيئة';
                     btn.classList.add('active');
+                    showToast('تم تفعيل إبقاء الشاشة مضيئة ☀️', 'info', 2000);
                 } else {
                     wakeLockWanted = false;
                     try { localStorage.setItem('wakeLockWanted', 'false'); } catch (e) {}
@@ -721,7 +838,6 @@
                 }
             }
         }
-
         document.addEventListener('visibilitychange', async () => {
             if (document.visibilityState === 'visible' && wakeLockWanted) {
                 await requestWakeLock();
@@ -729,17 +845,10 @@
                 if (btn && wakeLock) { btn.textContent = '💡 الشاشة مضيئة'; btn.classList.add('active'); }
             }
         });
-
         async function initWakeLock() {
             const btn = document.getElementById('wakeBtn');
-            if (!('wakeLock' in navigator)) {
-                if (btn) { btn.style.opacity = '0.5'; btn.title = 'غير مدعوم في هذا المتصفح'; }
-                return;
-            }
-            if (wakeLockWanted) {
-                const ok = await requestWakeLock();
-                if (ok && btn) { btn.textContent = '💡 الشاشة مضيئة'; btn.classList.add('active'); }
-            }
+            if (!('wakeLock' in navigator)) { if (btn) { btn.style.opacity = '0.5'; btn.title = 'غير مدعوم'; } return; }
+            if (wakeLockWanted) { const ok = await requestWakeLock(); if (ok && btn) { btn.textContent = '💡 الشاشة مضيئة'; btn.classList.add('active'); } }
         }
 
         function applyBookmarkColor() {
@@ -748,7 +857,6 @@
             document.documentElement.style.setProperty('--bookmark-dark', c.dark);
             try { localStorage.setItem('bookmarkColor', bookmarkColorIndex); } catch (e) {}
         }
-
         function openColorPicker() {
             const grid = document.getElementById('colorGrid');
             grid.innerHTML = BOOKMARK_COLORS.map((c, i) => `<div class="color-option ${i === bookmarkColorIndex ? 'selected' : ''}" style="background: linear-gradient(180deg, ${c.light}, ${c.dark});" onclick="selectColor(${i})" title="${c.name}"></div>`).join('');
@@ -765,26 +873,12 @@
             try { localStorage.setItem('darkMode', isDark); } catch (e) {}
             document.getElementById('darkModeBtn').textContent = isDark ? '☀️ نهاري' : '🌙 ليلي';
         }
-
         function openHelp() { document.getElementById('helpOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeHelp() { document.getElementById('helpOverlay').classList.remove('active'); document.body.style.overflow = ''; }
         function closeHelpOutside(e) { if (e.target.id === 'helpOverlay') closeHelp(); }
-
-        function loadBookmark() {
-            try { const s = localStorage.getItem('quranBookmark'); if (s) bookmark = JSON.parse(s); } catch (e) { bookmark = null; }
-        }
-
-        function saveAllBookmarksLocal() {
-            try { localStorage.setItem('allBookmarks', JSON.stringify(allBookmarks)); } catch (e) {}
-            updateBmCount();
-        }
-
-        function saveAllBookmarks() {
-            saveAllBookmarksLocal();
-            lastAddTime = Date.now();
-            syncSpecialBookmarksToServer();
-        }
-
+        function loadBookmark() { try { const s = localStorage.getItem('quranBookmark'); if (s) bookmark = JSON.parse(s); } catch (e) { bookmark = null; } }
+        function saveAllBookmarksLocal() { try { localStorage.setItem('allBookmarks', JSON.stringify(allBookmarks)); } catch (e) {} updateBmCount(); }
+        function saveAllBookmarks() { saveAllBookmarksLocal(); lastAddTime = Date.now(); syncSpecialBookmarksToServer(); }
         function updateBmCount() { document.getElementById('bmCount').textContent = allBookmarks.length; }
 
         function renderResultsPreservingScroll(anchorSurah, anchorAyah) {
@@ -800,13 +894,8 @@
                 requestAnimationFrame(() => {
                     if (anchorTop !== null) {
                         const newEl = document.getElementById(`ayah-${anchorSurah}-${anchorAyah}`);
-                        if (newEl) {
-                            const newTop = newEl.getBoundingClientRect().top;
-                            window.scrollBy(0, newTop - anchorTop);
-                        }
-                    } else {
-                        window.scrollTo(0, scrollY);
-                    }
+                        if (newEl) { window.scrollBy(0, newEl.getBoundingClientRect().top - anchorTop); }
+                    } else { window.scrollTo(0, scrollY); }
                 });
             });
         }
@@ -819,17 +908,21 @@
             updateBookmarkBar();
             focusAyah = null;
             renderResultsPreservingScroll();
+            showToast('تم حذف العلامة', 'warning', 2000);
         }
 
         function toggleBookmark(surah, ayah) {
+            const sName = SURAH_NAMES[surah - 1] || '؟';
             if (bookmark && bookmark.surah == surah && bookmark.ayah == ayah) {
                 bookmark = null;
                 try { localStorage.removeItem('quranBookmark'); } catch (e) {}
                 syncDeleteToServer();
+                showToast(`تم إزالة العلامة من سورة ${sName} - آية ${ayah}`, 'warning', 2500);
             } else {
                 bookmark = { surah: parseInt(surah), ayah: parseInt(ayah), timestamp: Date.now() };
                 try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) {}
                 syncBookmarkToServer(parseInt(surah), parseInt(ayah));
+                showToast(`تم حفظ آخر قراءة: سورة ${sName} - آية ${ayah}`, 'bookmark', 3000);
             }
             updateBookmarkBar();
             updateProgress();
@@ -847,7 +940,6 @@
             document.body.style.overflow = 'hidden';
             setTimeout(() => document.getElementById('labelInput').focus(), 100);
         }
-
         function setQuickLabel(text) { document.getElementById('labelInput').value = text; }
 
         function saveLabelBookmark() {
@@ -856,6 +948,7 @@
             if (pendingSurah === null || pendingAyah === null) return;
             const anchorSurah = pendingSurah;
             const anchorAyah = pendingAyah;
+            const sName = SURAH_NAMES[anchorSurah - 1] || '؟';
             const existing = allBookmarks.find(b => b.surah === anchorSurah && b.ayah === anchorAyah && b.label === label);
             if (existing) { if (!confirm('توجد علامة بنفس الاسم. إضافتها مرة أخرى؟')) return; }
             allBookmarks.push({ id: String(Date.now()) + '_' + Math.random().toString(36).substring(2, 8), label: label, surah: anchorSurah, ayah: anchorAyah, created: Date.now() });
@@ -863,15 +956,14 @@
             updateProgress();
             closeLabelDialog();
             renderResultsPreservingScroll(anchorSurah, anchorAyah);
+            showToast(`تمت إضافة "${label}" على ${sName} - آية ${anchorAyah}`, 'special', 3500);
         }
-
         function closeLabelDialog() {
             document.getElementById('labelOverlay').classList.remove('active');
             document.body.style.overflow = '';
             pendingSurah = null; pendingAyah = null;
         }
         function closeLabelOutside(e) { if (e.target.id === 'labelOverlay') closeLabelDialog(); }
-
         function hasSpecialBookmark(surah, ayah) { return allBookmarks.some(b => b.surah == surah && b.ayah == ayah); }
         function getSpecialLabels(surah, ayah) { return allBookmarks.filter(b => b.surah == surah && b.ayah == ayah).map(b => b.label); }
 
@@ -883,13 +975,12 @@
             closeBookmarksList();
             jumpToBookmark();
         }
-
         function deleteMyBookmark(id) {
             if (!confirm('حذف هذه العلامة؟')) return;
             allBookmarks = allBookmarks.filter(x => String(x.id) !== String(id));
             saveAllBookmarks(); updateProgress(); openBookmarksList();
+            showToast('تم حذف العلامة', 'warning', 2000);
         }
-
         function editMyBookmark(id) {
             const b = allBookmarks.find(x => String(x.id) === String(id));
             if (!b) return;
@@ -898,6 +989,7 @@
             b.label = newLabel.trim();
             saveAllBookmarks(); openBookmarksList();
             renderResultsPreservingScroll();
+            showToast('تم تعديل اسم العلامة', 'special', 2000);
         }
 
         function openBookmarksList() {
@@ -980,7 +1072,6 @@
             return text.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D3-\u08E1\u08E3-\u08FF]/g, '').replace(/\u0640/g, '').replace(/[\u0622\u0623\u0625\u0671]/g, '\u0627').replace(/\u0649/g, '\u064A').replace(/\u0624/g, '\u0648').replace(/\u0629/g, '\u0647').replace(/[﴿﴾۝۞۩]/g, '');
         }
         function normalizeSearch(text) { return text ? removeTashkeel(text).replace(/\s+/g, ' ').trim() : ''; }
-
         function isArabicLetter(c) { if (!c) return false; return /[\u0621-\u063A\u0641-\u064A]/.test(c); }
 
         function findKeywordPosition(text, keyword) {
@@ -1010,16 +1101,13 @@
             }
             return null;
         }
-
         function searchMatch(text, keyword) { if (!keyword) return true; return findKeywordPosition(text, keyword) !== null; }
-
         function highlight(text, keyword) {
             if (!keyword || !text) return text;
             const match = findKeywordPosition(text, keyword);
             if (!match) return text;
             return text.substring(0, match.start) + '<mark>' + text.substring(match.start, match.end) + '</mark>' + text.substring(match.end);
         }
-
         function findSurahByName(keyword) {
             if (!keyword) return null;
             const cleanKeyword = normalizeSearch(keyword);
@@ -1028,12 +1116,10 @@
             if (cleanKeyword.length >= 3) { for (let i = 0; i < SURAH_NAMES.length; i++) { if (normalizeSearch(SURAH_NAMES[i]).includes(cleanKeyword)) return i + 1; } }
             return null;
         }
-
         function populateSurahSelect() {
             const sel = document.getElementById('surahSelect');
             SURAH_NAMES.forEach((name, i) => { const opt = document.createElement('option'); opt.value = i + 1; opt.textContent = `${i + 1}. ${name}`; sel.appendChild(opt); });
         }
-
         function updateAyahDropdown(surahNum, keepAyah) {
             const ayahSel = document.getElementById('ayahSelect');
             ayahSel.innerHTML = '<option value="all">كل الآيات</option>';
@@ -1042,11 +1128,9 @@
             quranData.filter(a => a.surah === s).forEach(a => { const opt = document.createElement('option'); opt.value = a.ayah; opt.textContent = `آية ${a.ayah}`; ayahSel.appendChild(opt); });
             if (keepAyah) ayahSel.value = keepAyah;
         }
-
         function populateSidebar() {
             document.getElementById('sidebarList').innerHTML = SURAH_NAMES.map((name, i) => `<div class="surah-nav-item" onclick="jumpToSurah(${i + 1})"><span class="num">${i + 1}</span><span>${name}</span></div>`).join('');
         }
-
         function jumpToSurah(num) {
             closeSidebar();
             document.getElementById('sourceSelect').value = 'quran';
@@ -1058,7 +1142,6 @@
             renderResults();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
         function showFullSurah(surah, ayah) {
             focusAyah = ayah;
             currentSource = 'quran';
@@ -1075,7 +1158,6 @@
             currentPage = index >= 0 ? Math.floor(index / perPage) + 1 : 1;
             renderResults();
         }
-
         function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('sidebarOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebarOverlay').classList.remove('active'); document.body.style.overflow = ''; }
 
@@ -1158,7 +1240,6 @@
             Object.keys(allTafsirs).forEach(k => results.push(...searchInSingleTafsir(k, keyword, surah)));
             return results;
         }
-
         function performSearch() {
             currentKeyword = document.getElementById('searchInput').value.trim();
             currentSource = document.getElementById('sourceSelect').value;
@@ -1177,7 +1258,6 @@
             }
             renderResults();
         }
-
         function renderSurahSuggestion() {
             const container = document.getElementById('surahSuggestionContainer');
             container.innerHTML = '';
@@ -1186,6 +1266,19 @@
             if (!surahNum) return;
             const sName = SURAH_NAMES[surahNum - 1];
             container.innerHTML = `<div class="surah-suggestion"><span class="surah-suggestion-text">📖 هل تريد عرض <strong>سورة ${sName}</strong> كاملة؟</span><button onclick="jumpToSurah(${surahNum})">⚡ عرض السورة</button></div>`;
+        }
+
+        // ✅ إضافة مستمع الضغط على كل بطاقة آية لإبراز مؤقت
+        function attachTapHighlight() {
+            document.querySelectorAll('.ayah-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // تجاهل النقر على الأزرار
+                    if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+                    if (screenLocked) return;
+                    this.classList.add('temp-highlight');
+                    setTimeout(() => this.classList.remove('temp-highlight'), 1500);
+                });
+            });
         }
 
         function renderResults() {
@@ -1311,7 +1404,7 @@
                 }, 400);
             }
 
-            setTimeout(updateJumpBtnText, 100);
+            setTimeout(() => { updateJumpBtnText(); attachTapHighlight(); }, 100);
         }
 
         function openAbout() { document.getElementById('aboutOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
@@ -1407,11 +1500,11 @@
         loadData();
         startSync();
         initWakeLock();
+        updateReadingTimer();
 
         if (document.body.classList.contains('dark-mode')) { document.getElementById('darkModeBtn').textContent = '☀️ نهاري'; }
         setTimeout(updateJumpBtnText, 500);
 
-        // ✅ عرض نافذة الترحيب بالتحديث
         checkForUpdate();
     </script>
 </body>
