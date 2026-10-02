@@ -55,20 +55,42 @@
         .reading-timer .timer-value { font-family: 'Courier New', monospace; font-size: 1.05rem; background: rgba(255,255,255,0.5); padding: 2px 10px; border-radius: 6px; border: 1px solid rgba(59,130,246,0.3); color: #1d4ed8; }
         body.dark-mode .reading-timer .timer-value { background: rgba(0,0,0,0.3); color: #93c5fd; }
 
-        .screen-lock-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.05); z-index: 9997; cursor: not-allowed; }
+        /* ====== نظام القفل المُحسَّن ====== */
+        .screen-lock-overlay { display: none; position: fixed; inset: 0; background: rgba(220, 38, 38, 0.02); z-index: 9996; pointer-events: none; }
         .screen-lock-overlay.active { display: block; }
-        .screen-lock-float { display: none; position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); z-index: 9999; padding: 14px 28px; background: linear-gradient(180deg, #dc2626, #991b1b); color: white; border: 3px solid white; border-radius: 50px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 1.05rem; cursor: pointer; box-shadow: 0 8px 30px rgba(220, 38, 38, 0.6), 0 0 0 4px rgba(220, 38, 38, 0.2); transition: all 0.3s ease; animation: lockFloatPulse 2s ease-in-out infinite; user-select: none; white-space: nowrap; }
-        .screen-lock-float.active { display: flex; align-items: center; gap: 10px; }
-        .screen-lock-float:hover { transform: translateX(-50%) translateY(-3px); }
-        @keyframes lockFloatPulse { 0%, 100% { box-shadow: 0 8px 30px rgba(220, 38, 38, 0.6), 0 0 0 4px rgba(220, 38, 38, 0.2); } 50% { box-shadow: 0 8px 30px rgba(220, 38, 38, 0.6), 0 0 0 10px rgba(220, 38, 38, 0.05); } }
-        .screen-lock-badge { display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 9999; padding: 8px 20px; background: linear-gradient(180deg, #dc2626, #991b1b); color: white; border-radius: 30px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.85rem; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5); animation: slideDown 0.4s ease; user-select: none; pointer-events: none; }
-        .screen-lock-badge.active { display: flex; align-items: center; gap: 8px; }
-        @keyframes slideDown { from { transform: translate(-50%, -100px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+        body.screen-locked .ayah-card,
+        body.screen-locked .bookmark-btn,
+        body.screen-locked .special-btn,
+        body.screen-locked .show-context-btn,
+        body.screen-locked .bookmark-jump-btn,
+        body.screen-locked .bookmark-clear-btn,
+        body.screen-locked .pagination a,
+        body.screen-locked .surah-suggestion button,
+        body.screen-locked .top-buttons button,
+        body.screen-locked .search-box button,
+        body.screen-locked .search-box input,
+        body.screen-locked .search-box select,
+        body.screen-locked .about-btn {
+            pointer-events: none !important;
+        }
+        body.screen-locked .lock-fab,
+        body.screen-locked .screen-lock-float {
+            pointer-events: auto !important;
+        }
+        
+        /* زر الفتح - في الزاوية العلوية اليمنى */
+        .screen-lock-float { display: none; position: fixed; top: 15px; right: 15px; z-index: 10001; padding: 10px 16px; background: linear-gradient(180deg, #dc2626, #991b1b); color: white; border: 2px solid white; border-radius: 30px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5); animation: lockFloatPulse 2s ease-in-out infinite; user-select: none; white-space: nowrap; }
+        .screen-lock-float.active { display: flex; align-items: center; gap: 6px; }
+        @keyframes lockFloatPulse { 0%, 100% { box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5); } 50% { box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5), 0 0 0 8px rgba(220, 38, 38, 0.1); } }
+        
+        /* شارة صغيرة في الأعلى */
+        .screen-lock-badge { display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 10000; padding: 8px 16px; background: linear-gradient(180deg, #dc2626, #991b1b); color: white; border-radius: 30px; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.5); user-select: none; pointer-events: none; }
+        .screen-lock-badge.active { display: flex; align-items: center; gap: 6px; }
 
         /* ✅ الزر العائم للقفل */
         .lock-fab {
             position: fixed;
-            bottom: 90px;
+            bottom: 25px;
             right: 20px;
             width: 60px;
             height: 60px;
@@ -82,7 +104,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.6rem;
-            z-index: 9996;
+            z-index: 10000;
             transition: all 0.3s ease;
             animation: lockFabPulse 2s ease-in-out infinite;
             padding: 0;
@@ -285,13 +307,15 @@
             .reading-timer { font-size: 0.8rem; padding: 6px 10px; }
             .reading-timer .timer-value { font-size: 0.9rem; padding: 2px 8px; }
             .toast { font-size: 0.85rem; padding: 10px 16px; }
-            .lock-fab { width: 55px; height: 55px; font-size: 1.4rem; bottom: 85px; right: 15px; }
+            .lock-fab { width: 55px; height: 55px; font-size: 1.4rem; bottom: 20px; right: 15px; }
+            .screen-lock-float { font-size: 0.75rem; padding: 8px 12px; }
+            .screen-lock-badge { font-size: 0.7rem; padding: 6px 12px; }
         }
     </style>
 </head>
 <body>
     <div class="toast-container" id="toastContainer"></div>
-    <div class="screen-lock-overlay" id="screenLockOverlay" onclick="unlockScreen()"></div>
+    <div class="screen-lock-overlay" id="screenLockOverlay"></div>
     <button class="lock-fab" id="lockFab" onclick="toggleScreenLock()" title="قفل/فتح الشاشة">🔒</button>
 
     <div class="container">
@@ -383,7 +407,7 @@
             <div class="welcome-header">
                 <span class="welcome-icon">🌟</span>
                 <h2 class="welcome-title">مرحباً بك</h2>
-                <div class="welcome-version">الإصدار الجديد v1.7</div>
+                <div class="welcome-version">الإصدار الجديد v1.8</div>
             </div>
             <div class="welcome-message">
                 ﴿ وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ ﴾
@@ -391,12 +415,11 @@
                 <span style="font-size:0.85rem; color:var(--ink-secondary);">أهلاً بك في الموسوعة القرآنية — رفيقك في قيام الليل</span>
             </div>
             <h3 class="welcome-features-title">✨ ما الجديد في هذا التحديث</h3>
-            <div class="feature-item"><div class="feature-icon">🔒</div><div class="feature-content"><div class="feature-title"><span class="feature-badge new">جديد</span> زر قفل عائم</div><div class="feature-desc">عند التمرير للأسفل، يظهر زر قفل عائم في الزاوية. اضغطه لقفل/فتح الشاشة من أي مكان — لا حاجة للعودة لأعلى الصفحة!</div></div></div>
-            <div class="feature-item"><div class="feature-icon">✅</div><div class="feature-content"><div class="feature-title"><span class="feature-badge">سابق</span> رسالة تأكيد فورية</div><div class="feature-desc">عند وضع علامة، تظهر رسالة خضراء واضحة تُخبرك بمكان العلامة بالضبط.</div></div></div>
+            <div class="feature-item"><div class="feature-icon">🔒</div><div class="feature-content"><div class="feature-title"><span class="feature-badge new">جديد</span> تحسين قفل الشاشة</div><div class="feature-desc">الآن يمكنك التنقل بين الصفحات أثناء قفل الشاشة! زر الفتح في الزاوية العلوية اليمنى، وزر القفل العائم في الزاوية السفلية اليمنى.</div></div></div>
+            <div class="feature-item"><div class="feature-icon">✅</div><div class="feature-content"><div class="feature-title"><span class="feature-badge">سابق</span> رسالة تأكيد فورية</div><div class="feature-desc">عند وضع علامة، تظهر رسالة تُخبرك بمكان العلامة بالضبط.</div></div></div>
             <div class="feature-item"><div class="feature-icon">⏱️</div><div class="feature-content"><div class="feature-title"><span class="feature-badge">سابق</span> مؤقت مدة القراءة</div><div class="feature-desc">يعرض أعلى الصفحة مدة قراءتك منذ فتح التطبيق.</div></div></div>
             <div class="feature-item"><div class="feature-icon">✨</div><div class="feature-content"><div class="feature-title"><span class="feature-badge">سابق</span> إبراز الآية عند اللمس</div><div class="feature-desc">عند الضغط على أي آية، تُبرَز بإطار ذهبي لثانية ونصف.</div></div></div>
             <div class="feature-item"><div class="feature-icon">☀️</div><div class="feature-content"><div class="feature-title"><span class="feature-badge">سابق</span> إبقاء الشاشة مضيئة</div><div class="feature-desc">اضغط <strong>☀️ إبقاء الشاشة</strong> لمنع انطفاء الشاشة أثناء القراءة.</div></div></div>
-            <div class="feature-item"><div class="feature-icon">🎯</div><div class="feature-content"><div class="feature-title"><span class="feature-badge">سابق</span> ثبات الشاشة عند وضع العلامة</div><div class="feature-desc">عند وضع علامة 🔖 أو 📌، تبقى الشاشة في مكانها تماماً.</div></div></div>
             <button class="welcome-footer-btn" onclick="closeWelcome()">✅ فهمت، لنبدأ القراءة</button>
             <div class="welcome-dua">اللهم اجعل هذا العمل خالصاً لوجهك الكريم 🤲</div>
         </div>
@@ -407,19 +430,15 @@
             <button class="about-close" onclick="closeHelp()">✖</button>
             <h2>📖 طريقة الاستخدام</h2>
             <p class="about-intro">دليل شامل لاستخدام جميع ميزات التطبيق</p>
-            <div class="help-tip">💡 <strong>نصيحة:</strong> عند التمرير، يظهر زر قفل عائم في الزاوية السفلية اليمنى — يمكنك القفل من أي مكان!</div>
-            <h3 class="help-section-title">🔒 قفل الشاشة (جديد)</h3>
-            <div class="help-step"><div class="help-step-icon">🔒</div><div class="help-step-content"><div class="help-step-title">قفل الشاشة العائم</div><div class="help-step-desc">عند التمرير للأسفل، يظهر <strong>زر أحمر عائم 🔒</strong> في الزاوية. اضغطه لقفل الشاشة. عند القفل يتحول للون الأخضر 🔓. اضغطه مرة أخرى للفتح.</div></div></div>
+            <div class="help-tip">💡 <strong>نصيحة:</strong> عند التمرير، يظهر زر قفل عائم في الزاوية السفلية اليمنى.</div>
+            <h3 class="help-section-title">🔒 قفل الشاشة (مُحدَّث)</h3>
+            <div class="help-step"><div class="help-step-icon">🔒</div><div class="help-step-content"><div class="help-step-title">قفل الشاشة الذكي</div><div class="help-step-desc">اضغط <strong>🔒 قفل الشاشة</strong> (أو الزر العائم عند التمرير). زر الفتح يظهر في <strong>الزاوية العلوية اليمنى</strong>. <strong>يمكنك التنقل بين الصفحات أثناء القفل!</strong> اللمس على الآيات فقط هو المُعطَّل.</div></div></div>
             <h3 class="help-section-title">🌟 الاستخدام الأساسي</h3>
             <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">1. قراءة القرآن</div><div class="help-step-desc">اختر السورة واضغط <code>بحث</code>.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">2. زر "عرض" السورة</div><div class="help-step-desc">عند البحث، يظهر زر <code>📖 عرض</code> على كل آية لعرض السورة كاملة من عندها.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">2. زر "عرض" السورة</div><div class="help-step-desc">عند البحث، يظهر زر <code>📖 عرض</code> على كل آية لعرض السورة كاملة.</div></div></div>
             <div class="help-step"><div class="help-step-icon">🔖</div><div class="help-step-content"><div class="help-step-title">3. حفظ موضع القراءة</div><div class="help-step-desc">اضغط <code>🔖</code> على أي آية. تظهر رسالة تأكيد.</div></div></div>
             <div class="help-step"><div class="help-step-icon">📌</div><div class="help-step-content"><div class="help-step-title">4. علامة خاصة</div><div class="help-step-desc">اضغط <code>📌</code> وأدخل اسماً. عدد غير محدود!</div></div></div>
             <div class="help-step"><div class="help-step-icon">📋</div><div class="help-step-content"><div class="help-step-title">5. عرض علاماتي</div><div class="help-step-desc">اضغط <code>📌 علاماتي</code> للانتقال/التعديل/الحذف.</div></div></div>
-            <h3 class="help-section-title">🌟 ميزات حديثة</h3>
-            <div class="help-step"><div class="help-step-icon">✅</div><div class="help-step-content"><div class="help-step-title">رسالة تأكيد فورية</div><div class="help-step-desc">تظهر عند وضع علامة. تخبرك بمكان العلامة بالضبط.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">⏱️</div><div class="help-step-content"><div class="help-step-title">مؤقت القراءة</div><div class="help-step-desc">يعرض مدة قراءتك أعلى الصفحة.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">✨</div><div class="help-step-content"><div class="help-step-title">إبراز عند اللمس</div><div class="help-step-desc">اضغط على أي آية → تُبرَز بإطار ذهبي مؤقت.</div></div></div>
             <h3 class="help-section-title">☀️ إبقاء الشاشة مضيئة</h3>
             <div class="help-step"><div class="help-step-icon">☀️</div><div class="help-step-content"><div class="help-step-title">إبقاء الشاشة مضيئة</div><div class="help-step-desc">اضغط زر <code>☀️ إبقاء الشاشة</code> لمنع إطفاء الشاشة أثناء القراءة.</div></div></div>
             <h3 class="help-section-title">☁️ المزامنة</h3>
@@ -454,7 +473,7 @@
                 <li>📌 علامات خاصة متعددة</li>
                 <li>✅ رسالة تأكيد عند وضع العلامة</li>
                 <li>⏱️ مؤقت مدة القراءة</li>
-                <li>🔒 زر قفل عائم (يعمل عند التمرير)</li>
+                <li>🔒 قفل الشاشة الذكي (التنقل يعمل)</li>
                 <li>✨ إبراز الآية عند اللمس</li>
                 <li>☀️ إبقاء الشاشة مضيئة</li>
                 <li>☁️ مزامنة تلقائية بين الأجهزة</li>
@@ -522,7 +541,7 @@
     </div>
 
     <script>
-        const APP_VERSION = 'v1.7';
+        const APP_VERSION = 'v1.8';
         const SURAH_NAMES = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
         const SURAH_AYAH_COUNTS = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
         const TOTAL_QURAN_AYAHS = 6236;
@@ -579,45 +598,47 @@
         setInterval(updateReadingTimer, 1000);
 
         function toggleScreenLock() {
-            const btn = document.getElementById('lockBtn');
-            const fab = document.getElementById('lockFab');
-            const overlay = document.getElementById('screenLockOverlay');
             if (screenLocked) {
                 unlockScreen();
             } else {
                 screenLocked = true;
-                overlay.classList.add('active');
-                btn.textContent = '🔓 فتح الشاشة';
-                btn.classList.add('active');
+                document.body.classList.add('screen-locked');
+                document.getElementById('screenLockOverlay').classList.add('active');
+                document.getElementById('lockBtn').textContent = '🔓 فتح الشاشة';
+                document.getElementById('lockBtn').classList.add('active');
+                const fab = document.getElementById('lockFab');
                 if (fab) { fab.textContent = '🔓'; fab.classList.add('locked'); fab.classList.add('visible'); }
+                
+                // زر الفتح - زاوية علوية يمنى
                 const floatBtn = document.createElement('div');
                 floatBtn.className = 'screen-lock-float active';
                 floatBtn.id = 'screenLockFloat';
-                floatBtn.innerHTML = '<span>🔒</span><span>اضغط لفتح الشاشة</span>';
+                floatBtn.innerHTML = '<span>🔓</span><span>فتح الشاشة</span>';
                 floatBtn.onclick = unlockScreen;
                 document.body.appendChild(floatBtn);
+                
+                // شارة صغيرة
                 const badge = document.createElement('div');
                 badge.className = 'screen-lock-badge active';
                 badge.id = 'screenLockBadge';
                 badge.innerHTML = '<span>🔒</span><span>الشاشة مقفلة</span>';
                 document.body.appendChild(badge);
-                document.body.style.overflow = 'hidden';
-                showToast('تم قفل الشاشة 🔒', 'info', 2000);
+                
+                showToast('تم قفل الشاشة 🔒 — يمكنك التنقل بين الصفحات', 'info', 3000);
             }
         }
 
         function unlockScreen() {
             if (!screenLocked) return;
             screenLocked = false;
+            document.body.classList.remove('screen-locked');
             document.getElementById('screenLockOverlay').classList.remove('active');
-            const btn = document.getElementById('lockBtn');
-            btn.textContent = '🔒 قفل الشاشة';
-            btn.classList.remove('active');
+            document.getElementById('lockBtn').textContent = '🔒 قفل الشاشة';
+            document.getElementById('lockBtn').classList.remove('active');
             const fab = document.getElementById('lockFab');
             if (fab) { fab.textContent = '🔒'; fab.classList.remove('locked'); }
             const floatBtn = document.getElementById('screenLockFloat'); if (floatBtn) floatBtn.remove();
             const badge = document.getElementById('screenLockBadge'); if (badge) badge.remove();
-            document.body.style.overflow = '';
             showToast('تم فتح الشاشة 🔓', 'info', 1500);
         }
 
@@ -1158,7 +1179,6 @@
         document.getElementById('ayahSelect').addEventListener('change', performSearch);
         window.addEventListener('scroll', updateJumpBtnText);
         window.addEventListener('resize', updateJumpBtnText);
-        // ✅ إظهار الزر العائم عند التمرير
         window.addEventListener('scroll', function() {
             const fab = document.getElementById('lockFab');
             if (!fab) return;
