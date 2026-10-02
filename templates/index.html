@@ -42,6 +42,9 @@
         .about-btn.bm-color { background: linear-gradient(180deg,#f59e0b,#b45309); border-color:#78350f; }
         .about-btn.my-bm { background: linear-gradient(180deg,#a78bfa,#7c3aed); border-color:#5b21b6; }
         .about-btn.help { background: linear-gradient(180deg,#10b981,#047857); border-color:#065f46; }
+        .about-btn.wake { background: linear-gradient(180deg,#fbbf24,#d97706); border-color:#92400e; }
+        .about-btn.wake.active { background: linear-gradient(180deg,#f59e0b,#b45309); border-color:#78350f; box-shadow: 0 0 0 2px rgba(251,191,36,0.5), 0 4px 12px rgba(217,119,6,0.5); animation: wakePulse 2s ease-in-out infinite; }
+        @keyframes wakePulse { 0%,100% { box-shadow: 0 0 0 2px rgba(251,191,36,0.5), 0 4px 12px rgba(217,119,6,0.5); } 50% { box-shadow: 0 0 0 4px rgba(251,191,36,0.3), 0 4px 16px rgba(217,119,6,0.7); } }
         .progress-wrap { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 12px 18px 36px 18px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 12px; position: relative; }
         .progress-label { font-size: 0.85rem; font-weight: 700; color: var(--ink-primary); white-space: nowrap; padding-top: 12px; }
         .progress-bar { flex: 1; height: 18px; background: rgba(0,0,0,0.08); border-radius: 10px; border: 1px solid var(--border-color); position: relative; direction: ltr; margin-top: 10px; }
@@ -204,6 +207,7 @@
             <button class="about-btn nav" onclick="openSidebar()">⚡ السور</button>
             <button class="about-btn my-bm" onclick="openBookmarksList()">📌 علاماتي <span id="bmCount" style="background:rgba(255,255,255,0.3); padding:1px 8px; border-radius:10px; font-size:0.75rem;">0</span></button>
             <button class="about-btn bm-color" onclick="openColorPicker()">🎨 لون</button>
+            <button class="about-btn wake" onclick="toggleWakeLock()" id="wakeBtn">☀️ إبقاء الشاشة</button>
             <button class="about-btn dark" onclick="toggleDarkMode()" id="darkModeBtn">🌙 ليلي</button>
         </div>
 
@@ -280,6 +284,8 @@
             <div class="help-step"><div class="help-step-icon">🔖</div><div class="help-step-content"><div class="help-step-title">3. حفظ موضع القراءة</div><div class="help-step-desc">اضغط <code>🔖</code> على أي آية.</div></div></div>
             <div class="help-step"><div class="help-step-icon">📌</div><div class="help-step-content"><div class="help-step-title">4. علامة خاصة</div><div class="help-step-desc">اضغط <code>📌</code> وأدخل اسماً. عدد غير محدود!</div></div></div>
             <div class="help-step"><div class="help-step-icon">📋</div><div class="help-step-content"><div class="help-step-title">5. عرض علاماتي</div><div class="help-step-desc">اضغط <code>📌 علاماتي</code> للانتقال/التعديل/الحذف.</div></div></div>
+            <h3 class="help-section-title">☀️ إبقاء الشاشة مضيئة</h3>
+            <div class="help-step"><div class="help-step-icon">☀️</div><div class="help-step-content"><div class="help-step-title">إبقاء الشاشة مضيئة</div><div class="help-step-desc">اضغط زر <code>☀️ إبقاء الشاشة</code> لمنع إطفاء الشاشة أثناء القراءة. سيتحول الزر إلى اللون الذهبي اللامع عند التفعيل. مفيد جداً عند القراءة الطويلة.</div></div></div>
             <h3 class="help-section-title">☁️ المزامنة</h3>
             <div class="help-step"><div class="help-step-icon">🔄</div><div class="help-step-content"><div class="help-step-title">6. مزامنة الأجهزة</div><div class="help-step-desc">انسخ الرمز من <code>🔄 مزامنة</code> وضعه في أجهزتك.</div></div></div>
             <h3 class="help-section-title">🎨 التخصيص</h3>
@@ -310,6 +316,7 @@
                 <li>📖 زر "عرض" لعرض السورة من أي آية</li>
                 <li>🔖 علامة "آخر قراءة"</li>
                 <li>📌 علامات خاصة متعددة</li>
+                <li>☀️ إبقاء الشاشة مضيئة أثناء القراءة</li>
                 <li>☁️ مزامنة تلقائية بين الأجهزة</li>
                 <li>📊 شريط تقدم دقيق (بالآيات)</li>
                 <li>🌙 وضع ليلي + 🎨 لون العلامة</li>
@@ -408,6 +415,11 @@
         let serverSyncEnabled = true;
         let isSyncingToServer = false;
         let lastAddTime = 0;
+
+        // ✅ Wake Lock
+        let wakeLock = null;
+        let wakeLockWanted = false;
+
         const perPage = 10;
 
         try {
@@ -419,10 +431,84 @@
             if (bc) bookmarkColorIndex = parseInt(bc);
             const bms = localStorage.getItem('allBookmarks');
             if (bms) allBookmarks = JSON.parse(bms);
+            // استعادة إعداد Wake Lock
+            if (localStorage.getItem('wakeLockWanted') === 'true') wakeLockWanted = true;
             if (!localStorage.getItem('helpShown')) {
                 setTimeout(() => { openHelp(); localStorage.setItem('helpShown', 'true'); }, 1500);
             }
         } catch (e) {}
+
+        // ========== Wake Lock (إبقاء الشاشة مضيئة) ==========
+        async function requestWakeLock() {
+            if (!('wakeLock' in navigator)) {
+                return false;
+            }
+            try {
+                wakeLock = await navigator.wakeLock.request('screen');
+                wakeLock.addEventListener('release', () => {
+                    console.log('Wake Lock released');
+                });
+                console.log('✅ Wake Lock activated');
+                return true;
+            } catch (err) {
+                console.warn('❌ Wake Lock failed:', err);
+                return false;
+            }
+        }
+
+        async function toggleWakeLock() {
+            if (!('wakeLock' in navigator)) {
+                alert('⚠️ ميزة إبقاء الشاشة مضيئة غير مدعومة في متصفحك.\n\nجرب: Chrome أو Edge الحديث، أو Safari 16.4+');
+                return;
+            }
+            const btn = document.getElementById('wakeBtn');
+            if (wakeLockWanted) {
+                // إيقاف
+                wakeLockWanted = false;
+                try { localStorage.setItem('wakeLockWanted', 'false'); } catch (e) {}
+                if (wakeLock) {
+                    try { await wakeLock.release(); } catch (e) {}
+                    wakeLock = null;
+                }
+                btn.textContent = '☀️ إبقاء الشاشة';
+                btn.classList.remove('active');
+            } else {
+                // تشغيل
+                wakeLockWanted = true;
+                try { localStorage.setItem('wakeLockWanted', 'true'); } catch (e) {}
+                const ok = await requestWakeLock();
+                if (ok) {
+                    btn.textContent = '💡 الشاشة مضيئة';
+                    btn.classList.add('active');
+                } else {
+                    wakeLockWanted = false;
+                    try { localStorage.setItem('wakeLockWanted', 'false'); } catch (e) {}
+                    alert('❌ تعذّر تفعيل الميزة. حاول مرة أخرى.');
+                }
+            }
+        }
+
+        // إعادة تفعيل Wake Lock عند العودة للصفحة (المتصفح يُطلقه عند إخفاء الصفحة)
+        document.addEventListener('visibilitychange', async () => {
+            if (document.visibilityState === 'visible' && wakeLockWanted) {
+                await requestWakeLock();
+                const btn = document.getElementById('wakeBtn');
+                if (btn && wakeLock) { btn.textContent = '💡 الشاشة مضيئة'; btn.classList.add('active'); }
+            }
+        });
+
+        // استعادة إعداد Wake Lock عند تحميل الصفحة
+        async function initWakeLock() {
+            const btn = document.getElementById('wakeBtn');
+            if (!('wakeLock' in navigator)) {
+                if (btn) { btn.style.opacity = '0.5'; btn.title = 'غير مدعوم في هذا المتصفح'; }
+                return;
+            }
+            if (wakeLockWanted) {
+                const ok = await requestWakeLock();
+                if (ok && btn) { btn.textContent = '💡 الشاشة مضيئة'; btn.classList.add('active'); }
+            }
+        }
 
         function applyBookmarkColor() {
             const c = BOOKMARK_COLORS[bookmarkColorIndex] || BOOKMARK_COLORS[0];
@@ -469,19 +555,14 @@
 
         function updateBmCount() { document.getElementById('bmCount').textContent = allBookmarks.length; }
 
-        // ✅ دالة مساعدة: إعادة عرض النتائج مع الحفاظ على موقع الآية
         function renderResultsPreservingScroll(anchorSurah, anchorAyah) {
             let anchorTop = null;
-            let anchorEl = null;
             if (anchorSurah && anchorAyah) {
-                anchorEl = document.getElementById(`ayah-${anchorSurah}-${anchorAyah}`);
+                const anchorEl = document.getElementById(`ayah-${anchorSurah}-${anchorAyah}`);
                 if (anchorEl) anchorTop = anchorEl.getBoundingClientRect().top;
             }
             const scrollY = window.scrollY;
-
             renderResults();
-
-            // استعادة الموقع بعد الرسم
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     if (anchorTop !== null) {
@@ -506,7 +587,6 @@
             renderResultsPreservingScroll();
         }
 
-        // ✅ الإصلاح: حفظ موقع الآية قبل التحديث
         function toggleBookmark(surah, ayah) {
             if (bookmark && bookmark.surah == surah && bookmark.ayah == ayah) {
                 bookmark = null;
@@ -536,24 +616,18 @@
 
         function setQuickLabel(text) { document.getElementById('labelInput').value = text; }
 
-        // ✅ الإصلاح: حفظ موقع الآية قبل التحديث
         function saveLabelBookmark() {
             const label = document.getElementById('labelInput').value.trim();
             if (!label) { alert('❌ الرجاء إدخال اسم للعلامة'); return; }
             if (pendingSurah === null || pendingAyah === null) return;
-
             const anchorSurah = pendingSurah;
             const anchorAyah = pendingAyah;
-
             const existing = allBookmarks.find(b => b.surah === anchorSurah && b.ayah === anchorAyah && b.label === label);
             if (existing) { if (!confirm('توجد علامة بنفس الاسم. إضافتها مرة أخرى؟')) return; }
-
             allBookmarks.push({ id: String(Date.now()) + '_' + Math.random().toString(36).substring(2, 8), label: label, surah: anchorSurah, ayah: anchorAyah, created: Date.now() });
             saveAllBookmarks();
             updateProgress();
             closeLabelDialog();
-
-            // استخدم الدالة الجديدة للحفاظ على الموقع
             renderResultsPreservingScroll(anchorSurah, anchorAyah);
         }
 
@@ -1098,6 +1172,7 @@
         updateBmCount();
         loadData();
         startSync();
+        initWakeLock();
 
         if (document.body.classList.contains('dark-mode')) { document.getElementById('darkModeBtn').textContent = '☀️ نهاري'; }
         setTimeout(updateJumpBtnText, 500);
