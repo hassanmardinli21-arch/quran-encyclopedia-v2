@@ -202,12 +202,23 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 .about-new .info-row .value{font-family:'Courier New',monospace;direction:ltr;flex:1;text-align:center;letter-spacing:.5px}
 .about-new .whatsapp-row{background:linear-gradient(180deg,#25D366,#128C7E)!important;color:#fff!important;border:none!important;font-weight:700;justify-content:center}
 .about-new .whatsapp-row:hover{background:linear-gradient(180deg,#128C7E,#075E54)!important;transform:scale(1.02)}
-.about-new .share-box{background:linear-gradient(180deg,#d4e8d0 0%,#b8d4b4 100%);border-radius:16px;padding:18px;text-align:center;border:2px solid #D4AF37;cursor:pointer;transition:.2s}
-.about-new .share-box:hover{transform:translateY(-2px);box-shadow:0 6px 15px rgba(212,175,55,.3)}
+.about-new .share-box{background:linear-gradient(180deg,#d4e8d0 0%,#b8d4b4 100%);border-radius:16px;padding:18px;text-align:center;border:2px solid #D4AF37}
 .about-new .share-title{font-family:'Amiri',serif;font-size:1.2rem;color:#1e2a1e;font-weight:700;margin-bottom:6px}
 .about-new .share-subtitle{font-size:.9rem;color:#3a5236;font-family:'Amiri',serif}
+.about-new .share-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}
+.about-new .share-btn{padding:12px 8px;border-radius:10px;border:none;color:#fff;font-family:'Cairo',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;transition:.2s;text-decoration:none}
+.about-new .share-btn:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.about-new .share-btn .ico{font-size:1.4rem}
+.about-new .sb-whatsapp{background:linear-gradient(180deg,#25D366,#128C7E)}
+.about-new .sb-telegram{background:linear-gradient(180deg,#2AABEE,#229ED9)}
+.about-new .sb-facebook{background:linear-gradient(180deg,#1877F2,#0C5DC7)}
+.about-new .sb-twitter{background:linear-gradient(180deg,#1DA1F2,#0C85D0)}
+.about-new .sb-email{background:linear-gradient(180deg,#EA4335,#C5221F)}
+.about-new .sb-copy{background:linear-gradient(180deg,#6B7280,#374151)}
+.about-new .share-url{background:#fff;border-radius:8px;padding:10px 14px;font-family:'Courier New',monospace;font-size:.85rem;color:#1e2a1e;text-align:center;direction:ltr;margin-top:10px;border:2px solid #D4AF37;word-break:break-all}
+.about-new .share-note{text-align:center;font-family:'Amiri',serif;font-size:.9rem;color:#3a5236;margin-top:10px}
 
-@media(max-width:600px){h1{font-size:1.7rem}.ayah-text{font-size:1.25rem;line-height:2.1}.container{padding:20px 14px}.search{flex-direction:column}.search input,.search select,.search button{width:100%}.btn{font-size:.8rem;padding:7px 12px}.compass{width:220px;height:220px}.arrow{height:85px}.tab{font-size:.75rem;padding:8px 6px}.fab{width:55px;height:55px;font-size:1.4rem;bottom:20px;right:15px}}
+@media(max-width:600px){h1{font-size:1.7rem}.ayah-text{font-size:1.25rem;line-height:2.1}.container{padding:20px 14px}.search{flex-direction:column}.search input,.search select,.search button{width:100%}.btn{font-size:.8rem;padding:7px 12px}.compass{width:220px;height:220px}.arrow{height:85px}.tab{font-size:.75rem;padding:8px 6px}.fab{width:55px;height:55px;font-size:1.4rem;bottom:20px;right:15px}.about-new .share-buttons{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -290,21 +301,19 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 <div id="sbList"></div>
 </div>
 
-<!-- Welcome Modal -->
 <div class="overlay" id="welcomeOv">
 <div class="modal" style="max-width:680px" onclick="event.stopPropagation()">
 <button class="close" onclick="closeModal('welcomeOv')">✖</button>
 <h2>🌟 مرحباً بك</h2>
-<p class="intro">الإصدار v2.3</p>
+<p class="intro">الإصدار v2.4</p>
 <div class="dua" style="margin-bottom:20px">﴿ وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ ﴾</div>
 <h3>✨ الجديد</h3>
-<div class="help-step"><div class="help-ic">ℹ️</div><div><div class="help-t">نافذة "حول" الجديدة</div><div class="help-d">تصميم أجمل مع معلومات التواصل وزر المشاركة</div></div></div>
-<div class="help-step"><div class="help-ic">🕌</div><div><div class="help-t">قسم الصلاة الكامل</div><div class="help-d">مواقيت + قبلة + ركعات + تعليمات</div></div></div>
+<div class="help-step"><div class="help-ic">📲</div><div><div class="help-t">أزرار المشاركة</div><div class="help-d">شارك التطبيق عبر واتساب، تلغرام، فيسبوك، تويتر، إيميل</div></div></div>
+<div class="help-step"><div class="help-ic">ℹ️</div><div><div class="help-t">نافذة حول جديدة</div><div class="help-d">تصميم فخم مع معلومات التواصل</div></div></div>
 <button class="pbtn" style="width:100%;padding:14px;background:linear-gradient(180deg,#10b981,#047857);font-size:1.05rem" onclick="closeModal('welcomeOv')">✅ فهمت، لنبدأ</button>
 </div>
 </div>
 
-<!-- Help Modal -->
 <div class="overlay" id="helpOv" onclick="closeModalOutside(event,'helpOv')">
 <div class="modal" style="max-width:720px" onclick="event.stopPropagation()">
 <button class="close" onclick="closeModal('helpOv')">✖</button>
@@ -321,7 +330,6 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 </div>
 </div>
 
-<!-- About Modal - NEW DESIGN -->
 <div class="overlay" id="aboutOv" onclick="closeModalOutside(event,'aboutOv')">
 <div class="modal about-new" onclick="event.stopPropagation()">
 <button class="about-close-red" onclick="closeModal('aboutOv')">✖</button>
@@ -346,14 +354,44 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 </a>
 </div>
 
-<div class="share-box" onclick="shareApp()">
+<div class="share-box">
 <div class="share-title">📲 شارك التطبيق مع أصدقائك</div>
 <div class="share-subtitle">الدال على الخير كفاعله 💰</div>
+
+<div class="share-buttons">
+<a class="share-btn sb-whatsapp" onclick="shareTo('whatsapp')">
+<span class="ico">💬</span>
+<span>واتساب</span>
+</a>
+<a class="share-btn sb-telegram" onclick="shareTo('telegram')">
+<span class="ico">✈️</span>
+<span>تلغرام</span>
+</a>
+<a class="share-btn sb-facebook" onclick="shareTo('facebook')">
+<span class="ico">📘</span>
+<span>فيسبوك</span>
+</a>
+<a class="share-btn sb-twitter" onclick="shareTo('twitter')">
+<span class="ico">🐦</span>
+<span>تويتر</span>
+</a>
+<a class="share-btn sb-email" onclick="shareTo('email')">
+<span class="ico">📧</span>
+<span>إيميل</span>
+</a>
+<a class="share-btn sb-copy" onclick="shareTo('copy')">
+<span class="ico">📋</span>
+<span>نسخ الرابط</span>
+</a>
+</div>
+
+<div class="share-url" id="shareUrl"></div>
+
+<div class="share-note">🌟 كل شخص يفتح التطبيق بسببك = أجر لك في ميزان حسناتك 🌟</div>
 </div>
 </div>
 </div>
 
-<!-- Prayer Modal -->
 <div class="overlay" id="prayerOv" onclick="closeModalOutside(event,'prayerOv')">
 <div class="modal" style="max-width:750px" onclick="event.stopPropagation()">
 <button class="close" onclick="closeModal('prayerOv')">✖</button>
@@ -429,7 +467,6 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 </div>
 </div>
 
-<!-- Sync Modal -->
 <div class="overlay" id="syncOv" onclick="closeModalOutside(event,'syncOv')">
 <div class="modal" onclick="event.stopPropagation()">
 <button class="close" onclick="closeModal('syncOv')">✖</button>
@@ -447,7 +484,6 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 </div>
 </div>
 
-<!-- Color Modal -->
 <div class="overlay" id="colorOv" onclick="closeModalOutside(event,'colorOv')">
 <div class="modal" onclick="event.stopPropagation()">
 <button class="close" onclick="closeModal('colorOv')">✖</button>
@@ -457,7 +493,6 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 </div>
 </div>
 
-<!-- Bookmarks Modal -->
 <div class="overlay" id="bmsOv" onclick="closeModalOutside(event,'bmsOv')">
 <div class="modal" onclick="event.stopPropagation()">
 <button class="close" onclick="closeModal('bmsOv')">✖</button>
@@ -467,7 +502,6 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 </div>
 </div>
 
-<!-- Label Modal -->
 <div class="overlay" id="labelOv" onclick="closeModalOutside(event,'labelOv')">
 <div class="modal" onclick="event.stopPropagation()">
 <button class="close" onclick="closeModal('labelOv')">✖</button>
@@ -486,7 +520,7 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 </div>
 
 <script>
-const APP_VERSION='v2.3';
+const APP_VERSION='v2.4';
 const SURAHS=["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 const AYAH_COUNTS=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
 const TOTAL=6236;
@@ -570,7 +604,14 @@ if(window.scrollY>200||locked)fab.classList.add('visible');
 else fab.classList.remove('visible');
 });
 
-function openModal(id){document.getElementById(id).classList.add('active');document.body.style.overflow='hidden'}
+function openModal(id){
+document.getElementById(id).classList.add('active');
+document.body.style.overflow='hidden';
+if(id==='aboutOv'){
+const el=document.getElementById('shareUrl');
+if(el)el.textContent=window.location.origin;
+}
+}
 function closeModal(id){document.getElementById(id).classList.remove('active');document.body.style.overflow=''}
 function closeModalOutside(e,id){if(e.target.id===id)closeModal(id)}
 document.addEventListener('keydown',e=>{
@@ -626,25 +667,40 @@ openModal('colorOv');
 }
 function selectColor(i){bmColorIdx=i;applyColor();closeModal('colorOv')}
 
-/* ===== دالة المشاركة الجديدة ===== */
-function shareApp(){
-const shareData={
-title:'الموسوعة القرآنية',
-text:'تطبيق رائع لقراءة القرآن مع التفاسير ومواقيت الصلاة',
-url:window.location.origin
-};
-if(navigator.share){
-navigator.share(shareData).catch(()=>{});
-}else{
+function shareTo(platform){
 const url=window.location.origin;
+const title='الموسوعة القرآنية';
+const text='تطبيق رائع لقراءة القرآن مع التفاسير ومواقيت الصلاة';
+switch(platform){
+case 'whatsapp':
+window.open('https://wa.me/?text='+encodeURIComponent(text+'\n'+url),'_blank');
+break;
+case 'telegram':
+window.open('https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text),'_blank');
+break;
+case 'facebook':
+window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),'_blank');
+break;
+case 'twitter':
+window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),'_blank');
+break;
+case 'email':
+window.location.href='mailto:?subject='+encodeURIComponent(title)+'&body='+encodeURIComponent(text+'\n\n'+url);
+break;
+case 'copy':
 if(navigator.clipboard){
-navigator.clipboard.writeText(url).then(()=>{
-alert('✅ تم نسخ رابط التطبيق:\n'+url+'\n\nشاركه مع أصدقائك!');
-});
-}else{
-prompt('انسخ الرابط وشاركه:',url);
+navigator.clipboard.writeText(url).then(()=>toast('✅ تم نسخ الرابط','info',2000)).catch(()=>fallbackCopy(url));
+}else fallbackCopy(url);
+break;
 }
 }
+function fallbackCopy(text){
+const inp=document.createElement('input');
+inp.value=text;
+document.body.appendChild(inp);
+inp.select();
+try{document.execCommand('copy');toast('✅ تم نسخ الرابط','info',2000);}catch(e){alert('انسخ يدوياً: '+text);}
+inp.remove();
 }
 
 function loadBm(){try{const s=localStorage.getItem('quranBookmark');if(s)bm=JSON.parse(s)}catch(e){bm=null}}
