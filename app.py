@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import sqlite3
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='')
 CORS(app)
 
 DB_PATH = 'sync.db'
@@ -28,10 +28,19 @@ def init_db():
     conn.commit()
     conn.close()
 
+# ✅ إصلاح حرج: نُشغّل init_db عند تحميل الملف وليس فقط عند التشغيل المباشر
+init_db()
+
+# --- خدمة الملفات الثابتة من مجلد static ---
 @app.route('/')
 def home():
-    return jsonify({'status': 'ok', 'message': 'Quran Sync API'})
+    return send_from_directory('static', 'index.html')
 
+@app.route('/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
+
+# --- API المزامنة ---
 @app.route('/api/sync_bookmark', methods=['POST'])
 def sync_bookmark():
     try:
@@ -91,7 +100,8 @@ def save_special():
         for b in bookmarks:
             c.execute('''INSERT OR REPLACE INTO special_bookmarks (id, sync_code, label, surah, ayah, created)
                          VALUES (?, ?, ?, ?, ?, ?)''',
-                      (str(b.get('id')), code, b.get('label'), b.get('surah'), b.get('ayah'), b.get('created', 0)))
+                      (str(b.get('id')), code, b.get('label'),
+                       b.get('surah'), b.get('ayah'), b.get('created', 0)))
         conn.commit()
         conn.close()
         return jsonify({'status': 'success'})
@@ -112,6 +122,5 @@ def get_special(code):
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
-    init_db()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
