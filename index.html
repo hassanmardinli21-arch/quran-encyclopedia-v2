@@ -6,12 +6,12 @@
     <title>الموسوعة القرآنية - التفاسير</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D8HQ7YKDWM"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF0JEW40GY"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-D8HQ7YKDWM');
+        gtag('config', 'G-HF0JEW40GY');
     </script>
     <style>
         :root {
@@ -120,6 +120,7 @@
         .ayah-card::before { content: '۞'; position: absolute; top: 8px; left: 12px; color: var(--gold); font-size: 1.4rem; opacity: 0.5; }
         .ayah-card.bookmarked { background: var(--highlight-bg); border-right-color: var(--bookmark-color); }
         .ayah-card.focused { box-shadow: 0 0 0 5px #f59e0b !important; }
+        .ayah-card.temp-highlight { background: rgba(255, 233, 168, 0.55) !important; }
         .bookmark-ribbon { position: absolute; top: -12px; left: 20px; background: linear-gradient(180deg, var(--bookmark-color) 0%, var(--bookmark-dark) 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; z-index: 2; }
         .special-ribbon { position: absolute; top: -12px; right: 20px; background: linear-gradient(180deg, var(--special-color) 0%, var(--special-dark) 100%); color: white; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; z-index: 2; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
         .ayah-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--parchment-dark); flex-wrap: wrap; gap: 8px; }
@@ -142,6 +143,7 @@
         .footer-ornament { text-align: center; margin-top: 30px; color: var(--gold); font-size: 1.4rem; letter-spacing: 8px; opacity: 0.6; }
         .tafsir-count { display: inline-block; background: rgba(184, 134, 11, 0.15); color: var(--gold); padding: 2px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; }
         .loading-msg { text-align: center; padding: 30px; color: var(--ink-secondary); font-size: 1rem; }
+
         .about-overlay { display: none; position: fixed; inset: 0; background: rgba(74, 55, 40, 0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
         .about-overlay.active { display: flex; }
         .about-modal { position: relative; max-width: 620px; width: 100%; max-height: 85vh; overflow-y: auto; background: linear-gradient(180deg, var(--container-bg-1) 0%, var(--container-bg-2) 100%); border: 3px double var(--border-color); border-radius: 12px; padding: 30px 28px; }
@@ -379,10 +381,10 @@
                 <br>
                 <span style="font-size:0.85rem; color:var(--ink-secondary);">أهلاً بك في الموسوعة القرآنية</span>
             </div>
-            <h3 class="welcome-features-title">✨ ما الجديد</h3>
-            <div class="feature-item"><div class="feature-icon">📊</div><div class="feature-content"><div class="feature-title"><span class="feature-badge">جديد</span> Google Analytics</div><div class="feature-desc">ربط التطبيق بـ Google Analytics.</div></div></div>
-            <div class="feature-item"><div class="feature-icon">🔖</div><div class="feature-content"><div class="feature-title"><span class="feature-badge">إصلاح</span> ثبات البوك مارك</div><div class="feature-desc">البوك مارك لا يختفي عند إعادة الفتح.</div></div></div>
-            <div class="feature-item"><div class="feature-icon">🕌</div><div class="feature-content"><div class="feature-title">قسم الصلاة الكامل</div><div class="feature-desc">مواقيت + قبلة + جدول الركعات + كيفية الصلاة.</div></div></div>
+            <h3 class="welcome-features-title">✨ ما الجديد في هذا التحديث</h3>
+            <div class="feature-item"><div class="feature-icon">📊</div><div class="feature-content"><div class="feature-title"><span class="feature-badge">جديد</span> Google Analytics</div><div class="feature-desc">ربط التطبيق بـ Google Analytics لمعرفة عدد الزوار وإحصائيات الاستخدام.</div></div></div>
+            <div class="feature-item"><div class="feature-icon">🔖</div><div class="feature-content"><div class="feature-title"><span class="feature-badge">إصلاح</span> ثبات البوك مارك</div><div class="feature-desc">البوك مارك لا يختفي الآن عند فتح التطبيق مرة أخرى.</div></div></div>
+            <div class="feature-item"><div class="feature-icon">🕌</div><div class="feature-content"><div class="feature-title">قسم الصلاة الكامل</div><div class="feature-desc">مواقيت الصلاة + القبلة + جدول الركعات + كيفية الصلاة.</div></div></div>
             <button class="welcome-footer-btn" onclick="closeWelcome()">✅ فهمت، لنبدأ القراءة</button>
             <div class="welcome-dua">اللهم اجعل هذا العمل خالصاً لوجهك الكريم 🤲</div>
         </div>
@@ -392,12 +394,12 @@
         <div class="about-modal" onclick="event.stopPropagation()" style="max-width:720px;">
             <button class="about-close" onclick="closeHelp()">✖</button>
             <h2>📖 طريقة الاستخدام</h2>
-            <p class="about-intro">دليل شامل لاستخدام التطبيق</p>
+            <p class="about-intro">دليل شامل لاستخدام جميع ميزات التطبيق</p>
             <h3 class="help-section-title">🕌 قسم الصلاة</h3>
-            <div class="help-step"><div class="help-step-icon">🕌</div><div class="help-step-content"><div class="help-step-title">مواقيت الصلاة والقبلة</div><div class="help-step-desc">اضغط <strong>🕌 الصلاة</strong> → فعّل الموقع → ستظهر المواقيت.</div></div></div>
-            <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">كيفية الصلاة</div><div class="help-step-desc">تبويب <strong>📖 التعليمات</strong>: العيد، الجمعة، الجنازة، التراويح.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🕌</div><div class="help-step-content"><div class="help-step-title">مواقيت الصلاة والقبلة</div><div class="help-step-desc">اضغط زر <strong>🕌 الصلاة</strong> → فعّل الموقع → ستظهر مواقيت الصلاة + التاريخ الهجري + العد التنازلي.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">📖</div><div class="help-step-content"><div class="help-step-title">كيفية الصلاة</div><div class="help-step-desc">تبويب <strong>📖 التعليمات</strong> يحتوي: العيد، الجمعة، الجنازة، التراويح، قيام الليل.</div></div></div>
             <h3 class="help-section-title">🔒 قفل الشاشة</h3>
-            <div class="help-step"><div class="help-step-icon">🔒</div><div class="help-step-content"><div class="help-step-title">قفل الشاشة الذكي</div><div class="help-step-desc">يمكنك التنقل بين الصفحات! زر الفتح في الزاوية العلوية اليمنى.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🔒</div><div class="help-step-content"><div class="help-step-title">قفل الشاشة الذكي</div><div class="help-step-desc">اضغط <strong>🔒 قفل الشاشة</strong>. يمكنك التنقل بين الصفحات! زر الفتح في الزاوية العلوية اليمنى.</div></div></div>
             <h3 class="help-section-title">⏱️ الميزات</h3>
             <div class="help-step"><div class="help-step-icon">⏱️</div><div class="help-step-content"><div class="help-step-title">مؤقت القراءة</div><div class="help-step-desc">يعرض مدة قراءتك منذ فتح التطبيق.</div></div></div>
             <div class="help-step"><div class="help-step-icon">☀️</div><div class="help-step-content"><div class="help-step-title">إبقاء الشاشة مضيئة</div><div class="help-step-desc">لمنع انطفاء الشاشة أثناء القراءة.</div></div></div>
@@ -406,7 +408,7 @@
             <div class="help-step"><div class="help-step-icon">🔖</div><div class="help-step-content"><div class="help-step-title">حفظ موضع القراءة</div><div class="help-step-desc">اضغط <code>🔖</code> على أي آية.</div></div></div>
             <div class="help-step"><div class="help-step-icon">📌</div><div class="help-step-content"><div class="help-step-title">علامة خاصة</div><div class="help-step-desc">اضغط <code>📌</code> وأدخل اسماً.</div></div></div>
             <h3 class="help-section-title">☁️ المزامنة</h3>
-            <div class="help-step"><div class="help-step-icon">🔄</div><div class="help-step-content"><div class="help-step-title">مزامنة الأجهزة</div><div class="help-step-desc">انسخ الرمز وضعه في أجهزتك.</div></div></div>
+            <div class="help-step"><div class="help-step-icon">🔄</div><div class="help-step-content"><div class="help-step-title">مزامنة الأجهزة</div><div class="help-step-desc">انسخ الرمز من <code>🔄 مزامنة</code> وضعه في أجهزتك.</div></div></div>
             <h3 class="help-section-title">🎨 التخصيص</h3>
             <div class="help-step"><div class="help-step-icon">🎨</div><div class="help-step-content"><div class="help-step-title">لون العلامة</div><div class="help-step-desc"><code>🎨 لون</code> لاختيار من 8 ألوان.</div></div></div>
             <div class="help-step"><div class="help-step-icon">🌙</div><div class="help-step-content"><div class="help-step-title">الوضع الليلي</div><div class="help-step-desc"><code>🌙 ليلي</code> للتبديل.</div></div></div>
@@ -426,11 +428,11 @@
                 <li>📖 القرآن الكريم كاملاً (6236 آية)</li>
                 <li>📗 تفسير السعدي + 📘 تفسير ابن كثير</li>
                 <li>🔍 بحث ذكي يتجاهل التشكيل</li>
-                <li>🕌 قسم صلاة كامل</li>
+                <li>🕌 قسم صلاة كامل (مواقيت + قبلة + تعليمات)</li>
                 <li>⏱️ مؤقت مدة القراءة</li>
                 <li>🔒 قفل الشاشة الذكي</li>
                 <li>☀️ إبقاء الشاشة مضيئة</li>
-                <li>☁️ مزامنة بين الأجهزة</li>
+                <li>☁️ مزامنة تلقائية بين الأجهزة</li>
                 <li>📊 إحصائيات Google Analytics</li>
                 <li>🌙 وضع ليلي + 🎨 لون العلامة</li>
             </ul>
@@ -455,7 +457,7 @@
                 <div id="prayerTimesContainer">
                     <div style="text-align:center; padding:30px;">
                         <div style="font-size:3rem; margin-bottom:10px;">📍</div>
-                        <p style="margin-bottom:15px; color:var(--ink-secondary);">لتحديد مواقيت الصلاة، نحتاج إذن الموقع</p>
+                        <p style="margin-bottom:15px; color:var(--ink-secondary);">لتحديد مواقيت الصلاة، نحتاج إذن الوصول إلى موقعك</p>
                         <button class="prayer-location-btn" onclick="requestLocation()">📍 تفعيل الموقع</button>
                     </div>
                 </div>
@@ -526,7 +528,7 @@
             <div class="prayer-content" id="content-guide">
                 <div class="prayer-guide-section">
                     <div class="prayer-guide-title">🎉 كيفية صلاة العيد</div>
-                    <div class="prayer-guide-desc">سنة مؤكدة، تُصلى جماعة.</div>
+                    <div class="prayer-guide-desc">صلاة العيدين سنة مؤكدة، تُصلى جماعة.</div>
                     <ol class="prayer-guide-steps">
                         <li><strong>1.</strong> تكبيرة الإحرام ثم 7 تكبيرات في الركعة الأولى.</li>
                         <li><strong>2.</strong> الفاتحة وسورة (الأعلى).</li>
@@ -618,7 +620,7 @@
         <div class="about-modal" onclick="event.stopPropagation()">
             <button class="about-close" onclick="closeBookmarksList()">✖</button>
             <h2>📌 علاماتي الخاصة</h2>
-            <p class="about-intro"><span class="sync-badge">☁️ مُزامنة</span> جميع العلامات</p>
+            <p class="about-intro"><span class="sync-badge">☁️ مُزامنة</span> جميع العلامات الخاصة بك</p>
             <div id="bookmarksListContainer"></div>
         </div>
     </div>
@@ -639,15 +641,69 @@
             </div>
         </div>
     </div>
+
     <script>
+        /* =========================================================
+           الثوابت والإعدادات العامة
+           ========================================================= */
         const APP_VERSION = 'v2.1';
         const SURAH_NAMES = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
         const SURAH_AYAH_COUNTS = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
         const TOTAL_QURAN_AYAHS = 6236;
-        const TAFSIR_FILES = [{ key: 'saadi', file: 'tafsir_saadi.json', label: 'تفسير السعدي', icon: '📗' }, { key: 'ibn_kathir', file: 'tafsir_ibn_kathir.json', label: 'تفسير ابن كثير', icon: '📘' }];
-        const BOOKMARK_COLORS = [{ name: 'بني محروق', light: '#8B4513', dark: '#5C2E0E' }, { name: 'ذهبي', light: '#D4AF37', dark: '#8B6508' }, { name: 'أخضر زمردي', light: '#059669', dark: '#064e3b' }, { name: 'أزرق نيلي', light: '#2563eb', dark: '#1e3a8a' }, { name: 'أحمر قرمزي', light: '#dc2626', dark: '#7f1d1d' }, { name: 'بنفسجي', light: '#7c3aed', dark: '#4c1d95' }, { name: 'برتقالي', light: '#ea580c', dark: '#7c2d12' }, { name: 'أسود فاحم', light: '#374151', dark: '#111827' }];
+        const TAFSIR_FILES = [
+            { key: 'saadi', file: 'tafsir_saadi.json', label: 'تفسير السعدي', icon: '📗' },
+            { key: 'ibn_kathir', file: 'tafsir_ibn_kathir.json', label: 'تفسير ابن كثير', icon: '📘' }
+        ];
+        const BOOKMARK_COLORS = [
+            { name: 'بني محروق', light: '#8B4513', dark: '#5C2E0E' },
+            { name: 'ذهبي', light: '#D4AF37', dark: '#8B6508' },
+            { name: 'أخضر زمردي', light: '#059669', dark: '#064e3b' },
+            { name: 'أزرق نيلي', light: '#2563eb', dark: '#1e3a8a' },
+            { name: 'أحمر قرمزي', light: '#dc2626', dark: '#7f1d1d' },
+            { name: 'بنفسجي', light: '#7c3aed', dark: '#4c1d95' },
+            { name: 'برتقالي', light: '#ea580c', dark: '#7c2d12' },
+            { name: 'أسود فاحم', light: '#374151', dark: '#111827' }
+        ];
         const QUICK_LABELS = ['📌 وردي اليومي', '💭 للتدبر', '⭐ مهمة', '📖 حفظ', '🤲 دعاء', '🔍 للبحث'];
 
+        /* بيانات تجريبية احتياطية عند تعذّر تحميل quran.json */
+        const SAMPLE_QURAN = [
+            { surah: 1, ayah: 1, text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ" },
+            { surah: 1, ayah: 2, text: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ" },
+            { surah: 1, ayah: 3, text: "الرَّحْمَٰنِ الرَّحِيمِ" },
+            { surah: 1, ayah: 4, text: "مَالِكِ يَوْمِ الدِّينِ" },
+            { surah: 1, ayah: 5, text: "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ" },
+            { surah: 1, ayah: 6, text: "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ" },
+            { surah: 1, ayah: 7, text: "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ" },
+            { surah: 103, ayah: 1, text: "وَالْعَصْرِ" },
+            { surah: 103, ayah: 2, text: "إِنَّ الْإِنسَانَ لَفِي خُسْرٍ" },
+            { surah: 103, ayah: 3, text: "إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ" },
+            { surah: 108, ayah: 1, text: "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ" },
+            { surah: 108, ayah: 2, text: "فَصَلِّ لِرَبِّكَ وَانْحَرْ" },
+            { surah: 108, ayah: 3, text: "إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ" },
+            { surah: 110, ayah: 1, text: "إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ" },
+            { surah: 110, ayah: 2, text: "وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا" },
+            { surah: 110, ayah: 3, text: "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ ۚ إِنَّهُ كَانَ تَوَّابًا" },
+            { surah: 112, ayah: 1, text: "قُلْ هُوَ اللَّهُ أَحَدٌ" },
+            { surah: 112, ayah: 2, text: "اللَّهُ الصَّمَدُ" },
+            { surah: 112, ayah: 3, text: "لَمْ يَلِدْ وَلَمْ يُولَدْ" },
+            { surah: 112, ayah: 4, text: "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ" },
+            { surah: 113, ayah: 1, text: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ" },
+            { surah: 113, ayah: 2, text: "مِن شَرِّ مَا خَلَقَ" },
+            { surah: 113, ayah: 3, text: "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ" },
+            { surah: 113, ayah: 4, text: "وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ" },
+            { surah: 113, ayah: 5, text: "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ" },
+            { surah: 114, ayah: 1, text: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ" },
+            { surah: 114, ayah: 2, text: "مَلِكِ النَّاسِ" },
+            { surah: 114, ayah: 3, text: "إِلَٰهِ النَّاسِ" },
+            { surah: 114, ayah: 4, text: "مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ" },
+            { surah: 114, ayah: 5, text: "الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ" },
+            { surah: 114, ayah: 6, text: "مِنَ الْجِنَّةِ وَالنَّاسِ" }
+        ];
+
+        /* =========================================================
+           متغيرات الحالة
+           ========================================================= */
         let quranData = [], allTafsirs = {};
         let currentSource = 'quran', currentKeyword = '', currentSurah = 'all', currentAyah = 'all';
         let currentPage = 1, showTafsir = false;
@@ -662,8 +718,10 @@
         let prayerTimes = null;
         let prayerInterval = null;
         let prayerMethod = 13;
+        let usingSampleData = false;
         const perPage = 10;
 
+        /* استرجاع الإعدادات المحفوظة */
         try {
             if (localStorage.getItem('showTafsir') === 'true') showTafsir = true;
             if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
@@ -672,8 +730,11 @@
             if (localStorage.getItem('wakeLockWanted') === 'true') wakeLockWanted = true;
             const sl = localStorage.getItem('userLocation'); if (sl) userLocation = JSON.parse(sl);
             const sm = localStorage.getItem('prayerMethod'); if (sm) prayerMethod = parseInt(sm);
-        } catch (e) {}
+        } catch (e) { }
 
+        /* =========================================================
+           التنبيهات (Toast)
+           ========================================================= */
         function showToast(message, type = 'default', duration = 3000) {
             const container = document.getElementById('toastContainer');
             if (!container) return;
@@ -693,6 +754,9 @@
             setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, duration);
         }
 
+        /* =========================================================
+           مؤقت القراءة
+           ========================================================= */
         function updateReadingTimer() {
             const elapsed = Math.floor((Date.now() - readingStartTime) / 1000);
             const h = Math.floor(elapsed / 3600), m = Math.floor((elapsed % 3600) / 60), s = elapsed % 60;
@@ -702,6 +766,9 @@
         }
         setInterval(updateReadingTimer, 1000);
 
+        /* =========================================================
+           قفل الشاشة
+           ========================================================= */
         function toggleScreenLock() {
             if (screenLocked) { unlockScreen(); }
             else {
@@ -733,23 +800,29 @@
             const fb = document.getElementById('screenLockFloat'); if (fb) fb.remove();
             showToast('تم فتح الشاشة 🔓', 'info', 1500);
         }
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             const fab = document.getElementById('lockFab');
             if (!fab) return;
             if (window.scrollY > 200 || screenLocked) fab.classList.add('visible');
             else fab.classList.remove('visible');
         });
 
+        /* =========================================================
+           شاشة الترحيب
+           ========================================================= */
         function checkForUpdate() {
             let lv = '';
-            try { lv = localStorage.getItem('appVersion') || ''; } catch (e) {}
+            try { lv = localStorage.getItem('appVersion') || ''; } catch (e) { }
             if (lv !== APP_VERSION) { setTimeout(() => { openWelcome(); }, 800); return true; }
             return false;
         }
         function openWelcome() { document.getElementById('welcomeOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
-        function closeWelcome() { document.getElementById('welcomeOverlay').classList.remove('active'); document.body.style.overflow = ''; try { localStorage.setItem('appVersion', APP_VERSION); } catch (e) {} }
+        function closeWelcome() { document.getElementById('welcomeOverlay').classList.remove('active'); document.body.style.overflow = ''; try { localStorage.setItem('appVersion', APP_VERSION); } catch (e) { } }
         function closeWelcomeOutside(e) { if (e.target.id === 'welcomeOverlay') closeWelcome(); }
 
+        /* =========================================================
+           إبقاء الشاشة مضيئة (Wake Lock)
+           ========================================================= */
         async function requestWakeLock() {
             if (!('wakeLock' in navigator)) return false;
             try { wakeLock = await navigator.wakeLock.request('screen'); return true; } catch (err) { return false; }
@@ -759,16 +832,16 @@
             const btn = document.getElementById('wakeBtn');
             if (wakeLockWanted) {
                 wakeLockWanted = false;
-                try { localStorage.setItem('wakeLockWanted', 'false'); } catch (e) {}
-                if (wakeLock) { try { await wakeLock.release(); } catch (e) {} wakeLock = null; }
+                try { localStorage.setItem('wakeLockWanted', 'false'); } catch (e) { }
+                if (wakeLock) { try { await wakeLock.release(); } catch (e) { } wakeLock = null; }
                 if (btn) { btn.textContent = '☀️ إبقاء الشاشة'; btn.classList.remove('active'); }
                 showToast('تم إيقاف إبقاء الشاشة', 'info', 2000);
             } else {
                 wakeLockWanted = true;
-                try { localStorage.setItem('wakeLockWanted', 'true'); } catch (e) {}
+                try { localStorage.setItem('wakeLockWanted', 'true'); } catch (e) { }
                 const ok = await requestWakeLock();
                 if (ok) { if (btn) { btn.textContent = '💡 الشاشة مضيئة'; btn.classList.add('active'); } showToast('تم تفعيل إبقاء الشاشة ☀️', 'info', 2000); }
-                else { wakeLockWanted = false; try { localStorage.setItem('wakeLockWanted', 'false'); } catch (e) {} alert('❌ تعذّر التفعيل.'); }
+                else { wakeLockWanted = false; try { localStorage.setItem('wakeLockWanted', 'false'); } catch (e) { } alert('❌ تعذّر التفعيل.'); }
             }
         }
         document.addEventListener('visibilitychange', async () => {
@@ -784,11 +857,14 @@
             if (wakeLockWanted) { const ok = await requestWakeLock(); if (ok && btn) { btn.textContent = '💡 الشاشة مضيئة'; btn.classList.add('active'); } }
         }
 
+        /* =========================================================
+           لون العلامة والوضع الليلي
+           ========================================================= */
         function applyBookmarkColor() {
             const c = BOOKMARK_COLORS[bookmarkColorIndex] || BOOKMARK_COLORS[0];
             document.documentElement.style.setProperty('--bookmark-color', c.light);
             document.documentElement.style.setProperty('--bookmark-dark', c.dark);
-            try { localStorage.setItem('bookmarkColor', bookmarkColorIndex); } catch (e) {}
+            try { localStorage.setItem('bookmarkColor', bookmarkColorIndex); } catch (e) { }
         }
         function openColorPicker() {
             const grid = document.getElementById('colorGrid');
@@ -802,15 +878,32 @@
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
-            try { localStorage.setItem('darkMode', isDark); } catch (e) {}
+            try { localStorage.setItem('darkMode', isDark); } catch (e) { }
             const btn = document.getElementById('darkModeBtn');
             if (btn) btn.textContent = isDark ? '☀️ نهاري' : '🌙 ليلي';
         }
+
+        /* =========================================================
+           النوافذ المنبثقة
+           ========================================================= */
         function openHelp() { document.getElementById('helpOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeHelp() { document.getElementById('helpOverlay').classList.remove('active'); document.body.style.overflow = ''; }
         function closeHelpOutside(e) { if (e.target.id === 'helpOverlay') closeHelp(); }
+        function openAbout() { document.getElementById('aboutOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeAbout() { document.getElementById('aboutOverlay').classList.remove('active'); document.body.style.overflow = ''; }
+        function closeAboutOutside(e) { if (e.target.id === 'aboutOverlay') closeAbout(); }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeAbout(); closeSync(); closeColorPicker(); closeBookmarksList();
+                closeSidebar(); closeLabelDialog(); closeHelp(); closeWelcome(); closePrayer();
+            }
+        });
+
+        /* =========================================================
+           العلامات (Bookmarks)
+           ========================================================= */
         function loadBookmark() { try { const s = localStorage.getItem('quranBookmark'); if (s) bookmark = JSON.parse(s); } catch (e) { bookmark = null; } }
-        function saveAllBookmarksLocal() { try { localStorage.setItem('allBookmarks', JSON.stringify(allBookmarks)); } catch (e) {} updateBmCount(); }
+        function saveAllBookmarksLocal() { try { localStorage.setItem('allBookmarks', JSON.stringify(allBookmarks)); } catch (e) { } updateBmCount(); }
         function saveAllBookmarks() { saveAllBookmarksLocal(); lastAddTime = Date.now(); syncSpecialBookmarksToServer(); }
         function updateBmCount() { const el = document.getElementById('bmCount'); if (el) el.textContent = allBookmarks.length; }
 
@@ -832,29 +925,31 @@
                 });
             });
         }
+
         function clearBookmark() {
             if (!confirm('حذف علامة آخر قراءة؟')) return;
             bookmark = null;
-            try { localStorage.removeItem('quranBookmark'); } catch (e) {}
-            try { localStorage.setItem('pendingBookmarkSync', 'true'); } catch (e) {}
+            try { localStorage.removeItem('quranBookmark'); } catch (e) { }
+            try { localStorage.setItem('pendingBookmarkSync', 'true'); } catch (e) { }
             syncDeleteToServer();
             updateBookmarkBar();
             focusAyah = null;
             renderResultsPreservingScroll();
             showToast('تم حذف العلامة', 'warning', 2000);
         }
+
         function toggleBookmark(surah, ayah) {
             const sName = SURAH_NAMES[surah - 1] || '؟';
             if (bookmark && bookmark.surah == surah && bookmark.ayah == ayah) {
                 bookmark = null;
-                try { localStorage.removeItem('quranBookmark'); } catch (e) {}
-                try { localStorage.setItem('pendingBookmarkSync', 'true'); } catch (e) {}
+                try { localStorage.removeItem('quranBookmark'); } catch (e) { }
+                try { localStorage.setItem('pendingBookmarkSync', 'true'); } catch (e) { }
                 syncDeleteToServer();
                 showToast(`تم إزالة العلامة من سورة ${sName}`, 'warning', 2500);
             } else {
                 bookmark = { surah: parseInt(surah), ayah: parseInt(ayah), timestamp: Date.now() };
-                try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) {}
-                try { localStorage.setItem('pendingBookmarkSync', 'true'); } catch (e) {}
+                try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) { }
+                try { localStorage.setItem('pendingBookmarkSync', 'true'); } catch (e) { }
                 syncBookmarkToServer(parseInt(surah), parseInt(ayah));
                 showToast(`تم حفظ آخر قراءة: ${sName} - آية ${ayah}`, 'bookmark', 3000);
             }
@@ -862,6 +957,7 @@
             updateProgress();
             renderResultsPreservingScroll(surah, ayah);
         }
+
         function openLabelDialog(surah, ayah) {
             pendingSurah = surah; pendingAyah = ayah;
             const sName = SURAH_NAMES[surah - 1] || '؟';
@@ -880,8 +976,13 @@
             if (pendingSurah === null || pendingAyah === null) return;
             const aS = pendingSurah, aA = pendingAyah;
             const sName = SURAH_NAMES[aS - 1] || '؟';
-            if (allBookmarks.find(b => b.surah === aS && b.ayah === aA && b.label === label)) { if (!confirm('موجودة بالفعل، إضافتها مرة أخرى؟')) return; }
-            allBookmarks.push({ id: String(Date.now()) + '_' + Math.random().toString(36).substring(2, 8), label, surah: aS, ayah: aA, created: Date.now() });
+            if (allBookmarks.find(b => b.surah === aS && b.ayah === aA && b.label === label)) {
+                if (!confirm('موجودة بالفعل، إضافتها مرة أخرى؟')) return;
+            }
+            allBookmarks.push({
+                id: String(Date.now()) + '_' + Math.random().toString(36).substring(2, 8),
+                label, surah: aS, ayah: aA, created: Date.now()
+            });
             saveAllBookmarks();
             updateProgress();
             closeLabelDialog();
@@ -896,7 +997,7 @@
             const b = allBookmarks.find(x => String(x.id) === String(id));
             if (!b) return;
             bookmark = { surah: b.surah, ayah: b.ayah, timestamp: Date.now() };
-            try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) {}
+            try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) { }
             closeBookmarksList();
             jumpToBookmark();
         }
@@ -931,6 +1032,10 @@
         }
         function closeBookmarksList() { document.getElementById('bookmarksOverlay').classList.remove('active'); document.body.style.overflow = ''; }
         function closeBookmarksOutside(e) { if (e.target.id === 'bookmarksOverlay') closeBookmarksList(); }
+
+        /* =========================================================
+           شريط التقدم
+           ========================================================= */
         function updateProgress() {
             const u = new Set(allBookmarks.map(b => b.surah));
             if (bookmark) u.add(bookmark.surah);
@@ -949,6 +1054,10 @@
             else if (p >= 25) { pe.textContent = p + '%'; pe.style.color = '#f59e0b'; }
             else { pe.textContent = p + '%'; pe.style.color = ''; }
         }
+
+        /* =========================================================
+           شريط آخر قراءة
+           ========================================================= */
         function updateBookmarkBar() {
             const bar = document.getElementById('bookmarkBar');
             if (!bar) return;
@@ -983,9 +1092,20 @@
             renderResults();
         }
         function isBookmarked(surah, ayah) { return bookmark && bookmark.surah == surah && bookmark.ayah == ayah; }
+
+        /* =========================================================
+           البحث ومعالجة النص العربي
+           ========================================================= */
         function removeTashkeel(text) {
             if (!text) return '';
-            return text.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D3-\u08E1\u08E3-\u08FF]/g, '').replace(/\u0640/g, '').replace(/[\u0622\u0623\u0625\u0671]/g, '\u0627').replace(/\u0649/g, '\u064A').replace(/\u0624/g, '\u0648').replace(/\u0629/g, '\u0647').replace(/[﴿﴾۝۞۩]/g, '');
+            return text
+                .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u08D3-\u08E1\u08E3-\u08FF]/g, '')
+                .replace(/\u0640/g, '')
+                .replace(/[\u0622\u0623\u0625\u0671]/g, '\u0627')
+                .replace(/\u0649/g, '\u064A')
+                .replace(/\u0624/g, '\u0648')
+                .replace(/\u0629/g, '\u0647')
+                .replace(/[﴿﴾۝۞۩]/g, '');
         }
         function normalizeSearch(text) { return text ? removeTashkeel(text).replace(/\s+/g, ' ').trim() : ''; }
         function isArabicLetter(c) { if (!c) return false; return /[\u0621-\u063A\u0641-\u064A]/.test(c); }
@@ -1026,6 +1146,10 @@
             if (ck.length >= 3) for (let i = 0; i < SURAH_NAMES.length; i++) if (normalizeSearch(SURAH_NAMES[i]).includes(ck)) return i + 1;
             return null;
         }
+
+        /* =========================================================
+           القوائم المنسدلة والسور
+           ========================================================= */
         function populateSurahSelect() {
             const sel = document.getElementById('surahSelect');
             SURAH_NAMES.forEach((n, i) => { const o = document.createElement('option'); o.value = i + 1; o.textContent = `${i + 1}. ${n}`; sel.appendChild(o); });
@@ -1067,59 +1191,141 @@
         }
         function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('sidebarOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebarOverlay').classList.remove('active'); document.body.style.overflow = ''; }
+
+        /* =========================================================
+           مفتاح إظهار التفاسير
+           ========================================================= */
         function initTafsirToggle() {
             const t = document.getElementById('showTafsirToggle');
             const h = document.getElementById('toggleHint');
             t.checked = showTafsir;
             uh();
-            t.addEventListener('change', () => { showTafsir = t.checked; try { localStorage.setItem('showTafsir', showTafsir); } catch (e) {} uh(); renderResultsPreservingScroll(); });
+            t.addEventListener('change', () => {
+                showTafsir = t.checked;
+                try { localStorage.setItem('showTafsir', showTafsir); } catch (e) { }
+                uh();
+                renderResultsPreservingScroll();
+            });
             function uh() { h.textContent = showTafsir ? '(ظاهرة)' : '(مخفية)'; h.style.color = showTafsir ? '#16a34a' : 'var(--gold)'; }
         }
+
+        /* =========================================================
+           تحميل البيانات (الإصدار المُصحّح)
+           ========================================================= */
         async function loadTafsirFile(config) {
             try {
                 const res = await fetch(config.file);
                 if (!res.ok) { allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] }; return; }
                 const text = await res.text();
-                if (text.startsWith('SQLite') || text.startsWith('<!DOCTYPE') || text.startsWith('<html')) { allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] }; return; }
+                if (text.startsWith('SQLite') || text.startsWith('<!DOCTYPE') || text.startsWith('<html')) {
+                    allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] }; return;
+                }
                 let raw;
                 try { raw = JSON.parse(text); } catch (e) { allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] }; return; }
                 let ayahs = [];
-                if (Array.isArray(raw)) ayahs = raw.map(a => ({ surah: parseInt(a.surah || a.sura || 1), number: parseInt(a.number || a.ayah || a.numberInSurah || a.id || 1), text: a.text || a.tafsir || a.content || '' }));
-                else if (raw && raw.ayahs && Array.isArray(raw.ayahs)) ayahs = raw.ayahs.map(a => ({ surah: parseInt(a.surah || a.sura || 1), number: parseInt(a.number || a.ayah || 1), text: a.text || a.tafsir || a.content || '' }));
-                else if (raw && typeof raw === 'object') ayahs = Object.keys(raw).map(key => {
-                    if (!key.includes(':')) return null;
-                    const p = key.split(':'); if (p.length !== 2) return null;
-                    const s = parseInt(p[0]), n = parseInt(p[1]);
-                    if (isNaN(s) || isNaN(n)) return null;
-                    const item = raw[key]; let t = '';
-                    if (typeof item === 'string') t = item;
-                    else if (item && typeof item === 'object') t = item.text || item.tafsir || item.content || '';
-                    t = t.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim();
-                    return { surah: s, number: n, text: t };
-                }).filter(a => a && a.text && a.text.length > 0);
+                if (Array.isArray(raw)) {
+                    ayahs = raw.map(a => ({
+                        surah: parseInt(a.surah || a.sura || 1),
+                        number: parseInt(a.number || a.ayah || a.numberInSurah || a.id || 1),
+                        text: a.text || a.tafsir || a.content || ''
+                    }));
+                } else if (raw && raw.ayahs && Array.isArray(raw.ayahs)) {
+                    ayahs = raw.ayahs.map(a => ({
+                        surah: parseInt(a.surah || a.sura || 1),
+                        number: parseInt(a.number || a.ayah || 1),
+                        text: a.text || a.tafsir || a.content || ''
+                    }));
+                } else if (raw && typeof raw === 'object') {
+                    ayahs = Object.keys(raw).map(key => {
+                        if (!key.includes(':')) return null;
+                        const p = key.split(':');
+                        if (p.length !== 2) return null;
+                        const s = parseInt(p[0]), n = parseInt(p[1]);
+                        if (isNaN(s) || isNaN(n)) return null;
+                        const item = raw[key];
+                        let t = '';
+                        if (typeof item === 'string') t = item;
+                        else if (item && typeof item === 'object') t = item.text || item.tafsir || item.content || '';
+                        t = t.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&')
+                             .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+                             .replace(/\s+/g, ' ').trim();
+                        return { surah: s, number: n, text: t };
+                    }).filter(a => a && a.text && a.text.length > 0);
+                }
                 allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs };
-            } catch (e) { allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] }; }
+            } catch (e) {
+                allTafsirs[config.key] = { label: config.label, icon: config.icon, ayahs: [] };
+            }
         }
+
         async function loadData() {
+            const info = document.getElementById('resultsInfo');
             try {
                 const r = await fetch('quran.json');
+                if (!r.ok) throw new Error('HTTP ' + r.status);
                 const raw = await r.json();
-                if (Array.isArray(raw) && raw.length > 0 && raw[0].verses) { quranData = []; raw.forEach(s => (s.verses || []).forEach(v => quranData.push({ surah: s.id, ayah: v.id, text: v.text }))); }
-                else if (Array.isArray(raw)) quranData = raw.map(a => ({ surah: parseInt(a.surah || 1), ayah: parseInt(a.ayah || a.number || 1), text: a.text || '' }));
-                await Promise.all(TAFSIR_FILES.map(loadTafsirFile));
-                const tt = Object.values(allTafsirs).reduce((s, t) => s + t.ayahs.length, 0);
-                document.getElementById('resultsInfo').textContent = `📖 ${quranData.length} آية | 📚 ${tt} مدخل تفسيري`;
-                updateBookmarkBar(); updateProgress(); updateBmCount(); renderResults();
-            } catch (err) { document.getElementById('resultsInfo').innerHTML = '❌ <span style="color:#8B4513">تعذر تحميل البيانات: ' + err.message + '</span>'; }
+
+                // الحالة 1: الملف عبارة عن مصفوفة سور، كل سورة فيها verses
+                if (Array.isArray(raw) && raw.length > 0 && raw[0].verses) {
+                    quranData = [];
+                    raw.forEach(s => (s.verses || []).forEach(v => quranData.push({
+                        surah: s.id,
+                        ayah: v.id,
+                        text: v.text
+                    })));
+                }
+                // الحالة 2: الملف عبارة عن مصفوفة آيات مسطحة
+                else if (Array.isArray(raw)) {
+                    quranData = raw.map(a => ({
+                        surah: parseInt(a.surah || 1),
+                        ayah: parseInt(a.ayah || a.number || 1),
+                        text: a.text || ''
+                    }));
+                }
+
+                if (!quranData.length) throw new Error('ملف فارغ');
+
+            } catch (err) {
+                console.warn('⚠️ تعذر تحميل quran.json، سيتم استخدام بيانات تجريبية:', err.message);
+                quranData = SAMPLE_QURAN.slice();
+                usingSampleData = true;
+            }
+
+            // تحميل التفاسير
+            await Promise.all(TAFSIR_FILES.map(loadTafsirFile));
+
+            const tt = Object.values(allTafsirs).reduce((s, t) => s + t.ayahs.length, 0);
+            info.innerHTML = `📖 ${quranData.length} آية | 📚 ${tt} مدخل تفسيري`
+                + (usingSampleData
+                    ? ` <span style="color:#b45309;">(بيانات تجريبية — أضف quran.json للقرآن كاملاً)</span>`
+                    : '');
+
+            updateBookmarkBar();
+            updateProgress();
+            updateBmCount();
+            renderResults();
         }
+
+        /* =========================================================
+           دوال البحث والعرض
+           ========================================================= */
         function searchInSingleTafsir(k, kw, surah) {
             const res = [];
             const t = allTafsirs[k];
             if (!t || t.ayahs.length === 0) return res;
-            t.ayahs.forEach(a => { if (surah !== 'all' && a.surah != surah) return; if (kw && !searchMatch(a.text, kw)) return; res.push({ tafsirKey: k, tafsirLabel: t.label, tafsirIcon: t.icon, surah: a.surah, number: a.number, text: a.text }); });
+            t.ayahs.forEach(a => {
+                if (surah !== 'all' && a.surah != surah) return;
+                if (kw && !searchMatch(a.text, kw)) return;
+                res.push({ tafsirKey: k, tafsirLabel: t.label, tafsirIcon: t.icon, surah: a.surah, number: a.number, text: a.text });
+            });
             return res;
         }
-        function searchInAllTafsirs(kw, s) { const r = []; Object.keys(allTafsirs).forEach(k => r.push(...searchInSingleTafsir(k, kw, s))); return r; }
+        function searchInAllTafsirs(kw, s) {
+            const r = [];
+            Object.keys(allTafsirs).forEach(k => r.push(...searchInSingleTafsir(k, kw, s)));
+            return r;
+        }
+
         function performSearch() {
             currentKeyword = document.getElementById('searchInput').value.trim();
             currentSource = document.getElementById('sourceSelect').value;
@@ -1133,6 +1339,7 @@
             } else { focusAyah = null; currentAyah = sa; currentPage = 1; }
             renderResults();
         }
+
         function renderSurahSuggestion() {
             const c = document.getElementById('surahSuggestionContainer');
             c.innerHTML = '';
@@ -1142,9 +1349,10 @@
             const s = SURAH_NAMES[sn - 1];
             c.innerHTML = `<div class="surah-suggestion"><span style="font-size:1rem; font-weight:700;">📖 عرض <strong>سورة ${s}</strong> كاملة؟</span><button onclick="jumpToSurah(${sn})">⚡ عرض السورة</button></div>`;
         }
+
         function attachTapHighlight() {
             document.querySelectorAll('.ayah-card').forEach(card => {
-                card.addEventListener('click', function(e) {
+                card.addEventListener('click', function (e) {
                     if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
                     if (screenLocked) return;
                     this.classList.add('temp-highlight');
@@ -1152,6 +1360,7 @@
                 });
             });
         }
+
         function renderResults() {
             const c = document.getElementById('resultsContainer');
             const pe = document.getElementById('pagination');
@@ -1159,23 +1368,42 @@
             const tb = document.getElementById('tafsirToggleBar');
             let items = [], isTafsir = false;
             const isSearchMode = (currentKeyword && currentKeyword.length > 0) || (currentAyah !== 'all');
+
             if (currentSource === 'quran') {
                 let s = quranData;
                 if (currentSurah !== 'all') { const x = parseInt(currentSurah); s = s.filter(a => a.surah == x); }
                 if (currentAyah !== 'all') { const x = parseInt(currentAyah); s = s.filter(a => a.ayah == x); }
                 if (currentKeyword) s = s.filter(a => searchMatch(a.text, currentKeyword));
                 items = s;
-            } else if (currentSource === 'all_tafsirs') { isTafsir = true; items = searchInAllTafsirs(currentKeyword, currentSurah); }
-            else { isTafsir = true; const k = currentSource.replace('tafsir_', ''); items = searchInSingleTafsir(k, currentKeyword, currentSurah); }
+            } else if (currentSource === 'all_tafsirs') {
+                isTafsir = true;
+                items = searchInAllTafsirs(currentKeyword, currentSurah);
+            } else {
+                isTafsir = true;
+                const k = currentSource.replace('tafsir_', '');
+                items = searchInSingleTafsir(k, currentKeyword, currentSurah);
+            }
+
             tb.style.display = currentSource === 'quran' ? 'flex' : 'none';
+
             const tp = Math.max(1, Math.ceil(items.length / perPage));
             if (currentPage > tp) currentPage = tp;
             const paginated = items.slice((currentPage - 1) * perPage, currentPage * perPage);
             ie.textContent = `📊 ${items.length} نتيجة | صفحة ${currentPage}/${tp}`;
             renderSurahSuggestion();
-            if (paginated.length === 0) { c.innerHTML = '<div class="empty-msg">📭 لا توجد نتائج مطابقة</div>'; pe.innerHTML = ''; setTimeout(updateJumpBtnText, 100); return; }
+
+            if (paginated.length === 0) {
+                c.innerHTML = '<div class="empty-msg">📭 لا توجد نتائج مطابقة</div>';
+                pe.innerHTML = '';
+                setTimeout(updateJumpBtnText, 100);
+                return;
+            }
+
             if (isTafsir) {
-                c.innerHTML = paginated.map(i => { const sn = SURAH_NAMES[i.surah - 1] || '؟'; return `<div class="ayah-card"><div class="ayah-header"><span class="ayah-ref">${i.tafsirIcon} ${i.tafsirLabel} - ${sn} - آية ${i.number}</span><span class="ayah-type">تفسير</span></div><div class="tafsir-text">${highlight(i.text, currentKeyword)}</div></div>`; }).join('');
+                c.innerHTML = paginated.map(i => {
+                    const sn = SURAH_NAMES[i.surah - 1] || '؟';
+                    return `<div class="ayah-card"><div class="ayah-header"><span class="ayah-ref">${i.tafsirIcon} ${i.tafsirLabel} - ${sn} - آية ${i.number}</span><span class="ayah-type">تفسير</span></div><div class="tafsir-text">${highlight(i.text, currentKeyword)}</div></div>`;
+                }).join('');
             } else {
                 c.innerHTML = paginated.map(item => {
                     const sn = SURAH_NAMES[item.surah - 1] || '؟';
@@ -1186,7 +1414,15 @@
                     let tB = '', cB = '';
                     if (showTafsir) {
                         let cf = 0;
-                        TAFSIR_FILES.forEach(cfg => { const t = allTafsirs[cfg.key]; if (!t || t.ayahs.length === 0) return; const m = t.ayahs.find(x => x.surah == item.surah && x.number == item.ayah); if (m && m.text) { cf++; tB += `<div class="tafsir-block"><h4>${t.icon} ${t.label}</h4><div class="tafsir-text">${highlight(m.text, currentKeyword)}</div></div>`; } });
+                        TAFSIR_FILES.forEach(cfg => {
+                            const t = allTafsirs[cfg.key];
+                            if (!t || t.ayahs.length === 0) return;
+                            const m = t.ayahs.find(x => x.surah == item.surah && x.number == item.ayah);
+                            if (m && m.text) {
+                                cf++;
+                                tB += `<div class="tafsir-block"><h4>${t.icon} ${t.label}</h4><div class="tafsir-text">${highlight(m.text, currentKeyword)}</div></div>`;
+                            }
+                        });
                         if (cf > 0) cB = `<span class="tafsir-count">📚 ${cf}</span>`;
                     }
                     const bR = marked ? `<div class="bookmark-ribbon">🔖 آخر قراءة</div>` : '';
@@ -1195,26 +1431,54 @@
                     return `<div class="ayah-card ${marked ? 'bookmarked' : ''}" id="ayah-${item.surah}-${item.ayah}">${bR}${sR}<div class="ayah-header"><span class="ayah-ref">سورة ${sn} - آية ${item.ayah}</span><div class="ayah-header-right">${cB}${scB}<span class="ayah-type">آية</span><div class="ayah-btns"><button class="special-btn ${hs ? 'has-special' : ''}" onclick="openLabelDialog(${item.surah}, ${item.ayah})">📌</button><button class="bookmark-btn ${marked ? 'active' : ''}" onclick="toggleBookmark(${item.surah}, ${item.ayah})">🔖</button></div></div></div><div class="ayah-text">${at}</div>${tB}</div>`;
                 }).join('');
             }
+
             let ph = '';
             if (tp > 1) {
                 if (currentPage > 1) ph += `<a data-page="${currentPage - 1}">⬅ السابق</a>`;
-                for (let i = Math.max(1, currentPage - 2); i <= Math.min(tp, currentPage + 2); i++) ph += (i === currentPage) ? `<span class="current">${i}</span>` : `<a data-page="${i}">${i}</a>`;
+                for (let i = Math.max(1, currentPage - 2); i <= Math.min(tp, currentPage + 2); i++)
+                    ph += (i === currentPage) ? `<span class="current">${i}</span>` : `<a data-page="${i}">${i}</a>`;
                 if (currentPage < tp) ph += `<a data-page="${currentPage + 1}">التالي ➡</a>`;
             }
             pe.innerHTML = ph;
-            pe.querySelectorAll('a[data-page]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); currentPage = parseInt(a.dataset.page); focusAyah = null; renderResults(); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
-            if (focusAyah && currentSurah !== 'all') { setTimeout(() => { const el = document.getElementById(`ayah-${currentSurah}-${focusAyah}`); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('focused'); setTimeout(() => el.classList.remove('focused'), 3000); } }, 400); }
+            pe.querySelectorAll('a[data-page]').forEach(a => a.addEventListener('click', e => {
+                e.preventDefault(); currentPage = parseInt(a.dataset.page); focusAyah = null;
+                renderResults(); window.scrollTo({ top: 0, behavior: 'smooth' });
+            }));
+
+            if (focusAyah && currentSurah !== 'all') {
+                setTimeout(() => {
+                    const el = document.getElementById(`ayah-${currentSurah}-${focusAyah}`);
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        el.classList.add('focused');
+                        setTimeout(() => el.classList.remove('focused'), 3000);
+                    }
+                }, 400);
+            }
             setTimeout(() => { updateJumpBtnText(); attachTapHighlight(); }, 100);
         }
-        function openAbout() { document.getElementById('aboutOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
-        function closeAbout() { document.getElementById('aboutOverlay').classList.remove('active'); document.body.style.overflow = ''; }
-        function closeAboutOutside(e) { if (e.target.id === 'aboutOverlay') closeAbout(); }
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeAbout(); closeSync(); closeColorPicker(); closeBookmarksList(); closeSidebar(); closeLabelDialog(); closeHelp(); closeWelcome(); closePrayer(); } });
 
-        function generateSyncCode() { const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = ''; const arr = new Uint32Array(12); crypto.getRandomValues(arr); for (let i = 0; i < 12; i++) c += chars[arr[i] % chars.length]; return c; }
-        function getSyncCode() { let c = ''; try { c = localStorage.getItem('syncCode') || ''; } catch (e) {} if (!c || c.length < 8) { c = generateSyncCode(); try { localStorage.setItem('syncCode', c); } catch (e) {} } return c; }
+        /* =========================================================
+           المزامنة (تعمل مع Backend اختياري)
+           ========================================================= */
+        function generateSyncCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let c = '';
+            const arr = new Uint32Array(12);
+            if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(arr);
+            else for (let i = 0; i < 12; i++) arr[i] = Math.floor(Math.random() * 1e9);
+            for (let i = 0; i < 12; i++) c += chars[arr[i] % chars.length];
+            return c;
+        }
+        function getSyncCode() {
+            let c = '';
+            try { c = localStorage.getItem('syncCode') || ''; } catch (e) { }
+            if (!c || c.length < 8) { c = generateSyncCode(); try { localStorage.setItem('syncCode', c); } catch (e) { } }
+            return c;
+        }
 
         async function syncBookmarkToServer(surah, ayah) {
+            if (!serverSyncEnabled) return;
             const code = getSyncCode(); if (!code) return;
             try {
                 const res = await fetch('/api/sync_bookmark', {
@@ -1222,12 +1486,11 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ sync_code: code, surah, ayah })
                 });
-                if (res.ok) {
-                    try { localStorage.removeItem('pendingBookmarkSync'); } catch (e) {}
-                }
-            } catch (e) {}
+                if (res.ok) { try { localStorage.removeItem('pendingBookmarkSync'); } catch (e) { } }
+            } catch (e) { }
         }
         async function syncDeleteToServer() {
+            if (!serverSyncEnabled) return;
             const code = getSyncCode(); if (!code) return;
             try {
                 const res = await fetch('/api/delete_bookmark', {
@@ -1235,264 +1498,4 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ sync_code: code })
                 });
-                if (res.ok) {
-                    try { localStorage.removeItem('pendingBookmarkSync'); } catch (e) {}
-                }
-            } catch (e) {}
-        }
-        async function loadBookmarkFromServer(silent) {
-            const code = getSyncCode(); if (!code) return;
-
-            let hasPending = false;
-            try { hasPending = localStorage.getItem('pendingBookmarkSync') === 'true'; } catch (e) {}
-
-            if (hasPending && bookmark) {
-                await syncBookmarkToServer(bookmark.surah, bookmark.ayah);
-                return;
-            }
-
-            try {
-                const res = await fetch(`/api/get_bookmark/${code}`);
-                const data = await res.json();
-                if (data.status === 'success') {
-                    if (!bookmark || bookmark.surah != data.surah || bookmark.ayah != data.ayah) {
-                        bookmark = { surah: data.surah, ayah: data.ayah, timestamp: Date.now() };
-                        try { localStorage.setItem('quranBookmark', JSON.stringify(bookmark)); } catch (e) {}
-                        updateBookmarkBar(); updateProgress();
-                        if (!silent) renderResultsPreservingScroll();
-                    }
-                } else if (data.status === 'empty' && bookmark) {
-                    syncBookmarkToServer(bookmark.surah, bookmark.ayah);
-                }
-            } catch (e) {}
-        }
-        async function syncSpecialBookmarksToServer() {
-            if (!serverSyncEnabled || isSyncingToServer) return;
-            const code = getSyncCode(); if (!code) return;
-            isSyncingToServer = true;
-            try { await fetch('/api/special_bookmarks', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sync_code: code, bookmarks: allBookmarks }) }); } catch (e) {} finally { isSyncingToServer = false; }
-        }
-        async function loadSpecialBookmarksFromServer(silent) {
-            const code = getSyncCode(); if (!code) return;
-            if (Date.now() - lastAddTime < 8000) return;
-            if (isSyncingToServer) return;
-            try {
-                const res = await fetch(`/api/special_bookmarks/${code}`);
-                const data = await res.json();
-                if (data.status !== 'success') return;
-                const sb = (data.bookmarks || []).map(b => ({ id: String(b.id), label: b.label, surah: parseInt(b.surah), ayah: parseInt(b.ayah) }));
-                if (allBookmarks.length === 0 && sb.length > 0) { allBookmarks = sb; saveAllBookmarksLocal(); updateProgress(); if (!silent) renderResultsPreservingScroll(); return; }
-                if (sb.length === 0 && allBookmarks.length > 0) { await syncSpecialBookmarksToServer(); return; }
-                const li = new Set(allBookmarks.map(b => String(b.id)));
-                const nf = sb.filter(b => !li.has(String(b.id)));
-                if (nf.length > 0) { allBookmarks = [...allBookmarks, ...nf]; saveAllBookmarksLocal(); updateProgress(); if (!silent) renderResultsPreservingScroll(); }
-            } catch (e) {}
-        }
-        function startSync() { getSyncCode(); loadBookmarkFromServer(true); loadSpecialBookmarksFromServer(true); setInterval(() => { loadBookmarkFromServer(false); loadSpecialBookmarksFromServer(false); }, 15000); }
-        function openSync() { document.getElementById('syncOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; document.getElementById('syncCodeDisplay').value = getSyncCode(); document.getElementById('syncCodeInput').value = ''; }
-        function closeSync() { document.getElementById('syncOverlay').classList.remove('active'); document.body.style.overflow = ''; }
-        function closeSyncOutside(e) { if (e.target.id === 'syncOverlay') closeSync(); }
-        function copySyncCode() { const c = getSyncCode(); navigator.clipboard.writeText(c).then(() => alert('✅ تم النسخ:\n' + c)).catch(() => { document.getElementById('syncCodeDisplay').select(); document.execCommand('copy'); alert('✅ تم النسخ: ' + c); }); }
-        async function linkToSyncCode() {
-            const input = document.getElementById('syncCodeInput');
-            const code = (input.value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
-            if (!code || code.length < 8) { alert('❌ الرمز قصير'); return; }
-            try { localStorage.setItem('syncCode', code); } catch (e) {}
-            document.getElementById('syncCodeDisplay').value = code;
-            input.value = '';
-            alert('✅ تم الربط: ' + code);
-            await loadBookmarkFromServer(false);
-            try {
-                const res = await fetch(`/api/special_bookmarks/${code}`);
-                const data = await res.json();
-                if (data.status === 'success' && data.bookmarks && data.bookmarks.length > 0) {
-                    const sb = data.bookmarks.map(b => ({ id: String(b.id), label: b.label, surah: parseInt(b.surah), ayah: parseInt(b.ayah) }));
-                    const li = new Set(allBookmarks.map(b => String(b.id)));
-                    const no = sb.filter(b => !li.has(String(b.id)));
-                    if (no.length > 0) { allBookmarks = [...allBookmarks, ...no]; saveAllBookmarksLocal(); updateProgress(); renderResultsPreservingScroll(); }
-                }
-            } catch (e) {}
-        }
-
-        function openPrayer() {
-            document.getElementById('prayerOverlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            if (userLocation) {
-                if (document.getElementById('content-times').classList.contains('active')) loadPrayerTimes();
-                if (document.getElementById('content-qibla').classList.contains('active')) calcQibla();
-            }
-        }
-        function closePrayer() { document.getElementById('prayerOverlay').classList.remove('active'); document.body.style.overflow = ''; if (prayerInterval) { clearInterval(prayerInterval); prayerInterval = null; } }
-        function closePrayerOutside(e) { if (e.target.id === 'prayerOverlay') closePrayer(); }
-        function showPrayerTab(tab) {
-            document.querySelectorAll('.prayer-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.prayer-content').forEach(c => c.classList.remove('active'));
-            document.getElementById('tab-' + tab).classList.add('active');
-            document.getElementById('content-' + tab).classList.add('active');
-            if (tab === 'qibla') { if (!userLocation) requestLocation(); else calcQibla(); }
-            if (tab === 'times') { if (!userLocation) requestLocation(); else loadPrayerTimes(); }
-        }
-        function requestLocation() {
-            const c = document.getElementById('prayerTimesContainer');
-            const s = document.getElementById('qiblaStatus');
-            if (!navigator.geolocation) { alert('⚠️ متصفحك لا يدعم الموقع.'); return; }
-            if (c) c.innerHTML = '<div style="text-align:center; padding:30px;"><div style="font-size:2rem;">⏳</div><p>جاري تحديد موقعك...</p></div>';
-            if (s) s.textContent = '⏳ جاري تحديد موقعك...';
-            navigator.geolocation.getCurrentPosition(
-                function(p) { userLocation = { lat: p.coords.latitude, lng: p.coords.longitude }; try { localStorage.setItem('userLocation', JSON.stringify(userLocation)); } catch (e) {} loadPrayerTimes(); calcQibla(); },
-                function(err) {
-                    let m = '⚠️ تعذّر تحديد موقعك.';
-                    if (err.code === 1) m = '⚠️ رفضت إذن الموقع.';
-                    else if (err.code === 2) m = '⚠️ الموقع غير متاح.';
-                    else if (err.code === 3) m = '⚠️ انتهت المدة.';
-                    if (c) c.innerHTML = `<div style="text-align:center; padding:30px;"><div style="font-size:2rem;">❌</div><p>${m}</p><button class="prayer-location-btn" onclick="requestLocation()" style="margin-top:15px;">🔄 إعادة المحاولة</button></div>`;
-                    if (s) s.innerHTML = m;
-                },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: 600000 }
-            );
-        }
-        async function loadPrayerTimes() {
-            if (!userLocation) return;
-            const c = document.getElementById('prayerTimesContainer');
-            if (!c) return;
-            c.innerHTML = '<div style="text-align:center; padding:30px;"><div style="font-size:2rem;">⏳</div><p>جاري جلب مواقيت الصلاة...</p></div>';
-            try {
-                const today = new Date();
-                const dateStr = `${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}`;
-                const url = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${userLocation.lat}&longitude=${userLocation.lng}&method=${prayerMethod}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                if (data.code !== 200) throw new Error('فشل');
-                prayerTimes = data.data.timings;
-                renderPrayerTimes(data.data.date.hijri, data.data.date.gregorian);
-                startPrayerCountdown();
-            } catch (e) {
-                c.innerHTML = `<div style="text-align:center; padding:30px;"><div style="font-size:2rem;">❌</div><p>تعذّر جلب مواقيت الصلاة.</p><button class="prayer-location-btn" onclick="loadPrayerTimes()" style="margin-top:15px;">🔄 إعادة المحاولة</button></div>`;
-            }
-        }
-        function renderPrayerTimes(hijri, gregorian) {
-            const c = document.getElementById('prayerTimesContainer');
-            if (!c) return;
-            const prayers = [{ key: 'Fajr', name: 'الفجر', icon: '🌅' }, { key: 'Dhuhr', name: 'الظهر', icon: '☀️' }, { key: 'Asr', name: 'العصر', icon: '🌤️' }, { key: 'Maghrib', name: 'المغرب', icon: '🌇' }, { key: 'Isha', name: 'العشاء', icon: '🌙' }];
-            const now = new Date();
-            const cm = now.getHours() * 60 + now.getMinutes();
-            let np = null, npm = Infinity;
-            prayers.forEach(p => { const [h, m] = prayerTimes[p.key].split(':').map(Number); const mins = h * 60 + m; if (mins > cm && mins < npm) { npm = mins; np = { ...p, time: prayerTimes[p.key], minutes: mins }; } });
-            if (!np) { const [h, m] = prayerTimes.Fajr.split(':').map(Number); np = { key: 'Fajr', name: 'الفجر', icon: '🌅', time: prayerTimes.Fajr, minutes: h * 60 + m + 1440 }; }
-            const listHtml = prayers.map(p => { const isNext = p.key === np.key; const [h, m] = prayerTimes[p.key].split(':').map(Number); const isPassed = (h * 60 + m) < cm; return `<div class="prayer-item ${isNext ? 'next-prayer' : ''} ${isPassed && !isNext ? 'passed' : ''}"><div style="display:flex; align-items:center; gap:10px;"><span style="font-size:1.5rem; margin-left:12px;">${p.icon}</span><span class="prayer-item-name">${p.name}</span></div><span class="prayer-item-time">${prayerTimes[p.key]}</span></div>`; }).join('');
-            c.innerHTML = `<div class="prayer-date-info"><div class="hijri">${hijri.day} ${hijri.month.ar} ${hijri.year} هـ</div><div class="gregorian">${gregorian.weekday.ar}، ${gregorian.day} ${gregorian.month.ar} ${gregorian.year} م</div></div><div class="prayer-next"><div class="label">الصلاة القادمة</div><div class="name">${np.icon} ${np.name}</div><div class="time" id="nextPrayerTime">${np.time}</div><div class="countdown" id="prayerCountdown">—</div></div><div class="prayer-list">${listHtml}</div><div class="prayer-location-info">📍 خط العرض: ${userLocation.lat.toFixed(4)} | خط الطول: ${userLocation.lng.toFixed(4)}<br><span style="font-size:0.75rem;">الطريقة: ${getMethodName(prayerMethod)}</span><br><button class="prayer-location-btn" onclick="changeMethod()" style="font-size:0.8rem; padding:6px 12px;">🔄 تغيير طريقة الحساب</button> <button class="prayer-location-btn" onclick="requestLocation()" style="font-size:0.8rem; padding:6px 12px; background:linear-gradient(180deg,#10b981,#047857);">📍 تحديث الموقع</button></div>`;
-            window._nextPrayer = np;
-        }
-        function getMethodName(m) { const names = { 3: 'رابطة العالم الإسلامي', 4: 'أم القرى', 5: 'الهيئة المصرية', 13: 'ديانت (تركيا)', 16: 'دبي', 18: 'الكويت', 21: 'قطر' }; return names[m] || 'قياسي'; }
-        function changeMethod() {
-            const methods = [{ id: 13, name: 'ديانت (تركيا)' }, { id: 3, name: 'رابطة العالم الإسلامي' }, { id: 4, name: 'أم القرى (السعودية)' }, { id: 5, name: 'الهيئة المصرية' }, { id: 18, name: 'الكويت' }, { id: 21, name: 'قطر' }, { id: 16, name: 'دبي' }];
-            let msg = 'اختر طريقة الحساب (اكتب الرقم):\n\n';
-            methods.forEach(m => msg += `${m.id} - ${m.name}\n`);
-            const choice = prompt(msg, prayerMethod);
-            if (choice) { const num = parseInt(choice); if (methods.find(m => m.id === num)) { prayerMethod = num; try { localStorage.setItem('prayerMethod', prayerMethod); } catch (e) {} loadPrayerTimes(); } }
-        }
-        function startPrayerCountdown() { if (prayerInterval) clearInterval(prayerInterval); updatePrayerCountdown(); prayerInterval = setInterval(updatePrayerCountdown, 1000); }
-        function updatePrayerCountdown() {
-            if (!window._nextPrayer) return;
-            const el = document.getElementById('prayerCountdown'); if (!el) return;
-            const now = new Date();
-            const cm = now.getHours() * 60 + now.getMinutes();
-            const cs = now.getSeconds();
-            let dm = window._nextPrayer.minutes - cm;
-            if (dm < 0) dm += 1440;
-            const ts = dm * 60 - cs;
-            if (ts <= 0) { el.textContent = '🔔 حان وقت الصلاة'; return; }
-            const h = Math.floor(ts / 3600), m = Math.floor((ts % 3600) / 60), s = ts % 60;
-            const pad = n => String(n).padStart(2, '0');
-            el.textContent = h > 0 ? `⏳ متبقٍ: ${pad(h)}:${pad(m)}:${pad(s)}` : `⏳ متبقٍ: ${pad(m)}:${pad(s)}`;
-        }
-        async function calcQibla() {
-            if (!userLocation) return;
-            const status = document.getElementById('qiblaStatus');
-            const compass = document.getElementById('qiblaCompass');
-            const degree = document.getElementById('qiblaDegree');
-            const arrow = document.getElementById('qiblaArrow');
-            if (!compass || !degree || !arrow) return;
-            const KAABA_LAT = 21.4225, KAABA_LNG = 39.8262;
-            const lat1 = userLocation.lat * Math.PI / 180, lng1 = userLocation.lng * Math.PI / 180;
-            const lat2 = KAABA_LAT * Math.PI / 180, lng2 = KAABA_LNG * Math.PI / 180;
-            const dLng = lng2 - lng1;
-            const x = Math.sin(dLng) * Math.cos(lat2);
-            const y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
-            let bearing = Math.atan2(x, y) * 180 / Math.PI;
-            bearing = (bearing + 360) % 360;
-            window._qiblaBearing = bearing;
-            if (status) status.style.display = 'none';
-            if (compass) compass.style.display = 'block';
-            if (degree) degree.innerHTML = `🧭 اتجاه القبلة: ${bearing.toFixed(1)}° من الشمال`;
-            if (arrow) arrow.style.transform = `translate(-50%, -100%) rotate(${bearing}deg)`;
-
-            let pg = true;
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                try {
-                    const p = await DeviceOrientationEvent.requestPermission();
-                    pg = (p === 'granted');
-                } catch (e) { pg = false; }
-            }
-            if (!pg) {
-                if (status) {
-                    status.style.display = 'block';
-                    status.innerHTML = `⚠️ يحتاج التطبيق إلى إذن البوصلة.<br><button class="prayer-location-btn" onclick="calcQibla()" style="margin-top:10px;">🔄 إعادة المحاولة</button><br><br><small>💡 iPhone/iPad: الإعدادات → Safari → Motion & Orientation Access → فعّلها</small>`;
-                }
-                return;
-            }
-            if (window.DeviceOrientationEvent) {
-                window.removeEventListener('deviceorientationabsolute', handleOrientation, true);
-                window.removeEventListener('deviceorientation', handleOrientation, true);
-                window.addEventListener('deviceorientationabsolute', handleOrientation, true);
-                window.addEventListener('deviceorientation', handleOrientation, true);
-            }
-        }
-        function handleOrientation(event) {
-            let heading = null;
-            if (event.webkitCompassHeading !== undefined && event.webkitCompassHeading !== null) {
-                heading = event.webkitCompassHeading;
-            } else if (event.absolute === true && event.alpha !== null) {
-                heading = 360 - event.alpha;
-            } else if (event.alpha !== null) {
-                heading = 360 - event.alpha;
-            }
-            if (heading === null || window._qiblaBearing === undefined) return;
-            window._compassDetected = true;
-            const arrow = document.getElementById('qiblaArrow');
-            if (arrow) {
-                const rot = window._qiblaBearing - heading;
-                arrow.style.transform = `translate(-50%, -100%) rotate(${rot}deg)`;
-            }
-            const degree = document.getElementById('qiblaDegree');
-            if (degree) {
-                degree.innerHTML = `🧭 اتجاه القبلة: ${window._qiblaBearing.toFixed(1)}° من الشمال<br><small style="font-size:0.8rem; color:var(--ink-secondary);">🔄 اتجاهك الحالي: ${heading.toFixed(1)}° — السهم يدور تلقائياً</small>`;
-            }
-        }
-
-        document.getElementById('searchBtn').addEventListener('click', performSearch);
-        document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
-        document.getElementById('sourceSelect').addEventListener('change', performSearch);
-        document.getElementById('surahSelect').addEventListener('change', (e) => { updateAyahDropdown(e.target.value, 'all'); document.getElementById('searchInput').value = ''; performSearch(); });
-        document.getElementById('ayahSelect').addEventListener('change', performSearch);
-        window.addEventListener('scroll', updateJumpBtnText);
-        window.addEventListener('resize', updateJumpBtnText);
-
-        applyBookmarkColor();
-        populateSurahSelect();
-        populateSidebar();
-        initTafsirToggle();
-        loadBookmark();
-        updateBookmarkBar();
-        updateProgress();
-        updateBmCount();
-        loadData();
-        startSync();
-        initWakeLock();
-        updateReadingTimer();
-        if (document.body.classList.contains('dark-mode')) { const btn = document.getElementById('darkModeBtn'); if (btn) btn.textContent = '☀️ نهاري'; }
-        setTimeout(updateJumpBtnText, 500);
-        checkForUpdate();
-    </script>
-</body>
-</html>
+                if (res.ok) { try { localStorage
