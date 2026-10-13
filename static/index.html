@@ -309,14 +309,14 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 
 <div class="overlay" id="welcomeOv">
 <div class="modal" style="max-width:680px" onclick="event.stopPropagation()">
-<button class="close" onclick="closeModal('welcomeOv')">✖</button>
+<button class="close" onclick="closeWelcome()">✖</button>
 <h2>🌟 مرحباً بك</h2>
 <p class="intro">الإصدار v2.5</p>
 <div class="dua" style="margin-bottom:20px">﴿ وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ ﴾</div>
 <h3>✨ الجديد</h3>
 <div class="help-step"><div class="help-ic">📍</div><div><div class="help-t">الحفاظ على موضع القراءة</div><div class="help-d">التطبيق الآن يحفظ مكانك عند إضافة أو حذف العلامات</div></div></div>
 <div class="help-step"><div class="help-ic">📲</div><div><div class="help-t">أزرار المشاركة</div><div class="help-d">شارك التطبيق عبر واتساب، تلغرام، فيسبوك، تويتر، إيميل</div></div></div>
-<button class="pbtn" style="width:100%;padding:14px;background:linear-gradient(180deg,#10b981,#047857);font-size:1.05rem" onclick="closeModal('welcomeOv')">✅ فهمت، لنبدأ</button>
+<button class="pbtn" style="width:100%;padding:14px;background:linear-gradient(180deg,#10b981,#047857);font-size:1.05rem" onclick="closeWelcome()">✅ فهمت، لنبدأ</button>
 </div>
 </div>
 
@@ -477,16 +477,16 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 <div class="modal" onclick="event.stopPropagation()">
 <button class="close" onclick="closeModal('syncOv')">✖</button>
 <h2>🔄 مزامنة الأجهزة</h2>
-<p class="intro">اربط أجهزتك</p>
-<h3>🔑 رمزك الخاص</h3>
+<p class="intro">اربط أجهزتك بنسخ البيانات</p>
+<h3>🔑 رمزك الخاص (انسخه للاحتفاظ بنسخة)</h3>
 <div style="display:flex;gap:8px;margin:10px 0">
 <input type="text" id="syncCode" readonly style="flex:1;padding:12px;font-size:1.2rem;font-weight:700;text-align:center;letter-spacing:3px;border:2px solid var(--gold);border-radius:8px;background:var(--in);color:var(--ink);direction:ltr">
 <button onclick="copyCode()" style="padding:12px 20px;background:linear-gradient(180deg,#D4AF37,#B8860B);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">📋 نسخ</button>
 </div>
 <hr style="border:none;border-top:1px dashed var(--bd);margin:20px 0">
-<h3>🔗 ربط بجهاز آخر</h3>
-<input type="text" id="syncIn" placeholder="الصق رمز الجهاز الآخر" style="width:100%;padding:12px;font-size:1rem;text-align:center;letter-spacing:2px;border:2px solid var(--gold);border-radius:8px;background:var(--in);color:var(--ink);direction:ltr;margin-bottom:10px">
-<button onclick="linkCode()" style="width:100%;padding:12px;background:linear-gradient(180deg,#38bdf8,#0284c7);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✅ ربط</button>
+<h3>🔗 استيراد بيانات جهاز آخر</h3>
+<input type="text" id="syncIn" placeholder="الصق رمز المزامنة هنا" style="width:100%;padding:12px;font-size:1rem;text-align:center;letter-spacing:2px;border:2px solid var(--gold);border-radius:8px;background:var(--in);color:var(--ink);direction:ltr;margin-bottom:10px">
+<button onclick="linkCode()" style="width:100%;padding:12px;background:linear-gradient(180deg,#38bdf8,#0284c7);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer">✅ استيراد</button>
 </div>
 </div>
 
@@ -626,14 +626,34 @@ document.body.style.overflow='';
 requestAnimationFrame(()=>{ window.scrollTo(0, _savedScroll); });
 setTimeout(()=>{ window.scrollTo(0, _savedScroll); }, 30);
 }
-function closeModalOutside(e,id){if(e.target.id===id)closeModal(id)}
+function closeModalOutside(e,id){
+if(e.target.id===id) {
+    closeModal(id);
+    if(id==='welcomeOv') localStorage.setItem('appVersion', APP_VERSION);
+}
+}
 document.addEventListener('keydown',e=>{
-if(e.key==='Escape'){['welcomeOv','helpOv','aboutOv','prayerOv','syncOv','colorOv','bmsOv','labelOv'].forEach(closeModal);closeSidebar()}
+if(e.key==='Escape'){
+    ['welcomeOv','helpOv','aboutOv','prayerOv','syncOv','colorOv','bmsOv','labelOv'].forEach(id => {
+        closeModal(id);
+        if(id === 'welcomeOv') localStorage.setItem('appVersion', APP_VERSION);
+    });
+    closeSidebar();
+}
 });
+
+// دالة إغلاق رسالة الترحيب وحفظ الإصدار
+function closeWelcome() {
+    closeModal('welcomeOv');
+    localStorage.setItem('appVersion', APP_VERSION);
+}
 
 setTimeout(()=>{
 const v=localStorage.getItem('appVersion')||'';
-if(v!==APP_VERSION)openModal('welcomeOv');
+if(v!==APP_VERSION){
+    openModal('welcomeOv');
+    // تم نقل حفظ الإصدار إلى دالة closeWelcome والإغلاق الخارجي
+}
 },800);
 
 async function reqWake(){
@@ -728,21 +748,51 @@ updateBmBar();focusAyah=null;render();
 requestAnimationFrame(()=>window.scrollTo(0,_y));
 toast('تم حذف العلامة','warn',2000);
 }
+
+// تم إصلاح هذه الدالة لمنع القفز إلى أعلى الصفحة
 function toggleBm(s,a){
-const _y = window.scrollY || 0;
-const n=SURAHS[s-1]||'؟';
-if(bm&&bm.surah==s&&bm.ayah==a){
-bm=null;localStorage.removeItem('quranBookmark');
-toast('تم إزالة العلامة من '+n,'warn',2500);
-}else{
-bm={surah:parseInt(s),ayah:parseInt(a),timestamp:Date.now()};
-localStorage.setItem('quranBookmark',JSON.stringify(bm));
-toast('تم الحفظ: '+n+' - آية '+a,'bookmark',3000);
+    const n=SURAHS[s-1]||'؟';
+    const isCurrentlyBm = bm && bm.surah == s && bm.ayah == a;
+    
+    if(isCurrentlyBm){
+        bm=null;
+        localStorage.removeItem('quranBookmark');
+        toast('تم إزالة العلامة من '+n,'warn',2500);
+    } else {
+        bm={surah:parseInt(s),ayah:parseInt(a),timestamp:Date.now()};
+        localStorage.setItem('quranBookmark',JSON.stringify(bm));
+        toast('تم الحفظ: '+n+' - آية '+a,'bookmark',3000);
+    }
+    
+    updateBmBar();
+    updateProgress();
+    
+    // تحديث العنصر مباشرة بدلاً من إعادة بناء الصفحة بالكامل
+    const card = document.getElementById(`ayah-${s}-${a}`);
+    if (card) {
+        if (bm) {
+            card.classList.add('bookmarked');
+            if (!card.querySelector('.ribbon-bm')) {
+                const ribbon = document.createElement('div');
+                ribbon.className = 'ribbon-bm';
+                ribbon.textContent = '🔖 آخر قراءة';
+                card.insertBefore(ribbon, card.firstChild);
+            }
+            const btn = card.querySelector('.bm-btn');
+            if (btn) btn.classList.add('active');
+        } else {
+            card.classList.remove('bookmarked');
+            const ribbon = card.querySelector('.ribbon-bm');
+            if (ribbon) ribbon.remove();
+            const btn = card.querySelector('.bm-btn');
+            if (btn) btn.classList.remove('active');
+        }
+    } else {
+        // في حال كانت البطاقة غير موجودة في الصفحة الحالية
+        render();
+    }
 }
-updateBmBar();updateProgress();render();
-requestAnimationFrame(()=>window.scrollTo(0,_y));
-setTimeout(()=>window.scrollTo(0,_y),50);
-}
+
 function openLabel(s,a){
 _savedScroll = window.scrollY || 0;
 pendSur=s;pendAyah=a;
@@ -1132,43 +1182,89 @@ if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('f
 setTimeout(attachTap,100);
 }
 
-function genCode(){
-const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-let x='';
-const arr=new Uint32Array(12);
-if(window.crypto&&crypto.getRandomValues)crypto.getRandomValues(arr);
-else for(let i=0;i<12;i++)arr[i]=Math.floor(Math.random()*1e9);
-for(let i=0;i<12;i++)x+=c[arr[i]%c.length];
-return x;
+// ============== دوال المزامنة الحقيقية (تصدير واستيراد) ==============
+
+function getSyncData() {
+    const data = {
+        bms: allBms,
+        bm: bm,
+        color: bmColorIdx,
+        version: APP_VERSION
+    };
+    try {
+        return btoa(encodeURIComponent(JSON.stringify(data)));
+    } catch(e) {
+        return '';
+    }
 }
-function getCode(){
-let c=localStorage.getItem('syncCode')||'';
-if(!c||c.length<8){c=genCode();localStorage.setItem('syncCode',c)}
-return c;
+
+function applySyncData(code) {
+    try {
+        const decoded = decodeURIComponent(atob(code));
+        const data = JSON.parse(decoded);
+        
+        if(data.bms && Array.isArray(data.bms)) {
+            allBms = data.bms;
+            saveBms();
+        }
+        if(data.bm) {
+            bm = data.bm;
+            localStorage.setItem('quranBookmark', JSON.stringify(bm));
+        }
+        if(data.color !== undefined) {
+            bmColorIdx = data.color;
+            applyColor();
+        }
+        
+        updateBmBar();
+        updateProgress();
+        render();
+        return true;
+    } catch(e) {
+        console.error('Sync error:', e);
+        return false;
+    }
 }
+
 function openSync(){
-_savedScroll = window.scrollY || 0;
-document.getElementById('syncCode').value=getCode();
-document.getElementById('syncIn').value='';
-openModal('syncOv');
+    _savedScroll = window.scrollY || 0;
+    document.getElementById('syncCode').value = getSyncData();
+    document.getElementById('syncIn').value = '';
+    openModal('syncOv');
 }
+
 function copyCode(){
-const c=getCode();
-if(navigator.clipboard){
-navigator.clipboard.writeText(c).then(()=>alert('✅ تم النسخ:\n'+c)).catch(()=>{document.getElementById('syncCode').select();document.execCommand('copy');alert('✅ تم النسخ: '+c)});
-}else{
-document.getElementById('syncCode').select();document.execCommand('copy');alert('✅ تم النسخ: '+c);
+    const c = getSyncData();
+    if(!c) { alert('❌ لا توجد بيانات'); return; }
+    if(navigator.clipboard){
+        navigator.clipboard.writeText(c).then(()=>alert('✅ تم النسخ بنجاح!')).catch(()=>{
+            document.getElementById('syncCode').select();
+            document.execCommand('copy');
+            alert('✅ تم النسخ!');
+        });
+    } else {
+        document.getElementById('syncCode').select();
+        document.execCommand('copy');
+        alert('✅ تم النسخ!');
+    }
 }
-}
+
 function linkCode(){
-const inp=document.getElementById('syncIn');
-const c=(inp.value||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
-if(!c||c.length<8){alert('❌ الرمز قصير');return}
-localStorage.setItem('syncCode',c);
-document.getElementById('syncCode').value=c;
-inp.value='';
-alert('✅ تم الربط: '+c);
+    const inp = document.getElementById('syncIn');
+    const c = (inp.value || '').trim();
+    if(!c) { alert('❌ الرجاء لصق رمز المزامنة أولاً'); return; }
+    
+    const success = applySyncData(c);
+    if(success) {
+        inp.value = '';
+        alert('✅ تم استيراد البيانات بنجاح!');
+        closeModal('syncOv');
+    } else {
+        alert('❌ رمز غير صالح أو تالف');
+    }
 }
+
+// =====================================================================
 
 const RAD=Math.PI/180,DEG=180/Math.PI;
 const METHODS={13:{name:'رئاسة الشؤون الدينية التركية',fajr:18,isha:17},3:{name:'رابطة العالم الإسلامي',fajr:18,isha:17},2:{name:'ISNA',fajr:15,isha:15},4:{name:'أم القرى',fajr:18.5,ishaMin:90},5:{name:'الهيئة المصرية',fajr:19.5,isha:17.5},1:{name:'كراتشي',fajr:18,isha:18}};
