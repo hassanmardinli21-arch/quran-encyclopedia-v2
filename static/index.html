@@ -652,7 +652,6 @@ setTimeout(()=>{
 const v=localStorage.getItem('appVersion')||'';
 if(v!==APP_VERSION){
     openModal('welcomeOv');
-    // تم نقل حفظ الإصدار إلى دالة closeWelcome والإغلاق الخارجي
 }
 },800);
 
@@ -749,10 +748,13 @@ requestAnimationFrame(()=>window.scrollTo(0,_y));
 toast('تم حذف العلامة','warn',2000);
 }
 
-// تم إصلاح هذه الدالة لمنع القفز إلى أعلى الصفحة
+// تم إصلاح هذه الدالة لمنع بقاء التلوين على الآية القديمة
 function toggleBm(s,a){
     const n=SURAHS[s-1]||'؟';
     const isCurrentlyBm = bm && bm.surah == s && bm.ayah == a;
+    
+    // حفظ العلامة القديمة قبل التغيير لإزالة تلوينها
+    const oldBm = bm;
     
     if(isCurrentlyBm){
         bm=null;
@@ -767,7 +769,19 @@ function toggleBm(s,a){
     updateBmBar();
     updateProgress();
     
-    // تحديث العنصر مباشرة بدلاً من إعادة بناء الصفحة بالكامل
+    // 1. إزالة التلوين من البطاقة القديمة إذا كانت موجودة في الصفحة
+    if (oldBm) {
+        const oldCard = document.getElementById(`ayah-${oldBm.surah}-${oldBm.ayah}`);
+        if (oldCard) {
+            oldCard.classList.remove('bookmarked');
+            const oldRibbon = oldCard.querySelector('.ribbon-bm');
+            if (oldRibbon) oldRibbon.remove();
+            const oldBtn = oldCard.querySelector('.bm-btn');
+            if (oldBtn) oldBtn.classList.remove('active');
+        }
+    }
+    
+    // 2. إضافة أو إزالة التلوين من البطاقة الجديدة
     const card = document.getElementById(`ayah-${s}-${a}`);
     if (card) {
         if (bm) {
@@ -788,7 +802,7 @@ function toggleBm(s,a){
             if (btn) btn.classList.remove('active');
         }
     } else {
-        // في حال كانت البطاقة غير موجودة في الصفحة الحالية
+        // إذا كانت البطاقة غير موجودة في الصفحة الحالية (مثلاً في صفحة أخرى)
         render();
     }
 }
