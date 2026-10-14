@@ -289,4 +289,472 @@ mark{background:var(--hl);color:var(--bm);padding:0 4px;border-radius:3px}
 
 <script>
 const APP_VERSION='v2.6';
-const SURAHS=["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","
+const SURAHS=["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
+const AYAH_COUNTS=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
+const TOTAL=6236;
+const TAFSIRS=[{k:'saadi',f:'tafsir_saadi.json',l:'تفسير السعدي',i:'📗'},{k:'ibn_kathir',f:'tafsir_ibn_kathir.json',l:'تفسير ابن كثير',i:'📘'}];
+const COLORS=[{n:'بني',l:'#8B4513',d:'#5C2E0E'},{n:'ذهبي',l:'#D4AF37',d:'#8B6508'},{n:'أخضر',l:'#059669',d:'#064e3b'},{n:'أزرق',l:'#2563eb',d:'#1e3a8a'},{n:'أحمر',l:'#dc2626',d:'#7f1d1d'},{n:'بنفسجي',l:'#7c3aed',d:'#4c1d95'},{n:'برتقالي',l:'#ea580c',d:'#7c2d12'},{n:'أسود',l:'#374151',d:'#111827'}];
+const SAMPLE=[{surah:1,ayah:1,text:"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"},{surah:1,ayah:2,text:"الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ"},{surah:103,ayah:1,text:"وَالْعَصْرِ"}];
+
+let quran=[],tafsirs={};
+let curSrc='quran',curKW='',curSur='all',curAyah='all';
+let page=1,showTafsir=false;
+let bm=null,allBms=[],bmColorIdx=0;
+let pendSur=null,pendAyah=null,focusAyah=null;
+let locked=false,startTime=Date.now(),_savedScroll=0;
+let syncUserId=null,isSyncing=false;
+const perPage=10;
+
+try{
+if(localStorage.getItem('showTafsir')==='true')showTafsir=true;
+if(localStorage.getItem('darkMode')==='true')document.body.classList.add('dark');
+const bc=localStorage.getItem('bookmarkColor');if(bc)bmColorIdx=parseInt(bc);
+const bms=localStorage.getItem('allBookmarks');if(bms)allBms=JSON.parse(bms);
+}catch(e){}
+
+function getUserId(){
+    let id = localStorage.getItem('syncUserId');
+    if(!id || id.length < 8){
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let newId = '';
+        for(let i = 0; i < 12; i++) newId += chars[Math.floor(Math.random() * chars.length)];
+        localStorage.setItem('syncUserId', newId);
+        id = newId;
+    }
+    return id;
+}
+syncUserId = getUserId();
+
+async function syncToCloud(){
+    if(!window.fbReady || isSyncing) return;
+    isSyncing = true;
+    try {
+        await window.fbSet(window.fbDoc(window.fbDB, 'sync', syncUserId), {
+            bms: allBms, bm: bm, color: bmColorIdx,
+            dark: document.body.classList.contains('dark'),
+            tafsir: showTafsir, updatedAt: Date.now()
+        });
+        console.log("☁️ Synced");
+    } catch(e) { console.error("Sync error:", e); }
+    isSyncing = false;
+}
+
+async function loadFromCloud(){
+    if(!window.fbReady) { setTimeout(loadFromCloud, 500); return; }
+    try {
+        const snap = await window.fbGet(window.fbDoc(window.fbDB, 'sync', syncUserId));
+        if(snap.exists()){
+            const data = snap.data();
+            if(data.bms) allBms = data.bms;
+            if(data.bm) bm = data.bm;
+            if(data.color !== undefined) { bmColorIdx = data.color; applyColor(); }
+            if(data.tafsir !== undefined) { showTafsir = data.tafsir; }
+            if(data.dark !== undefined) { if(data.dark) document.body.classList.add('dark'); else document.body.classList.remove('dark'); }
+            localStorage.setItem('allBookmarks', JSON.stringify(allBms));
+            if(bm) localStorage.setItem('quranBookmark', JSON.stringify(bm));
+            updateBmBar(); updateProgress(); updateBmCount(); render();
+            console.log("☁️ Loaded from cloud");
+        } else {
+            await syncToCloud();
+        }
+    } catch(e) { console.error("Load error:", e); }
+}
+
+function openSync(){
+    _savedScroll = window.scrollY || 0;
+    document.getElementById('syncCode').value = syncUserId;
+    document.getElementById('syncIn').value = '';
+    openModal('syncOv');
+}
+function copyCode(){
+    const code = syncUserId;
+    if(navigator.clipboard){
+        navigator.clipboard.writeText(code).then(()=>alert('✅ تم نسخ رمز المزامنة:\n' + code)).catch(()=>{
+            document.getElementById('syncCode').select();
+            document.execCommand('copy');
+            alert('✅ تم النسخ!');
+        });
+    } else {
+        document.getElementById('syncCode').select();
+        document.execCommand('copy');
+        alert('✅ تم النسخ!');
+    }
+}
+async function linkCode(){
+    const inp = document.getElementById('syncIn');
+    const newCode = (inp.value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
+    if(!newCode || newCode.length < 8){ alert('❌ رمز غير صالح'); return; }
+    localStorage.setItem('syncUserId', newCode);
+    syncUserId = newCode;
+    alert('✅ تم الربط! جاري تحميل بياناتك...');
+    closeModal('syncOv');
+    await loadFromCloud();
+}
+
+function toast(msg,type='',dur=3000){
+const c=document.getElementById('toastC');
+const t=document.createElement('div');
+t.className='toast '+(type||'');
+t.innerHTML=`<span>${msg}</span>`;
+c.appendChild(t);
+setTimeout(()=>{if(t.parentNode)t.parentNode.removeChild(t)},dur);
+}
+
+setInterval(()=>{
+const e=Math.floor((Date.now()-startTime)/1000);
+const h=Math.floor(e/3600),m=Math.floor((e%3600)/60),s=e%60;
+const p=n=>String(n).padStart(2,'0');
+const el=document.getElementById('timer');
+if(el)el.textContent=`${p(h)}:${p(m)}:${p(s)}`;
+},1000);
+
+function openModal(id){
+_savedScroll = window.scrollY || 0;
+document.getElementById(id).classList.add('active');
+document.body.style.overflow='hidden';
+}
+function closeModal(id){
+document.getElementById(id).classList.remove('active');
+document.body.style.overflow='';
+requestAnimationFrame(()=>{ window.scrollTo(0, _savedScroll); });
+}
+function closeModalOutside(e,id){if(e.target.id===id)closeModal(id)}
+
+function toggleDark(){
+document.body.classList.toggle('dark');
+const d=document.body.classList.contains('dark');
+localStorage.setItem('darkMode',d);
+document.getElementById('darkBtn').textContent=d?'☀️ نهاري':'🌙 ليلي';
+syncToCloud();
+}
+if(document.body.classList.contains('dark'))document.getElementById('darkBtn').textContent='☀️ نهاري';
+
+function applyColor(){
+const c=COLORS[bmColorIdx]||COLORS[0];
+document.documentElement.style.setProperty('--bm',c.l);
+document.documentElement.style.setProperty('--bmD',c.d);
+localStorage.setItem('bookmarkColor',bmColorIdx);
+}
+function openColorPicker(){
+const g=document.getElementById('colorGrid');
+g.innerHTML=COLORS.map((c,i)=>`<div class="color-opt ${i===bmColorIdx?'selected':''}" style="background:linear-gradient(180deg,${c.l},${c.d})" onclick="selectColor(${i})"></div>`).join('');
+openModal('colorOv');
+}
+function selectColor(i){bmColorIdx=i;applyColor();closeModal('colorOv');syncToCloud();}
+
+function loadBm(){try{const s=localStorage.getItem('quranBookmark');if(s)bm=JSON.parse(s)}catch(e){bm=null}}
+function saveBms(){localStorage.setItem('allBookmarks',JSON.stringify(allBms));updateBmCount();syncToCloud();}
+function updateBmCount(){const e=document.getElementById('bmCount');if(e)e.textContent=allBms.length}
+function clearBm(){
+if(!confirm('حذف علامة آخر قراءة؟'))return;
+bm=null;localStorage.removeItem('quranBookmark');
+updateBmBar();render();syncToCloud();
+toast('تم حذف العلامة','warn',2000);
+}
+
+function toggleBm(s,a){
+    const oldBm = bm;
+    const isCurrentlyBm = bm && bm.surah == s && bm.ayah == a;
+    if(isCurrentlyBm){
+        bm=null;localStorage.removeItem('quranBookmark');
+        toast('تم إزالة العلامة','warn',2000);
+    } else {
+        bm={surah:parseInt(s),ayah:parseInt(a),timestamp:Date.now()};
+        localStorage.setItem('quranBookmark',JSON.stringify(bm));
+        toast('تم الحفظ 🔖','bookmark',2000);
+    }
+    updateBmBar();updateProgress();
+    if(oldBm){
+        const oc = document.getElementById(`ayah-${oldBm.surah}-${oldBm.ayah}`);
+        if(oc){oc.classList.remove('bookmarked');const r=oc.querySelector('.ribbon-bm');if(r)r.remove();const b=oc.querySelector('.bm-btn');if(b)b.classList.remove('active');}
+    }
+    const card = document.getElementById(`ayah-${s}-${a}`);
+    if(card && bm){
+        card.classList.add('bookmarked');
+        if(!card.querySelector('.ribbon-bm')){const r=document.createElement('div');r.className='ribbon-bm';r.textContent='🔖 آخر قراءة';card.insertBefore(r,card.firstChild);}
+        const b=card.querySelector('.bm-btn');if(b)b.classList.add('active');
+    }
+    syncToCloud();
+}
+
+function openLabel(s,a){
+pendSur=s;pendAyah=a;
+const n=SURAHS[s-1]||'؟';
+document.getElementById('labelRef').textContent='📍 سورة '+n+' - آية '+a;
+document.getElementById('labelIn').value='';
+openModal('labelOv');
+}
+function saveLabel(){
+const l=document.getElementById('labelIn').value.trim();
+if(!l){alert('❌ أدخل اسماً');return}
+allBms.push({id:String(Date.now()),label:l,surah:pendSur,ayah:pendAyah,created:Date.now()});
+saveBms();updateProgress();closeModal('labelOv');render();
+toast('تمت الإضافة 📌','special',2000);
+pendSur=null;pendAyah=null;
+}
+function hasSP(s,a){return allBms.some(b=>b.surah==s&&b.ayah==a)}
+function getSP(s,a){return allBms.filter(b=>b.surah==s&&b.ayah==a).map(b=>b.label)}
+function jumpToBmItem(id){
+const b=allBms.find(x=>String(x.id)===String(id));
+if(!b)return;
+bm={surah:b.surah,ayah:b.ayah,timestamp:Date.now()};
+localStorage.setItem('quranBookmark',JSON.stringify(bm));
+closeModal('bmsOv');jumpToBm();
+}
+function delBm(id){
+if(!confirm('حذف؟'))return;
+allBms=allBms.filter(x=>String(x.id)!==String(id));
+saveBms();updateProgress();openBookmarks();render();
+}
+function openBookmarks(){
+const c=document.getElementById('bmsList');
+if(allBms.length===0){c.innerHTML='<div style="text-align:center;padding:30px">📭 لا توجد علامات</div>';}
+else{
+const s=[...allBms].sort((a,b)=>a.surah-b.surah||a.ayah-b.ayah);
+c.innerHTML=s.map(b=>`<div class="bm-item"><div class="info"><div class="lbl">📌 ${b.label}</div><div style="font-size:.8rem;color:var(--ink2)">سورة ${SURAHS[b.surah-1]} - آية ${b.ayah}</div></div><div class="act"><button class="jump" onclick="jumpToBmItem('${b.id}')">📖</button><button class="del" onclick="delBm('${b.id}')">🗑️</button></div></div>`).join('');
+}
+openModal('bmsOv');
+}
+
+function updateProgress(){
+const u=new Set(allBms.map(b=>b.surah));if(bm)u.add(bm.surah);
+let ta=0;u.forEach(sn=>{const i=sn-1;if(i>=0&&i<AYAH_COUNTS.length)ta+=AYAH_COUNTS[i]});
+const p=Math.min(100,Math.round(ta/TOTAL*100));
+const pf=document.getElementById('pfill');if(pf)pf.style.width=p+'%';
+const pe=document.getElementById('pct');if(pe){pe.textContent=p>=100?'🏁 ختم':p+'%';}
+}
+function updateBmBar(){
+const bar=document.getElementById('bmBar');if(!bar)return;
+if(!bm){bar.style.display='none';return}
+bar.style.display='flex';
+document.getElementById('bmLoc').textContent=`سورة ${SURAHS[bm.surah-1]||'؟'} - آية ${bm.ayah}`;
+}
+function jumpToBm(){
+if(!bm)return;
+document.getElementById('src').value='quran';
+document.getElementById('surah').value=bm.surah;
+updateAyahDD(bm.surah,'all');
+document.getElementById('ayah').value='all';
+document.getElementById('q').value='';
+curSrc='quran';curSur=String(bm.surah);curAyah='all';curKW='';
+focusAyah=bm.ayah;
+const src=quran.filter(a=>a.surah==bm.surah);
+const i=src.findIndex(a=>a.ayah==bm.ayah);
+page=i>=0?Math.floor(i/perPage)+1:1;
+render();
+}
+function isBm(s,a){return bm&&bm.surah==s&&bm.ayah==a}
+
+function rmTashkeel(t){
+if(!t)return'';
+return t.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g,'').replace(/[\u0622\u0623\u0625\u0671]/g,'ا').replace(/\u0649/g,'ي').replace(/\u0624/g,'و').replace(/\u0629/g,'ه');
+}
+function match(t,kw){
+if(!kw)return true;
+return rmTashkeel(t).includes(rmTashkeel(kw));
+}
+function hl(t,kw){
+if(!kw)return t;
+const n=rmTashkeel(t);
+const k=rmTashkeel(kw);
+const i=n.indexOf(k);
+if(i<0)return t;
+return t.substring(0,i)+'<mark>'+t.substring(i,i+kw.length)+'</mark>'+t.substring(i+kw.length);
+}
+
+function populateSurah(){
+const s=document.getElementById('surah');
+SURAHS.forEach((n,i)=>{const o=document.createElement('option');o.value=i+1;o.textContent=`${i+1}. ${n}`;s.appendChild(o)});
+}
+function updateAyahDD(sn,ka){
+const a=document.getElementById('ayah');
+a.innerHTML='<option value="all">كل الآيات</option>';
+if(!sn||sn==='all')return;
+const s=parseInt(sn);
+quran.filter(x=>x.surah===s).forEach(x=>{const o=document.createElement('option');o.value=x.ayah;o.textContent='آية '+x.ayah;a.appendChild(o)});
+if(ka)a.value=ka;
+}
+function populateSidebar(){
+document.getElementById('sbList').innerHTML=SURAHS.map((n,i)=>`<div class="surah-item" onclick="jumpSurah(${i+1})"><span class="n">${i+1}</span><span>${n}</span></div>`).join('');
+}
+function jumpSurah(n){
+closeSidebar();
+document.getElementById('src').value='quran';
+document.getElementById('surah').value=n;
+document.getElementById('q').value='';
+updateAyahDD(n,'all');
+curSrc='quran';curSur=String(n);curAyah='all';curKW='';page=1;focusAyah=null;
+render();
+window.scrollTo({top:0,behavior:'smooth'});
+}
+function openSidebar(){
+_savedScroll = window.scrollY || 0;
+document.getElementById('sb').classList.add('active');
+document.getElementById('sbOv').classList.add('active');
+document.body.style.overflow='hidden';
+}
+function closeSidebar(){
+document.getElementById('sb').classList.remove('active');
+document.getElementById('sbOv').classList.remove('active');
+document.body.style.overflow='';
+requestAnimationFrame(()=>window.scrollTo(0, _savedScroll));
+}
+
+function initTafsir(){
+const t=document.getElementById('showTafsir');
+const h=document.getElementById('hint');
+t.checked=showTafsir;
+const u=()=>{h.textContent=showTafsir?'(ظاهرة)':'(مخفية)';};
+u();
+t.addEventListener('change',()=>{
+showTafsir=t.checked;
+localStorage.setItem('showTafsir',showTafsir);
+u();render();syncToCloud();
+});
+}
+
+async function loadTafsirFile(cfg){
+try{
+const r=await fetch(cfg.f);
+if(!r.ok){tafsirs[cfg.k]={l:cfg.l,i:cfg.i,ayahs:[]};return}
+const text=await r.text();
+if(text.startsWith('SQLite')||text.startsWith('<')){tafsirs[cfg.k]={l:cfg.l,i:cfg.i,ayahs:[]};return}
+let raw;
+try{raw=JSON.parse(text)}catch(e){tafsirs[cfg.k]={l:cfg.l,i:cfg.i,ayahs:[]};return}
+let ayahs=[];
+if(Array.isArray(raw)){
+ayahs=raw.map(a=>({surah:parseInt(a.surah||a.sura||1),number:parseInt(a.number||a.ayah||1),text:a.text||a.tafsir||''}));
+}else if(raw&&typeof raw==='object'){
+ayahs=Object.keys(raw).map(k=>{
+if(k.indexOf(':')===-1)return null;
+const p=k.split(':');if(p.length!==2)return null;
+const s=parseInt(p[0]),n=parseInt(p[1]);
+if(isNaN(s)||isNaN(n))return null;
+const item=raw[k];let t='';
+if(typeof item==='string')t=item;
+else if(item&&typeof item==='object')t=item.text||item.tafsir||'';
+t=t.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+return{surah:s,number:n,text:t};
+}).filter(a=>a&&a.text);
+}
+tafsirs[cfg.k]={l:cfg.l,i:cfg.i,ayahs:ayahs};
+}catch(e){
+tafsirs[cfg.k]={l:cfg.l,i:cfg.i,ayahs:[]};
+}
+}
+
+async function loadData(){
+const info=document.getElementById('resInfo');
+try{
+const r=await fetch('quran.json');
+if(!r.ok)throw new Error('HTTP '+r.status);
+const raw=await r.json();
+if(Array.isArray(raw)&&raw.length>0&&raw[0].verses){
+quran=[];
+raw.forEach(s=>{(s.verses||[]).forEach(v=>{quran.push({surah:s.id,ayah:v.id,text:v.text})})});
+}else if(Array.isArray(raw)){
+quran=raw.map(a=>({surah:parseInt(a.surah||1),ayah:parseInt(a.ayah||a.number||1),text:a.text||''}));
+}
+if(!quran.length)throw new Error('ملف فارغ');
+}catch(e){
+console.warn('⚠️ استخدام بيانات تجريبية:',e.message);
+quran=SAMPLE.slice();
+}
+await Promise.all(TAFSIRS.map(loadTafsirFile));
+const tt=Object.values(tafsirs).reduce((s,t)=>s+t.ayahs.length,0);
+info.innerHTML=`📖 ${quran.length} آية | 📚 ${tt} مدخل تفسيري`;
+updateBmBar();updateProgress();updateBmCount();render();
+await loadFromCloud();
+}
+
+function searchTafsir(k,kw,sur){
+const res=[],t=tafsirs[k];
+if(!t||t.ayahs.length===0)return res;
+t.ayahs.forEach(a=>{
+if(sur!=='all'&&a.surah!=sur)return;
+if(kw&&!match(a.text,kw))return;
+res.push({tk:k,tl:t.l,ti:t.i,surah:a.surah,number:a.number,text:a.text});
+});
+return res;
+}
+function doSearch(){
+curKW=document.getElementById('q').value.trim();
+curSrc=document.getElementById('src').value;
+curSur=document.getElementById('surah').value;
+const sa=document.getElementById('ayah').value;
+if(curSrc==='quran'&&curSur!=='all'&&sa!=='all'){
+focusAyah=parseInt(sa);curAyah='all';page=1;
+}else{focusAyah=null;curAyah=sa;page=1}
+render();
+}
+function render(){
+const c=document.getElementById('results');
+const pe=document.getElementById('pages');
+const ie=document.getElementById('resInfo');
+let items=[],isT=false;
+if(curSrc==='quran'){
+let s=quran;
+if(curSur!=='all'){const x=parseInt(curSur);s=s.filter(a=>a.surah==x)}
+if(curAyah!=='all'){const x=parseInt(curAyah);s=s.filter(a=>a.ayah==x)}
+if(curKW)s=s.filter(a=>match(a.text,curKW));
+items=s;
+}else if(curSrc==='all_tafsirs'){
+isT=true;Object.keys(tafsirs).forEach(k=>items.push(...searchTafsir(k,curKW,curSur)));
+}else{
+isT=true;items=searchTafsir(curSrc.replace('tafsir_',''),curKW,curSur);
+}
+const tp=Math.max(1,Math.ceil(items.length/perPage));
+if(page>tp)page=tp;
+const paged=items.slice((page-1)*perPage,page*perPage);
+ie.textContent=`📊 ${items.length} نتيجة | صفحة ${page}/${tp}`;
+if(paged.length===0){c.innerHTML='<div class="empty">📭 لا توجد نتائج</div>';pe.innerHTML='';return;}
+if(isT){
+c.innerHTML=paged.map(i=>`<div class="card"><div class="card-head"><span class="ref">${i.ti} ${i.tl} - ${SURAHS[i.surah-1]} - آية ${i.number}</span></div><div class="tafsir-text">${hl(i.text,curKW)}</div></div>`).join('');
+}else{
+c.innerHTML=paged.map(item=>{
+const marked=isBm(item.surah,item.ayah);
+const hs=hasSP(item.surah,item.ayah);
+const sl=getSP(item.surah,item.ayah);
+let tB='';
+if(showTafsir){
+TAFSIRS.forEach(cfg=>{
+const t=tafsirs[cfg.k];if(!t)return;
+const m=t.ayahs.find(x=>x.surah==item.surah&&x.number==item.ayah);
+if(m&&m.text)tB+=`<div class="tafsir-block"><h4>${t.i} ${t.l}</h4><div class="tafsir-text">${hl(m.text,curKW)}</div></div>`;
+});
+}
+const bR=marked?'<div class="ribbon-bm">🔖 آخر قراءة</div>':'';
+const sR=hs?`<div class="ribbon-sp">📌 ${sl.join(' · ')}</div>`:'';
+return `<div class="card ${marked?'bookmarked':''}" id="ayah-${item.surah}-${item.ayah}">${bR}${sR}<div class="card-head"><span class="ref">سورة ${SURAHS[item.surah-1]} - آية ${item.ayah}</span><div class="head-right"><button class="btn-icon sp-btn ${hs?'has':''}" onclick="openLabel(${item.surah},${item.ayah})">📌</button><button class="btn-icon bm-btn ${marked?'active':''}" onclick="toggleBm(${item.surah},${item.ayah})">🔖</button></div></div><div class="ayah-text">${hl(item.text,curKW)}</div>${tB}</div>`;
+}).join('');
+}
+let ph='';
+if(tp>1){
+if(page>1)ph+=`<a data-page="${page-1}">⬅ السابق</a>`;
+for(let i=Math.max(1,page-2);i<=Math.min(tp,page+2);i++)ph+=i===page?`<span class="current">${i}</span>`:`<a data-page="${i}">${i}</a>`;
+if(page<tp)ph+=`<a data-page="${page+1}">التالي ➡</a>`;
+}
+pe.innerHTML=ph;
+pe.querySelectorAll('a[data-page]').forEach(a=>{
+a.addEventListener('click',e=>{e.preventDefault();page=parseInt(a.dataset.page);focusAyah=null;render();window.scrollTo({top:0,behavior:'smooth'});});
+});
+if(focusAyah&&curSur!=='all'){
+setTimeout(()=>{
+const el=document.getElementById('ayah-'+curSur+'-'+focusAyah);
+if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('focused');setTimeout(()=>el.classList.remove('focused'),3000)}
+},400);
+}
+}
+
+function init(){
+populateSurah();populateSidebar();initTafsir();applyColor();loadBm();
+updateBmBar();updateProgress();updateBmCount();
+document.getElementById('searchBtn').addEventListener('click',doSearch);
+document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
+document.getElementById('surah').addEventListener('change',function(){updateAyahDD(this.value,'all');});
+loadData();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+</script>
+</body>
+</html>
