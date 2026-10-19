@@ -54,6 +54,7 @@ h1::before,h1::after{content:'❁';color:var(--gold);margin:0 12px;font-size:1.6
 .btn.prayer{background:linear-gradient(180deg,#8b5cf6,#6d28d9);border-color:#5b21b6}
 .btn.notes{background:linear-gradient(180deg,#f472b6,#be185d);border-color:#831843}
 .btn.time{background:linear-gradient(180deg,#06b6d4,#0e7490);border-color:#155e75}
+.btn.tasbih{background:linear-gradient(180deg,#14b8a6,#0f766e);border-color:#115e59}
 .timer{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;background:linear-gradient(180deg,rgba(59,130,246,.1),rgba(37,99,235,.05));border:1px dashed #3b82f6;border-radius:10px;margin-bottom:15px;font-weight:700;font-size:.9rem;color:#1e40af}
 .timer .val{font-family:'Courier New',monospace;font-size:1.05rem;background:rgba(255,255,255,.5);padding:2px 10px;border-radius:6px;border:1px solid rgba(59,130,246,.3);color:#1d4ed8}
 .progress{background:var(--in);border:1px solid var(--bd);border-radius:20px;padding:12px 18px 36px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;position:relative}
@@ -252,7 +253,33 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 .date-box .lbl{font-size:.85rem;color:var(--ink2);font-weight:700;margin-bottom:6px}
 .date-box .val{font-size:1.1rem;font-weight:700;color:var(--gold);font-family:'Amiri',serif}
 .date-box .num{font-size:.9rem;color:var(--ink2);margin-top:4px}
-@media(max-width:600px){h1{font-size:1.7rem}.ayah-text{font-size:1.25rem;line-height:2.1}.container{padding:20px 14px}.search{flex-direction:column}.search input,.search select,.search button{width:100%}.btn{font-size:.8rem;padding:7px 12px}.compass{width:220px;height:220px}.arrow{height:85px}.tab{font-size:.75rem;padding:8px 6px}.fab{width:55px;height:55px;font-size:1.4rem;bottom:20px;right:15px}.about-new .share-buttons{grid-template-columns:repeat(2,1fr)}.top-buttons{gap:5px}.btn-icon{width:34px;height:34px;font-size:1rem}}
+
+/* ===== المسبحة ===== */
+.tasbih-box{text-align:center;padding:20px 15px}
+.tasbih-display{background:linear-gradient(180deg,#0f766e,#134e4a);border-radius:50%;width:220px;height:220px;margin:20px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;border:6px solid #D4AF37;box-shadow:0 8px 30px rgba(20,184,166,.4),inset 0 0 30px rgba(0,0,0,.3);cursor:pointer;user-select:none;transition:transform .1s;position:relative;overflow:hidden}
+.tasbih-display::before{content:'📿';position:absolute;top:12px;font-size:1.5rem;opacity:.4}
+.tasbih-display:active{transform:scale(.95)}
+.tasbih-display.pulse{animation:tPulse .3s}
+@keyframes tPulse{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+.tasbih-count{font-family:'Courier New',monospace;font-size:4.5rem;font-weight:700;color:#D4AF37;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,.5)}
+.tasbih-target{font-size:1rem;color:#a7f3d0;margin-top:8px;font-family:'Amiri',serif}
+.tasbih-dhikr{font-family:'Amiri',serif;font-size:1.5rem;color:var(--gold);background:var(--hl);padding:15px;border-radius:12px;border:1px dashed var(--gold);margin-bottom:15px;line-height:2;min-height:60px;display:flex;align-items:center;justify-content:center;text-align:center}
+.tasbih-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.tasbih-controls button{padding:12px 22px;border:none;border-radius:10px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;color:#fff;transition:.2s}
+.tasbih-controls button:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.tasbih-reset{background:linear-gradient(180deg,#ef4444,#b91c1c)}
+.tasbih-minus{background:linear-gradient(180deg,#6b7280,#374151)}
+.tasbih-targets{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:15px 0}
+.tasbih-targets button{padding:8px 14px;border:2px solid var(--bd);background:var(--in);color:var(--ink);border-radius:20px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;transition:.2s}
+.tasbih-targets button.active{background:linear-gradient(180deg,#D4AF37,#B8860B);color:#fff;border-color:#8B6508}
+.tasbih-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.tasbih-stat{background:var(--in);border:1px solid var(--bd);border-radius:10px;padding:12px;text-align:center}
+.tasbih-stat .v{font-size:1.5rem;font-weight:700;color:var(--gold);font-family:'Courier New',monospace}
+.tasbih-stat .l{font-size:.8rem;color:var(--ink2);margin-top:4px}
+.tasbih-vibrate{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:15px;font-size:.9rem;font-weight:600}
+.tasbih-vibrate input{width:20px;height:20px;accent-color:var(--gold);cursor:pointer}
+.tasbih-vibrate label{cursor:pointer}
+@media(max-width:600px){h1{font-size:1.7rem}.ayah-text{font-size:1.25rem;line-height:2.1}.container{padding:20px 14px}.search{flex-direction:column}.search input,.search select,.search button{width:100%}.btn{font-size:.8rem;padding:7px 12px}.compass{width:220px;height:220px}.arrow{height:85px}.tab{font-size:.75rem;padding:8px 6px}.fab{width:55px;height:55px;font-size:1.4rem;bottom:20px;right:15px}.about-new .share-buttons{grid-template-columns:repeat(2,1fr)}.top-buttons{gap:5px}.btn-icon{width:34px;height:34px;font-size:1rem}.tasbih-display{width:180px;height:180px}.tasbih-count{font-size:3.5rem}}
 </style>
 </head>
 <body>
@@ -267,6 +294,7 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 <div class="top-buttons">
 <button class="btn help" onclick="openModal('helpOv')">📖 الاستخدام</button>
 <button class="btn prayer" onclick="openPrayer()">🕌 الصلاة</button>
+<button class="btn tasbih" onclick="openTasbih()">📿 المسبحة <span id="tasbihCount" style="background:rgba(255,255,255,.3);padding:1px 8px;border-radius:10px;font-size:.75rem">0</span></button>
 <button class="btn notes" onclick="openNotes()">📝 ملاحظات</button>
 <button class="btn" onclick="openModal('aboutOv')">ℹ️ حول</button>
 <button class="btn sync" onclick="openSync()">🔄 مزامنة</button>
@@ -341,12 +369,12 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 <div class="modal" style="max-width:680px" onclick="event.stopPropagation()">
 <button class="close" onclick="closeWelcome()">✖</button>
 <h2>🌟 مرحباً بك</h2>
-<p class="intro">الإصدار v2.8</p>
+<p class="intro">الإصدار v2.9 — إضافة المسبحة 📿</p>
 <div class="dua" style="margin-bottom:20px">﴿ وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ ﴾</div>
 <h3>✨ الجديد</h3>
-<div class="help-step"><div class="help-ic">📌</div><div><div class="help-t">فصل علاماتي عن آخر قراءة</div><div class="help-d">فتح علامة من "علاماتي" لا يغيّر آخر قراءة بعد الآن</div></div></div>
+<div class="help-step"><div class="help-ic">📿</div><div><div class="help-t">المسبحة الإلكترونية</div><div class="help-d">8 أذكار جاهزة + عدّاد يحفظ تلقائياً + اهتزاز + إحصائيات يومية</div></div></div>
+<div class="help-step"><div class="help-ic">📌</div><div><div class="help-t">فصل علاماتي عن آخر قراءة</div><div class="help-d">فتح علامة من "علاماتي" لا يغيّر آخر قراءة</div></div></div>
 <div class="help-step"><div class="help-ic">🔖</div><div><div class="help-t">زر تعيين كآخر قراءة</div><div class="help-d">يمكنك تعيين أي علامة كآخر قراءة يدوياً</div></div></div>
-<div class="help-step"><div class="help-ic">🧭</div><div><div class="help-t">تصحيح اتجاه القبلة</div><div class="help-d">معادلة دقيقة + دوران صحيح للسهم</div></div></div>
 <button class="pbtn" style="width:100%;padding:14px;background:linear-gradient(180deg,#10b981,#047857);font-size:1.05rem" onclick="closeWelcome()">✅ فهمت، لنبدأ</button>
 </div>
 </div>
@@ -356,6 +384,9 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 <button class="close" onclick="closeModal('helpOv')">✖</button>
 <h2>📖 طريقة الاستخدام</h2>
 <p class="intro">دليل شامل</p>
+<h3 class="help-sec">📿 المسبحة</h3>
+<div class="help-step"><div class="help-ic">📿</div><div><div class="help-t">كيف تسبّح؟</div><div class="help-d">اضغط <code>📿 المسبحة</code> → اختر الذكر → اضغط على الدائرة الكبيرة للتسبيح. الهدف يتحدد تلقائياً (33 أو 100).</div></div></div>
+<div class="help-step"><div class="help-ic">📊</div><div><div class="help-t">الإحصائيات</div><div class="help-d">إجمالي اليوم + الدورات المكتملة. تتصفّر تلقائياً عند بداية يوم جديد.</div></div></div>
 <h3 class="help-sec">🕌 قسم الصلاة</h3>
 <div class="help-step"><div class="help-ic">🕌</div><div><div class="help-t">المواقيت والقبلة</div><div class="help-d">اضغط <strong>🕌 الصلاة</strong> → فعّل الموقع، ثم اضغط <strong>🧭 تفعيل البوصلة</strong> في تبويب القبلة.</div></div></div>
 <h3 class="help-sec">🌟 الأساسيات</h3>
@@ -551,8 +582,44 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 </div>
 </div>
 </div>
+
+<!-- ===== نافذة المسبحة ===== -->
+<div class="overlay" id="tasbihOv" onclick="closeModalOutside(event,'tasbihOv')">
+<div class="modal" style="max-width:520px" onclick="event.stopPropagation()">
+<button class="close" onclick="closeModal('tasbihOv')">✖</button>
+<h2>📿 المسبحة</h2>
+<p class="intro">﴿ فَاذْكُرُونِي أَذْكُرْكُمْ ﴾</p>
+
+<div class="tasbih-dhikr" id="tasbihDhikr">سُبْحَانَ اللَّهِ</div>
+
+<div class="tasbih-targets" id="tasbihTargets"></div>
+
+<div class="tasbih-box">
+<div class="tasbih-display" id="tasbihBtn" onclick="tasbihTap()">
+<div class="tasbih-count" id="tasbihNum">0</div>
+<div class="tasbih-target" id="tasbihTargetLbl">الهدف: 33</div>
+</div>
+</div>
+
+<div class="tasbih-controls">
+<button class="tasbih-minus" onclick="tasbihMinus()">➖ تراجع</button>
+<button class="tasbih-reset" onclick="tasbihReset()">🔄 تصفير</button>
+</div>
+
+<div class="tasbih-stats">
+<div class="tasbih-stat"><div class="v" id="tasbihTotal">0</div><div class="l">إجمالي اليوم</div></div>
+<div class="tasbih-stat"><div class="v" id="tasbihRounds">0</div><div class="l">الدورات المكتملة</div></div>
+</div>
+
+<div class="tasbih-vibrate">
+<input type="checkbox" id="tasbihVib" checked onchange="toggleTasbihVib(this.checked)">
+<label for="tasbihVib">📳 اهتزاز عند التسبيح</label>
+</div>
+</div>
+</div>
+
 <script>
-const APP_VERSION='v2.8';
+const APP_VERSION='v2.9';
 const SURAHS=["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 const AYAH_COUNTS=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
 const TOTAL=6236;
@@ -748,7 +815,7 @@ setTimeout(()=>{window.scrollTo(0,_savedScroll);},30);
 function closeModalOutside(e,id){if(e.target.id===id){closeModal(id);if(id==='welcomeOv')localStorage.setItem('appVersion',APP_VERSION);}}
 document.addEventListener('keydown',e=>{
 if(e.key==='Escape'){
-['welcomeOv','helpOv','aboutOv','prayerOv','syncOv','colorOv','bmsOv','labelOv','timeOv','notesOv'].forEach(id=>{closeModal(id);if(id==='welcomeOv')localStorage.setItem('appVersion',APP_VERSION);});
+['welcomeOv','helpOv','aboutOv','prayerOv','syncOv','colorOv','bmsOv','labelOv','timeOv','notesOv','tasbihOv'].forEach(id=>{closeModal(id);if(id==='welcomeOv')localStorage.setItem('appVersion',APP_VERSION);});
 closeSidebar();
 }
 });
@@ -854,7 +921,6 @@ function getSP(s,a){return allBms.filter(b=>b.surah==s&&b.ayah==a).map(b=>b.labe
 function jumpToBmItem(id){
 const b=allBms.find(x=>String(x.id)===String(id));
 if(!b)return;
-// ✅ لا نغيّر bm (آخر قراءة) — ننتقل فقط إلى الآية
 closeModal('bmsOv');
 document.getElementById('src').value='quran';
 document.getElementById('surah').value=b.surah;
@@ -1034,6 +1100,7 @@ const tt=Object.values(tafsirs).reduce((s,t)=>s+t.ayahs.length,0);
 info.innerHTML=`📖 ${quran.length} آية | 📚 ${tt} مدخل تفسيري`;
 updateBmBar();updateProgress();updateBmCount();render();
 await loadFromCloud();
+await loadTasbihFromCloud();
 }
 
 function searchTafsir(k,kw,sur){
@@ -1427,10 +1494,159 @@ window.addEventListener('deviceorientation',onOrient,true);
 console.log('🧭 Compass listeners attached');
 }
 
+// ============ المسبحة ============
+const TASBIH_DHIKRS = [
+  {name:'سبحان الله', text:'سُبْحَانَ اللَّهِ', target:33},
+  {name:'الحمد لله', text:'الْحَمْدُ لِلَّهِ', target:33},
+  {name:'الله أكبر', text:'اللَّهُ أَكْبَرُ', target:33},
+  {name:'لا إله إلا الله', text:'لَا إِلَٰهَ إِلَّا اللَّهُ', target:100},
+  {name:'أستغفر الله', text:'أَسْتَغْفِرُ اللَّهَ', target:100},
+  {name:'الصلاة على النبي', text:'صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ', target:100},
+  {name:'لا حول ولا قوة', text:'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ', target:33},
+  {name:'سبحان الله وبحمده', text:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ', target:100}
+];
+let tasbihIdx = 0;
+let tasbihCountVal = 0;
+let tasbihTotalVal = 0;
+let tasbihRoundsVal = 0;
+let tasbihVibOn = true;
+let tasbihLastDate = new Date().toDateString();
+
+try {
+  const saved = localStorage.getItem('tasbihState');
+  if (saved) {
+    const st = JSON.parse(saved);
+    tasbihIdx = st.idx || 0;
+    tasbihCountVal = st.count || 0;
+    tasbihTotalVal = st.total || 0;
+    tasbihRoundsVal = st.rounds || 0;
+    tasbihVibOn = st.vib !== undefined ? st.vib : true;
+    if (st.date && st.date !== tasbihLastDate) {
+      tasbihTotalVal = 0;
+      tasbihRoundsVal = 0;
+    }
+  }
+} catch(e) {}
+
+function saveTasbih() {
+  try {
+    localStorage.setItem('tasbihState', JSON.stringify({
+      idx: tasbihIdx, count: tasbihCountVal, total: tasbihTotalVal,
+      rounds: tasbihRoundsVal, vib: tasbihVibOn,
+      date: new Date().toDateString()
+    }));
+    if (window.fbReady && syncUserId && !isSyncing) {
+      window.fbSet(window.fbDoc(window.fbDB,'sync',syncUserId), {
+        tasbih: {idx: tasbihIdx, count: tasbihCountVal, total: tasbihTotalVal,
+                 rounds: tasbihRoundsVal, vib: tasbihVibOn,
+                 date: new Date().toDateString()}
+      }, {merge:true}).catch(()=>{});
+    }
+  } catch(e) {}
+}
+
+function updateTasbihUI() {
+  const d = TASBIH_DHIKRS[tasbihIdx];
+  const num = document.getElementById('tasbihNum');
+  const tgt = document.getElementById('tasbihTargetLbl');
+  const dhikr = document.getElementById('tasbihDhikr');
+  const tot = document.getElementById('tasbihTotal');
+  const rnd = document.getElementById('tasbihRounds');
+  const badge = document.getElementById('tasbihCount');
+  if (num) num.textContent = tasbihCountVal;
+  if (tgt) tgt.textContent = 'الهدف: ' + d.target;
+  if (dhikr) dhikr.textContent = d.text;
+  if (tot) tot.textContent = tasbihTotalVal;
+  if (rnd) rnd.textContent = tasbihRoundsVal;
+  if (badge) badge.textContent = tasbihTotalVal;
+  document.querySelectorAll('#tasbihTargets button').forEach((b,i) => {
+    b.classList.toggle('active', i === tasbihIdx);
+  });
+  const vib = document.getElementById('tasbihVib');
+  if (vib) vib.checked = tasbihVibOn;
+}
+
+function openTasbih() {
+  _savedScroll = window.scrollY || 0;
+  const tg = document.getElementById('tasbihTargets');
+  if (tg) {
+    tg.innerHTML = TASBIH_DHIKRS.map((d,i) =>
+      `<button onclick="selectTasbih(${i})">${d.name} (${d.target})</button>`
+    ).join('');
+  }
+  updateTasbihUI();
+  openModal('tasbihOv');
+}
+
+function selectTasbih(i) {
+  tasbihIdx = i;
+  tasbihCountVal = 0;
+  updateTasbihUI();
+  saveTasbih();
+  toast('تم اختيار: ' + TASBIH_DHIKRS[i].name, 'info', 1500);
+}
+
+function tasbihTap() {
+  tasbihCountVal++;
+  tasbihTotalVal++;
+  const d = TASBIH_DHIKRS[tasbihIdx];
+  if (tasbihVibOn && navigator.vibrate) navigator.vibrate(30);
+  const el = document.getElementById('tasbihBtn');
+  if (el) { el.classList.add('pulse'); setTimeout(()=>el.classList.remove('pulse'), 300); }
+  if (tasbihCountVal >= d.target) {
+    tasbihRoundsVal++;
+    tasbihCountVal = 0;
+    if (navigator.vibrate) navigator.vibrate([100,50,100]);
+    toast('🎉 أكملت ' + d.name + ' ' + d.target + ' مرة!', 'bookmark', 2500);
+  }
+  updateTasbihUI();
+  saveTasbih();
+}
+
+function tasbihMinus() {
+  if (tasbihCountVal > 0) { tasbihCountVal--; }
+  else if (tasbihTotalVal > 0) { tasbihTotalVal--; }
+  updateTasbihUI();
+  saveTasbih();
+}
+
+function tasbihReset() {
+  if (!confirm('تصفير العداد الحالي؟ (الإجمالي يبقى)')) return;
+  tasbihCountVal = 0;
+  updateTasbihUI();
+  saveTasbih();
+  toast('تم التصفير', 'warn', 1500);
+}
+
+function toggleTasbihVib(v) {
+  tasbihVibOn = v;
+  saveTasbih();
+}
+
+async function loadTasbihFromCloud() {
+  if (!window.fbReady) return;
+  try {
+    const snap = await window.fbGet(window.fbDoc(window.fbDB,'sync',syncUserId));
+    if (snap.exists() && snap.data().tasbih) {
+      const t = snap.data().tasbih;
+      const today = new Date().toDateString();
+      tasbihIdx = t.idx ?? tasbihIdx;
+      tasbihCountVal = t.count ?? tasbihCountVal;
+      tasbihVibOn = t.vib ?? tasbihVibOn;
+      if (t.date === today) {
+        tasbihTotalVal = t.total ?? 0;
+        tasbihRoundsVal = t.rounds ?? 0;
+      }
+      updateTasbihUI();
+      saveTasbih();
+    }
+  } catch(e) {}
+}
+
 // ============ التشغيل ============
 function init(){
 populateSurah();populateSidebar();initTafsir();applyColor();loadBm();
-updateBmBar();updateProgress();updateBmCount();
+updateBmBar();updateProgress();updateBmCount();updateTasbihUI();
 document.getElementById('searchBtn').addEventListener('click',doSearch);
 document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
 document.getElementById('surah').addEventListener('change',function(){updateAyahDD(this.value,'all');});
