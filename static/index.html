@@ -1428,6 +1428,26 @@ ${nextP?`<div class="pnext"><div class="lb">الصلاة القادمة</div><di
 <div class="ploc">📍 ${userLoc.lat.toFixed(2)}, ${userLoc.lng.toFixed(2)}</div>
 `;
 }
+function requestLocation(){
+if(!navigator.geolocation){alert('⚠️ المتصفح لا يدعم تحديد الموقع');return;}
+const p=document.getElementById('prayerC');
+if(p)p.innerHTML='<div style="text-align:center;padding:30px"><div style="font-size:3rem">⏳</div><p>جاري تحديد موقعك...</p></div>';
+navigator.geolocation.getCurrentPosition(
+pos=>{
+userLoc={lat:pos.coords.latitude,lng:pos.coords.longitude};
+localStorage.setItem('userLocation',JSON.stringify(userLoc));
+const qs=document.getElementById('qStatus');
+if(qs)qs.textContent='✅ تم تحديد الموقع';
+loadPrayers();
+openQibla();
+},
+err=>{
+const p=document.getElementById('prayerC');
+if(p)p.innerHTML='<div style="text-align:center;padding:30px"><div style="font-size:3rem">❌</div><p>تعذر الحصول على الموقع</p><button class="pbtn" onclick="requestLocation()">🔄 إعادة المحاولة</button></div>';
+},
+{enableHighAccuracy:true,timeout:10000}
+);
+}
 
 // ============ القبلة ============
 function openQibla(){
