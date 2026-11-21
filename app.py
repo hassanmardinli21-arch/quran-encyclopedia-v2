@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import sqlite3
 import os
+import time
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 CORS(app)
@@ -28,10 +29,8 @@ def init_db():
     conn.commit()
     conn.close()
 
-# ✅ إصلاح حرج: نُشغّل init_db عند تحميل الملف وليس فقط عند التشغيل المباشر
 init_db()
 
-# --- خدمة الملفات الثابتة من مجلد static ---
 @app.route('/')
 def home():
     return send_from_directory('static', 'index.html')
@@ -88,36 +87,66 @@ def delete_bookmark():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+# ✅ تعديل: دالة حفظ الملاحظات الخاصة (تدعم الإضافة والتحديث دون حذف الكل)
 @app.route('/api/special_bookmarks', methods=['POST'])
 def save_special():
     try:
         data = request.get_json()
         code = data.get('sync_code')
         bookmarks = data.get('bookmarks', [])
+        if not code:
+            return jsonify({'status': 'error', 'message': 'missing code'}), 400
+        
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
-        c.execute('DELETE FROM special_bookmarks WHERE sync_code = ?', (code,))
+        
+        # نستخدم INSERT OR REPLACE لكل ملاحظة على حدة
+        # هذا يضمن تحديث الملاحظات الموجودة وإضافة الجديدة دون حذف الباقي
         for b in bookmarks:
+            created_time = b.get('created')
+            if not created_time:
+                created_time = int(time.time() * 1000)  # ميلي ثانية
+            
             c.execute('''INSERT OR REPLACE INTO special_bookmarks (id, sync_code, label, surah, ayah, created)
                          VALUES (?, ?, ?, ?, ?, ?)''',
                       (str(b.get('id')), code, b.get('label'),
-                       b.get('surah'), b.get('ayah'), b.get('created', 0)))
+                       b.get('surah'), b.get('ayah'), created_time))
+        
         conn.commit()
         conn.close()
         return jsonify({'status': 'success'})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+# ✅ تعديل: إرجاع حقل created في الـ GET لضمان الترتيب الصحيح في الواجهة
 @app.route('/api/special_bookmarks/<code>', methods=['GET'])
 def get_special(code):
     try:
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
-        c.execute('SELECT id, label, surah, ayah FROM special_bookmarks WHERE sync_code = ?', (code,))
+        c.execute('SELECT id, label, surah, ayah, created FROM special_bookmarks WHERE sync_code = ? ORDER BY created DESC', (code,))
         rows = c.fetchall()
         conn.close()
-        bookmarks = [{'id': r[0], 'label': r[1], 'surah': r[2], 'ayah': r[3]} for r in rows]
+        bookmarks = [{'id': r[0], 'label': r[1], 'surah': r[2], 'ayah': r[3], 'created': r[4]} for r in rows]
         return jsonify({'status': 'success', 'bookmarks': bookmarks})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# ✅ إضافة جديدة: دالة حذف ملاحظة خاصة واحدة (مفيدة للواجهة)
+@app.route('/api/delete_special_bookmark', methods=['POST'])
+def delete_special_bookmark():
+    try:
+        data = request.get_json()
+        code = data.get('sync_code')
+        bookmark_id = data.get('id')
+        if not code or not bookmark_id:
+            return jsonify({'status': 'error', 'message': 'missing data'}), 400
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute('DELETE FROM special_bookmarks WHERE sync_code = ? AND id = ?', (code, bookmark_id))
+        conn.commit()
+        conn.close()
+        return jsonify({'status': 'success'})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
