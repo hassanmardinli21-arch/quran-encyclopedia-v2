@@ -1030,21 +1030,10 @@ return `<div class="bm-item"><div class="info"><div class="lbl">📌 ${b.label}$
 }
 openModal('bmsOv');
 }
-function getGlobalAyahIndex(s,a){let idx=0;for(let i=0;i<s-1;i++){idx+=AYAH_COUNTS[i]}return idx+a}
 function updateProgress(){
-const pf=document.getElementById('pfill');const pe=document.getElementById('pct');
-if(!pf)return;
-if(!bm){pf.style.width='0%';if(pe){pe.textContent='0%';pe.title='';pe.style.color=''}document.querySelectorAll('.ms,.ms-l').forEach(el=>el.classList.remove('r'));return}
-const curIdx=getGlobalAyahIndex(parseInt(bm.surah),parseInt(bm.ayah));
-const p=Math.min(100,Math.max(0,Math.round(curIdx/TOTAL*100)));
-pf.style.width=p+'%';
-if(!pe)return;
-document.querySelectorAll('.ms').forEach(m=>{const pc=parseInt(m.dataset.pct);if(p>=pc)m.classList.add('r');else m.classList.remove('r')});
-document.querySelectorAll('.ms-l').forEach(l=>{const pc=parseInt(l.dataset.pct);if(p>=pc)l.classList.add('r');else l.classList.remove('r')});
-pe.title=`موضعك: الآية ${curIdx} من ${TOTAL}`;
-if(p>=100){pe.textContent='🏁 ختم';pe.style.color='#d4a100'}else{pe.textContent=p+'%';pe.style.color=''}
-}
-
+const u=new Set(allBms.map(b=>b.surah));if(bm)u.add(bm.surah);
+let ta=0;u.forEach(sn=>{const i=sn-1;if(i>=0&&i<AYAH_COUNTS.length)ta+=AYAH_COUNTS[i]});
+const p=Math.min(100,Math.round(ta/TOTAL*100));
 const pf=document.getElementById('pfill');if(pf)pf.style.width=p+'%';
 const pe=document.getElementById('pct');if(!pe)return;
 document.querySelectorAll('.ms').forEach(m=>{const pc=parseInt(m.dataset.pct);if(p>=pc)m.classList.add('r');else m.classList.remove('r')});
