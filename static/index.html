@@ -11,7 +11,8 @@ gtag('config', 'G-D8HQ7YKDWW');
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>الموسوعة القرآنية</title>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- إصلاح 1: إضافة خط Amiri Quran لوضوح التنوين -->
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -95,7 +96,8 @@ h1::before,h1::after{content:'❁';color:var(--gold);margin:0 12px;font-size:1.6
 .btn-icon{background:rgba(255,248,220,.7);border:1px solid var(--bd);color:var(--ink2);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
 .bm-btn.active{background:linear-gradient(180deg,var(--bm),var(--bmD));color:#fff}
 .sp-btn.has{background:linear-gradient(180deg,var(--sp),var(--spD));color:#fff}
-.ayah-text{font-family:'Amiri',serif;font-size:1.5rem;line-height:2.4;text-align:justify;margin-bottom:12px}
+/* إصلاح 2: وضوح التنوين وخط الآيات */
+.ayah-text{font-family:'Amiri Quran', 'Amiri', serif;font-size:1.8rem;line-height:2.8;text-align:justify;margin-bottom:12px;letter-spacing:0.5px}
 .tafsir-block{background:var(--hl);border-right:3px solid var(--gold);border-radius:6px;padding:12px 16px;margin-top:10px}
 .tafsir-block h4{font-size:.9rem;font-weight:700;color:var(--gold);margin-bottom:6px}
 .tafsir-text{font-size:1rem;color:var(--ink2);line-height:2}
@@ -252,7 +254,27 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 .date-box .lbl{font-size:.85rem;color:var(--ink2);font-weight:700;margin-bottom:6px}
 .date-box .val{font-size:1.1rem;font-weight:700;color:var(--gold);font-family:'Amiri',serif}
 .date-box .num{font-size:.9rem;color:var(--ink2);margin-top:4px}
-@media(max-width:600px){h1{font-size:1.7rem}.ayah-text{font-size:1.25rem;line-height:2.1}.container{padding:20px 14px}.search{flex-direction:column}.search input,.search select,.search button{width:100%}.btn{font-size:.8rem;padding:7px 12px}.compass{width:220px;height:220px}.arrow{height:85px}.tab{font-size:.75rem;padding:8px 6px}.fab{width:55px;height:55px;font-size:1.4rem;bottom:20px;right:15px}.about-new .share-buttons{grid-template-columns:repeat(2,1fr)}.top-buttons{gap:5px}.btn-icon{width:34px;height:34px;font-size:1rem}}
+.tasbih-body{text-align:center;padding:20px 10px}
+.tasbih-dhikr{font-family:'Amiri',serif;font-size:2rem;color:var(--gold);margin-bottom:8px;line-height:1.6}
+.tasbih-fadl{font-size:.85rem;color:var(--ink2);font-style:italic;margin-bottom:20px}
+.tasbih-counter{position:relative;width:220px;height:220px;margin:20px auto;border-radius:50%;background:radial-gradient(circle,var(--hl),var(--in));border:5px solid var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;box-shadow:0 8px 30px rgba(184,134,11,.3);transition:.15s}
+.tasbih-counter:active{transform:scale(.96)}
+.tasbih-counter.pulse{animation:tasbihPulse .3s}
+@keyframes tasbihPulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+.tasbih-num{font-family:'Amiri',serif;font-size:4.5rem;font-weight:700;color:var(--gold);line-height:1}
+.tasbih-target{font-size:.85rem;color:var(--ink2);margin-top:5px}
+.tasbih-progress{width:200px;height:8px;background:rgba(0,0,0,.1);border-radius:10px;margin:15px auto;overflow:hidden;border:1px solid var(--bd)}
+.tasbih-fill{height:100%;background:linear-gradient(90deg,var(--goldL),var(--gold));width:0;transition:width .3s;border-radius:10px}
+.tasbih-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:15px}
+.tasbih-actions button{padding:10px 18px;border:none;border-radius:20px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer}
+.tasbih-reset{background:linear-gradient(180deg,#ef4444,#b91c1c);color:#fff}
+.tasbih-switch{background:linear-gradient(180deg,#3b82f6,#1d4ed8);color:#fff}
+.tasbih-dhikr-tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:15px}
+.tasbih-tab{padding:8px 14px;background:var(--in);border:1px solid var(--bd);border-radius:20px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;color:var(--ink2);transition:.2s}
+.tasbih-tab.active{background:linear-gradient(180deg,var(--goldL),var(--gold));color:#fff;border-color:#8B6508}
+.tasbih-total{text-align:center;padding:12px;background:var(--in);border:1px dashed var(--gold);border-radius:10px;margin-top:15px;font-size:.85rem;color:var(--ink2)}
+.tasbih-total strong{color:var(--gold);font-size:1.1rem}
+@media(max-width:600px){h1{font-size:1.7rem}.ayah-text{font-size:1.4rem;line-height:2.4}.container{padding:20px 14px}.search{flex-direction:column}.search input,.search select,.search button{width:100%}.btn{font-size:.8rem;padding:7px 12px}.compass{width:220px;height:220px}.arrow{height:85px}.tab{font-size:.75rem;padding:8px 6px}.fab{width:55px;height:55px;font-size:1.4rem;bottom:20px;right:15px}.about-new .share-buttons{grid-template-columns:repeat(2,1fr)}.top-buttons{gap:5px}.btn-icon{width:34px;height:34px;font-size:1rem}.tasbih-counter{width:180px;height:180px}.tasbih-num{font-size:3.5rem}}
 </style>
 </head>
 <body>
@@ -268,6 +290,7 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 <button class="btn help" onclick="openModal('helpOv')">📖 الاستخدام</button>
 <button class="btn prayer" onclick="openPrayer()">🕌 الصلاة</button>
 <button class="btn notes" onclick="openNotes()">📝 ملاحظات</button>
+<button class="btn tasbih" onclick="openTasbih()">📿 المسبحة</button>
 <button class="btn" onclick="openModal('aboutOv')">ℹ️ حول</button>
 <button class="btn sync" onclick="openSync()">🔄 مزامنة</button>
 <button class="btn nav" onclick="openSidebar()">⚡ السور</button>
@@ -350,12 +373,12 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 <div class="modal" style="max-width:680px" onclick="event.stopPropagation()">
 <button class="close" onclick="closeWelcome()">✖</button>
 <h2>🌟 مرحباً بك</h2>
-<p class="intro">الإصدار v2.9</p>
+<p class="intro">الإصدار v3.0</p>
 <div class="dua" style="margin-bottom:20px">﴿ وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ ﴾</div>
 <h3>✨ الجديد</h3>
+<div class="help-step"><div class="help-ic">📿</div><div><div class="help-t">المسبحة الإلكترونية</div><div class="help-d">8 أذكار + هدف يومي + مزامنة سحابية</div></div></div>
 <div class="help-step"><div class="help-ic">☁️</div><div><div class="help-t">شريط المزامنة الدائم</div><div class="help-d">رمز المزامنة ظاهر دائماً + مؤشر الحالة</div></div></div>
 <div class="help-step"><div class="help-ic">📌</div><div><div class="help-t">فصل علاماتي عن آخر قراءة</div><div class="help-d">فتح علامة لا يغيّر آخر قراءة</div></div></div>
-<div class="help-step"><div class="help-ic">🧭</div><div><div class="help-t">تصحيح اتجاه القبلة</div><div class="help-d">معادلة دقيقة + دوران صحيح</div></div></div>
 <button class="pbtn" style="width:100%;padding:14px;background:linear-gradient(180deg,#10b981,#047857);font-size:1.05rem" onclick="closeWelcome()">✅ فهمت، لنبدأ</button>
 </div>
 </div>
@@ -367,6 +390,8 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 <p class="intro">دليل شامل</p>
 <h3 class="help-sec">🕌 قسم الصلاة</h3>
 <div class="help-step"><div class="help-ic">🕌</div><div><div class="help-t">المواقيت والقبلة</div><div class="help-d">اضغط <strong>🕌 الصلاة</strong> → فعّل الموقع، ثم اضغط <strong>🧭 تفعيل البوصلة</strong> في تبويب القبلة.</div></div></div>
+<h3 class="help-sec">📿 المسبحة</h3>
+<div class="help-step"><div class="help-ic">📿</div><div><div class="help-t">المسبحة الإلكترونية</div><div class="help-d">اضغط <strong>📿 المسبحة</strong> → اختر الذكر → اضغط الدائرة للعد. العدد محفوظ ويُزامن سحابياً.</div></div></div>
 <h3 class="help-sec">🌟 الأساسيات</h3>
 <div class="help-step"><div class="help-ic">📖</div><div><div class="help-t">قراءة القرآن</div><div class="help-d">اختر السورة واضغط <code>بحث</code>.</div></div></div>
 <div class="help-step"><div class="help-ic">🔖</div><div><div class="help-t">حفظ موضع القراءة</div><div class="help-d">اضغط <code>🔖</code> على أي آية لحفظها كآخر قراءة.</div></div></div>
@@ -544,6 +569,15 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 </div>
 </div>
 
+<div class="overlay" id="tasbihOv" onclick="closeModalOutside(event,'tasbihOv')">
+<div class="modal" style="max-width:520px" onclick="event.stopPropagation()">
+<button class="close" onclick="closeModal('tasbihOv')">✖</button>
+<h2>📿 المسبحة</h2>
+<p class="intro">ذكر الله يطمئن القلب</p>
+<div id="tasbihContent"></div>
+</div>
+</div>
+
 <div class="overlay" id="labelOv" onclick="closeModalOutside(event,'labelOv')">
 <div class="modal" onclick="event.stopPropagation()">
 <button class="close" onclick="closeModal('labelOv')">✖</button>
@@ -560,8 +594,9 @@ td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--bd);font-si
 </div>
 </div>
 </div>
+
 <script>
-const APP_VERSION='v2.9';
+const APP_VERSION='v3.0';
 const SURAHS=["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 const AYAH_COUNTS=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
 const TOTAL=6236;
@@ -571,6 +606,16 @@ const QLABELS=['📌 وردي اليومي','💭 للتدبر','⭐ مهمة','
 const SAMPLE=[{surah:1,ayah:1,text:"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"},{surah:1,ayah:2,text:"الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ"},{surah:103,ayah:1,text:"وَالْعَصْرِ"},{surah:112,ayah:1,text:"قُلْ هُوَ اللَّهُ أَحَدٌ"}];
 const SHAMI_MONTHS=['كانون الثاني','شباط','آذار','نيسان','أيار','حزيران','تموز','آب','أيلول','تشرين الأول','تشرين الثاني','كانون الأول'];
 const HIJRI_MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+const ADHKAR=[
+{d:'سُبْحَانَ اللَّهِ',n:'سبحان الله',t:33,f:'من قالها 100 مرة حُطّت خطاياه'},
+{d:'الْحَمْدُ لِلَّهِ',n:'الحمد لله',t:33,f:'الحمد لله تملأ الميزان'},
+{d:'اللَّهُ أَكْبَرُ',n:'الله أكبر',t:33,f:'الله أكبر كبيراً'},
+{d:'لَا إِلَٰهَ إِلَّا اللَّهُ',n:'لا إله إلا الله',t:100,f:'خير ما قاله النبيون'},
+{d:'أَسْتَغْفِرُ اللَّهَ',n:'أستغفر الله',t:100,f:'من لزم الاستغفار جعل الله له من كل هم فرجاً'},
+{d:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',n:'سبحان الله وبحمده',t:100,f:'من قالها 100 مرة حُطّت خطاياه ولو كانت مثل زبد البحر'},
+{d:'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ',n:'لا حول ولا قوة إلا بالله',t:100,f:'كنز من كنوز الجنة'},
+{d:'سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَلَا إِلَٰهَ إِلَّا اللَّهُ وَاللَّهُ أَكْبَرُ',n:'الباقيات الصالحات',t:100,f:'أفضل الكلام بعد القرآن'}
+];
 
 let quran=[],tafsirs={};
 let curSrc='quran',curKW='',curSur='all',curAyah='all';
@@ -581,6 +626,7 @@ let wakeLock=null,wakeWanted=false;
 let locked=false,startTime=Date.now(),_savedScroll=0;
 let userLoc=null,devHeading=null;
 let syncUserId=null,isSyncing=false,timeInterval=null;
+let tasbihState={dhikrIdx:0,count:0,target:33,total:0};
 const perPage=10;
 
 try{
@@ -591,6 +637,14 @@ const bms=localStorage.getItem('allBookmarks');if(bms)allBms=JSON.parse(bms);
 const nt=localStorage.getItem('quranNotes');if(nt)allNotes=JSON.parse(nt);
 if(localStorage.getItem('wakeLockWanted')==='true')wakeWanted=true;
 const sl=localStorage.getItem('userLocation');if(sl)userLoc=JSON.parse(sl);
+const ts=localStorage.getItem('tasbihState');
+if(ts){
+const p=JSON.parse(ts);
+if(typeof p.dhikrIdx==='number')tasbihState.dhikrIdx=p.dhikrIdx;
+if(typeof p.count==='number')tasbihState.count=p.count;
+if(typeof p.target==='number')tasbihState.target=p.target;
+if(typeof p.total==='number')tasbihState.total=p.total;
+}
 }catch(e){}
 
 // ============ المزامنة السحابية ============
@@ -626,6 +680,7 @@ bar.style.borderColor=s.bd;
 }
 }
 
+// [إصلاح 3] المزامنة باستخدام await لمنع تأخر الحفظ
 async function syncToCloud(){
 if(!window.fbReady||isSyncing)return;
 isSyncing=true;
@@ -634,7 +689,9 @@ try{
 await window.fbSet(window.fbDoc(window.fbDB,'sync',syncUserId),{
 bms:allBms,bm:bm,color:bmColorIdx,notes:allNotes,
 dark:document.body.classList.contains('dark'),
-tafsir:showTafsir,updatedAt:Date.now()
+tafsir:showTafsir,
+tasbih:tasbihState,
+updatedAt:Date.now()
 });
 console.log("☁️ Synced");
 setSyncStatus('ok','متزامن ✓');
@@ -663,6 +720,10 @@ if(data.color!==undefined){bmColorIdx=data.color;applyColor();}
 if(data.notes&&Array.isArray(data.notes))allNotes=data.notes;
 if(data.tafsir!==undefined){showTafsir=data.tafsir;const cb=document.getElementById('showTafsir');if(cb)cb.checked=showTafsir;const h=document.getElementById('hint');if(h)h.textContent=showTafsir?'(ظاهرة)':'(مخفية)';}
 if(data.dark!==undefined){if(data.dark)document.body.classList.add('dark');else document.body.classList.remove('dark');const btn=document.getElementById('darkBtn');if(btn)btn.textContent=data.dark?'☀️ نهاري':'🌙 ليلي';}
+if(data.tasbih&&typeof data.tasbih==='object'){
+tasbihState={...tasbihState,...data.tasbih};
+localStorage.setItem('tasbihState',JSON.stringify(tasbihState));
+}
 localStorage.setItem('allBookmarks',JSON.stringify(allBms));
 localStorage.setItem('quranNotes',JSON.stringify(allNotes));
 if(bm)localStorage.setItem('quranBookmark',JSON.stringify(bm));
@@ -812,7 +873,7 @@ setTimeout(()=>{window.scrollTo(0,_savedScroll);},30);
 function closeModalOutside(e,id){if(e.target.id===id){closeModal(id);if(id==='welcomeOv')localStorage.setItem('appVersion',APP_VERSION);}}
 document.addEventListener('keydown',e=>{
 if(e.key==='Escape'){
-['welcomeOv','helpOv','aboutOv','prayerOv','syncOv','colorOv','bmsOv','labelOv','timeOv','notesOv'].forEach(id=>{closeModal(id);if(id==='welcomeOv')localStorage.setItem('appVersion',APP_VERSION);});
+['welcomeOv','helpOv','aboutOv','prayerOv','syncOv','colorOv','bmsOv','labelOv','timeOv','notesOv','tasbihOv'].forEach(id=>{closeModal(id);if(id==='welcomeOv')localStorage.setItem('appVersion',APP_VERSION);});
 closeSidebar();
 }
 });
@@ -972,16 +1033,45 @@ return `<div class="bm-item"><div class="info"><div class="lbl">📌 ${b.label}$
 }
 openModal('bmsOv');
 }
+
+// [إصلاح 2] حساب نسبة الختمة بدقة
 function updateProgress(){
-const u=new Set(allBms.map(b=>b.surah));if(bm)u.add(bm.surah);
-let ta=0;u.forEach(sn=>{const i=sn-1;if(i>=0&&i<AYAH_COUNTS.length)ta+=AYAH_COUNTS[i]});
-const p=Math.min(100,Math.round(ta/TOTAL*100));
-const pf=document.getElementById('pfill');if(pf)pf.style.width=p+'%';
-const pe=document.getElementById('pct');if(!pe)return;
-document.querySelectorAll('.ms').forEach(m=>{const pc=parseInt(m.dataset.pct);if(p>=pc)m.classList.add('r');else m.classList.remove('r')});
-document.querySelectorAll('.ms-l').forEach(l=>{const pc=parseInt(l.dataset.pct);if(p>=pc)l.classList.add('r');else l.classList.remove('r')});
-pe.title=`قرأت ${ta} آية من ${TOTAL}`;
-if(p>=100){pe.textContent='🏁 ختم';pe.style.color='#d4a100'}else{pe.textContent=p+'%';pe.style.color=''}
+    let currentSurah = bm ? bm.surah : 1;
+    let currentAyah = bm ? bm.ayah : 0;
+    let ayahsReadBefore = 0;
+    for (let i = 0; i < currentSurah - 1; i++) {
+        ayahsReadBefore += AYAH_COUNTS[i];
+    }
+    let totalAyahsRead = ayahsReadBefore + currentAyah;
+    let p = (totalAyahsRead / TOTAL) * 100;
+    
+    if (currentSurah === 114 && currentAyah === 6) p = 100;
+    p = Math.min(100, Math.max(0, Math.round(p)));
+
+    const pf = document.getElementById('pfill');
+    if(pf) pf.style.width = p + '%';
+    const pe = document.getElementById('pct');
+    if(!pe) return;
+    
+    document.querySelectorAll('.ms').forEach(m => {
+        const pc = parseInt(m.dataset.pct);
+        if (p >= pc) m.classList.add('r');
+        else m.classList.remove('r');
+    });
+    document.querySelectorAll('.ms-l').forEach(l => {
+        const pc = parseInt(l.dataset.pct);
+        if (p >= pc) l.classList.add('r');
+        else l.classList.remove('r');
+    });
+    
+    pe.title = `قرأت ${totalAyahsRead} آية من ${TOTAL}`;
+    if (p >= 100) {
+        pe.textContent = '🏁 ختم';
+        pe.style.color = '#d4a100';
+    } else {
+        pe.textContent = p + '%';
+        pe.style.color = '';
+    }
 }
 function updateBmBar(){
 const bar=document.getElementById('bmBar');if(!bar)return;
@@ -1321,186 +1411,149 @@ const list=[
 {k:'maghrib',n:'المغرب',i:'🌇',t:times.maghrib},
 {k:'isha',n:'العشاء',i:'🌙',t:times.isha}
 ];
-const main=list.filter(x=>!x.skip);
-let next=null;
-for(const p of main){if(p.t&&p.t>now){next=p;break}}
-let nextT=null;
-if(next)nextT=next.t;
-else{next=main[0];if(next.t)nextT=new Date(next.t.getTime()+86400000)}
-let cd='—';
-if(nextT){let diff=Math.max(0,Math.floor((nextT-now)/1000));const hh=Math.floor(diff/3600),mm=Math.floor((diff%3600)/60),ss=diff%60;cd=`بعد ${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;}
-const opts=Object.keys(METHODS).map(k=>`<option value="${k}" ${String(k)===String(method)?'selected':''}>${METHODS[k].name}</option>`).join('');
+let nextP=null;
+for(const p of list){if(p.skip)continue;if(p.t&&p.t>now){nextP=p;break}}
+let rows='';
+for(const p of list){
+if(p.skip&&!p.t){continue}
+const passed=p.t&&p.t<now;
+rows+=`<div class="pitem ${passed?'passed':''} ${p===nextP?'next':''}"><div class="nm">${p.i} ${p.n}</div><div class="tm">${fmt(p.t)}</div></div>`;
+}
+const fc=hijri(now);
+const gc=greg(now);
 c.innerHTML=`
-<div class="pdate"><div class="h">🌙 ${hijri(now)}</div><div class="g">${greg(now)}</div></div>
-<div style="margin-bottom:15px;text-align:center">
-<label style="font-size:.85rem;color:var(--ink2);font-weight:700">طريقة الحساب: </label>
-<select onchange="changeMethod(this.value)" style="padding:8px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--in);color:var(--ink);font-family:'Cairo',sans-serif;font-weight:700">${opts}</select>
-</div>
-<div class="pnext">
-<div class="lb">الصلاة القادمة</div>
-<div class="nm">${next.i} ${next.n}</div>
-<div class="tm">${fmt(nextT)}</div>
-<div class="cd">⏳ ${cd}</div>
-</div>
-<div class="plist">
-${list.map(p=>{const isNext=next&&p.k===next.k;const passed=p.t&&p.t<now&&!isNext;return `<div class="pitem ${isNext?'next':''} ${passed?'passed':''}"><span class="nm">${p.i} ${p.n}</span><span class="tm">${fmt(p.t)}</span></div>`;}).join('')}
-</div>
-<div class="ploc">📍 الإحداثيات: ${userLoc.lat.toFixed(4)}, ${userLoc.lng.toFixed(4)}<br><button class="pbtn" onclick="requestLocation()" style="margin-top:10px">🔄 تحديث</button></div>
+<div class="pdate"><div class="h">${fc}</div><div class="g">${gc}</div></div>
+<div class="plist">${rows}</div>
+${nextP?`<div class="pnext"><div class="lb">الصلاة القادمة</div><div class="nm">${nextP.i} ${nextP.n}</div><div class="tm">${fmt(nextP.t)}</div><div class="cd">${Math.floor((nextP.t-now)/60000)} دقيقة متبقية</div></div>`:''}
+<div class="ploc">📍 ${userLoc.lat.toFixed(2)}, ${userLoc.lng.toFixed(2)}</div>
 `;
 }
-function changeMethod(v){method=parseInt(v);localStorage.setItem('prayerMethod',method);loadPrayers();toast('تم التغيير','info',2000)}
 
-function openPrayer(){
-_savedScroll=window.scrollY||0;
-openModal('prayerOv');
-if(userLoc){
-if(document.getElementById('c-times').classList.contains('active'))loadPrayers();
-if(document.getElementById('c-qibla').classList.contains('active'))calcQibla();
+// ============ القبلة ============
+function openQibla(){
+if(!userLoc){alert('يرجى تفعيل الموقع أولاً');return}
+const c=document.getElementById('qiblaC');
+if(!c)return;
+const kaabaLat=21.4225,kaabaLng=39.8262;
+const lat1=userLoc.lat*RAD,lat2=kaabaLat*RAD;
+const dLng=(kaabaLng-userLoc.lng)*RAD;
+const y=Math.sin(dLng);
+const x=Math.cos(lat1)*Math.tan(lat2)-Math.sin(lat1)*Math.cos(dLng);
+const qibla=Math.atan2(y,x)*DEG;
+window._qibla=qibla;
+c.innerHTML=`
+<div class="compass" id="compass">
+<div class="cn">N</div><div class="cs">S</div><div class="ce">E</div><div class="cw">W</div>
+<div class="cc"></div>
+<div class="arrow" id="arrow"></div>
+</div>
+<div class="qdeg" id="qdeg">🧭 ${qibla.toFixed(1)}° من الشمال</div>
+<button class="pbtn" onclick="enableCompass()">🧭 تفعيل البوصلة</button>
+<div class="qinfo">📱 <strong>كيف تستخدم القبلة؟</strong><br>1. اضغط <strong>🧭 تفعيل البوصلة</strong> واسمح بالوصول<br>2. ضع الهاتف مسطحاً<br>3. حرّك الهاتف حتى يشير السهم 🕋<br><br>💡 إذا لم يتحرك، جهازك لا يحتوي بوصلة.</div>
+`;
 }
-}
-function showTab(t){
-document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
-document.getElementById('tab-'+t).classList.add('active');
-document.getElementById('c-'+t).classList.add('active');
-if(t==='qibla'){
-if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission!=='function'){
-startCompass();
-}
-if(!userLoc)requestLocation();else calcQibla();
-}
-if(t==='times'){if(!userLoc)requestLocation();else loadPrayers()}
-}
-function requestLocation(){
-const c=document.getElementById('prayerC');
-const s=document.getElementById('qStatus');
-if(!navigator.geolocation){alert('⚠️ غير مدعوم');return}
-if(c)c.innerHTML='<div style="text-align:center;padding:30px"><div style="font-size:2rem">⏳</div><p>جاري التحديد...</p></div>';
-if(s)s.textContent='⏳ جاري التحديد...';
-navigator.geolocation.getCurrentPosition(
-p=>{
-userLoc={lat:p.coords.latitude,lng:p.coords.longitude};
-localStorage.setItem('userLocation',JSON.stringify(userLoc));
-loadPrayers();calcQibla();
-toast('تم تحديد موقعك 📍','info',2000);
-},
-err=>{
-let m='⚠️ تعذّر';
-if(err.code===1)m='⚠️ رفضت الإذن';
-else if(err.code===2)m='⚠️ غير متاح';
-else if(err.code===3)m='⚠️ انتهت المدة';
-if(c)c.innerHTML=`<div style="text-align:center;padding:30px"><div style="font-size:2rem">❌</div><p>${m}</p><button class="pbtn" onclick="requestLocation()" style="margin-top:15px">🔄 إعادة</button></div>`;
-if(s)s.textContent=m;
-},
-{enableHighAccuracy:true,timeout:15000,maximumAge:600000}
-);
-}
-
-// ============ اتجاه القبلة ============
-function qiblaBearing(lat,lng){
-const kLat=21.4225,kLng=39.8262;
-const phi1=lat*RAD, phi2=kLat*RAD;
-const dLng=(kLng-lng)*RAD;
-const y=Math.sin(dLng)*Math.cos(phi2);
-const x=Math.cos(phi1)*Math.sin(phi2)-Math.sin(phi1)*Math.cos(phi2)*Math.cos(dLng);
-const bearing=Math.atan2(y,x)*DEG;
-return (bearing+360)%360;
-}
-
-function calcQibla(){
-if(!userLoc)return;
-const st=document.getElementById('qStatus');
-const comp=document.getElementById('compass');
-const deg=document.getElementById('qdeg');
-const b=qiblaBearing(userLoc.lat,userLoc.lng);
-if(st)st.textContent='✅ تم التحديد — وجّه الهاتف نحو الشمال';
-if(comp)comp.style.display='block';
-if(deg)deg.textContent=`🧭 اتجاه القبلة: ${b.toFixed(1)}° من الشمال`;
-updateArrow(b);
-if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission!=='function'){
-startCompass();
-}
-window._qb=b;
-}
-
-function updateArrow(b){
-const a=document.getElementById('arrow');if(!a)return;
-let rot;
-if(devHeading===null||devHeading===undefined){
-rot=b;
+function enableCompass(){
+if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+DeviceOrientationEvent.requestPermission().then(r=>{
+if(r==='granted')window.addEventListener('deviceorientation',onOrientation);
+});
 }else{
-rot=b-devHeading;
+window.addEventListener('deviceorientation',onOrientation);
 }
-rot=((rot%360)+360)%360;
-a.style.transform=`translate(-50%,-100%) rotate(${rot}deg)`;
+toast('🧭 البوصلة مفعلة','info',2000);
 }
-
-function onOrient(e){
-let h=null;
-if(typeof e.webkitCompassHeading==='number'&&!isNaN(e.webkitCompassHeading)){
-h=e.webkitCompassHeading;
-}
-else if(typeof e.alpha==='number'&&e.alpha!==null){
-h=(360-e.alpha)%360;
-}
-if(h!==null&&!isNaN(h)){
-devHeading=(h+360)%360;
-if(window._qb)updateArrow(window._qb);
+function onOrientation(e){
+if(e.alpha===null)return;
+const compassHeading=360-e.alpha;
+const arrow=document.getElementById('arrow');
+if(arrow&&window._qibla!==undefined){
+const rotation=window._qibla-compassHeading;
+arrow.style.transform=`translate(-50%,-100%) rotate(${rotation}deg)`;
 }
 }
-
-async function requestCompassPermission(){
-if(typeof DeviceOrientationEvent==='undefined')return false;
-if(typeof DeviceOrientationEvent.requestPermission==='function'){
-try{
-const perm=await DeviceOrientationEvent.requestPermission();
-return perm==='granted';
-}catch(e){
-console.warn('Compass permission error:',e);
-return false;
-}
-}
-return true;
+function toggleDark(){
+document.body.classList.toggle('dark');
+const d=document.body.classList.contains('dark');
+localStorage.setItem('darkMode',d);
+const btn=document.getElementById('darkBtn');
+if(btn)btn.textContent=d?'☀️ نهاري':'🌙 ليلي';
+syncToCloud();
 }
 
-async function enableCompass(){
-const btn=document.getElementById('compassBtn');
-const ok=await requestCompassPermission();
-if(!ok){
-alert('⚠️ يجب السماح بالوصول للبوصلة.\nعلى iPhone: الإعدادات → Safari → Motion & Orientation Access');
-return;
+// ============ المسبحة ============
+function saveTasbihToStorage(){localStorage.setItem('tasbihState',JSON.stringify(tasbihState));syncToCloud();}
+function openTasbih(){
+_savedScroll=window.scrollY||0;
+renderTasbih();
+openModal('tasbihOv');
 }
-if(btn){btn.textContent='✅ البوصلة مفعّلة';btn.style.background='linear-gradient(180deg,#16a34a,#15803d)';}
-startCompass();
-if(userLoc)calcQibla();
-toast('✅ تم تفعيل البوصلة','info',2000);
+function renderTasbih(){
+const c=document.getElementById('tasbihContent');
+if(!c)return;
+const cur=ADHKAR[tasbihState.dhikrIdx]||ADHKAR[0];
+const prog=tasbihState.target>0?Math.min(100,(tasbihState.count/tasbihState.target)*100):0;
+c.innerHTML=`
+<div class="tasbih-body">
+<div class="tasbih-dhikr">${cur.d}</div>
+<div class="tasbih-fadl">${cur.f}</div>
+<div class="tasbih-dhikr-tabs">
+${ADHKAR.map((a,i)=>`<button class="tasbih-tab ${i===tasbihState.dhikrIdx?'active':''}" onclick="switchDhikr(${i})">${a.n}</button>`).join('')}
+</div>
+<div class="tasbih-counter" id="tasbihCounter" onclick="tasbihCount()">
+<div>
+<div class="tasbih-num" id="tasbihNum">${tasbihState.count}</div>
+<div class="tasbih-target">الهدف: ${tasbihState.target}</div>
+</div>
+</div>
+<div class="tasbih-progress">
+<div class="tasbih-fill" style="width:${prog}%"></div>
+</div>
+<div class="tasbih-actions">
+<button class="tasbih-reset" onclick="resetTasbih()">🔄 تصفير</button>
+<button class="tasbih-switch" onclick="changeTarget()">🎯 تغيير الهدف</button>
+</div>
+<div class="tasbih-total">المجموع الكلي: <strong>${tasbihState.total}</strong></div>
+</div>
+`;
+}
+function tasbihCount(){
+tasbihState.count++;tasbihState.total++;
+const cur=ADHKAR[tasbihState.dhikrIdx]||ADHKAR[0];
+if(tasbihState.count===cur.t){
+toast('🎉 أكملت '+cur.t+' مرة من '+cur.n,'info',3000);
+}
+saveTasbihToStorage();
+renderTasbih();
+const el=document.getElementById('tasbihCounter');
+if(el){el.classList.add('pulse');setTimeout(()=>el.classList.remove('pulse'),300);}
+if(navigator.vibrate)navigator.vibrate(20);
+}
+function resetTasbih(){
+if(!confirm('تصفير العدّاد الحالي؟'))return;
+tasbihState.count=0;saveTasbihToStorage();renderTasbih();toast('تم التصفير','warn',1500);
+}
+function switchDhikr(i){
+tasbihState.dhikrIdx=i;
+tasbihState.target=ADHKAR[i].t;
+tasbihState.count=0;
+saveTasbihToStorage();renderTasbih();
+}
+function changeTarget(){
+const t=prompt('أدخل الهدف الجديد:',tasbihState.target);
+if(t&&!isNaN(t)&&parseInt(t)>0){
+tasbihState.target=parseInt(t);saveTasbihToStorage();renderTasbih();
+}
 }
 
-function startCompass(){
-if(window._cs)return;
-window._cs=true;
-if('ondeviceorientationabsolute' in window){
-window.addEventListener('deviceorientationabsolute',onOrient,true);
-}
-if('ondeviceorientation' in window){
-window.addEventListener('deviceorientation',onOrient,true);
-}
-console.log('🧭 Compass listeners attached');
-}
-
-// ============ التشغيل ============
-function init(){
-populateSurah();populateSidebar();initTafsir();applyColor();loadBm();
-updateBmBar();updateProgress();updateBmCount();
-const codeEl=document.getElementById('syncBarCode');
-if(codeEl)codeEl.textContent=syncUserId;
-setSyncStatus('waiting','جاري الاتصال...');
-document.getElementById('searchBtn').addEventListener('click',doSearch);
-document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
-document.getElementById('surah').addEventListener('change',function(){updateAyahDD(this.value,'all');});
+// ============ التهيئة ============
+if(document.body.classList.contains('dark')){const btn=document.getElementById('darkBtn');if(btn)btn.textContent='☀️ نهاري';}
+applyColor();
+populateSurah();
+populateSidebar();
+updateBmBar();
+updateProgress();
+updateBmCount();
 loadData();
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 </script>
 </body>
 </html>
