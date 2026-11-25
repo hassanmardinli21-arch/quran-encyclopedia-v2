@@ -1475,11 +1475,93 @@ let m='⚠️ تعذّر';
 if(err.code===1)m='⚠️ رفضت الإذن';
 else if(err.code===2)m='⚠️ غير متاح';
 else if(err.code===3)m='⚠️ انتهت المدة';
-if(c)c.innerHTML=`<div style="text-align:center;padding:30px"><div style="font-size:2rem">❌</div><p>${m}</p><button class="pbtn" onclick="requestLocation()" style="margin-top:15px">🔄 إعادة</button></div>`;
-if(s)s.textContent=m;
-},
-{enableHighAccuracy:true,timeout:15000,maximumAge:600000}
-);
+if(c)c.innerHTML=`<div style="text-align:center;padding:30px"><div style="font-size:2rem">❌</div><p>${m}</p><button function requestLocation() {
+    const q = document.getElementById('qStatus');
+    if (q) q.innerHTML = '⏳ جاري تحديد موقعك...';
+
+    if (!navigator.geolocation) {
+        if (q) q.innerHTML = '❌ المتصفح لا يدعم تحديد الموقع';
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            // حفظ الموقع
+            userLoc = { lat: lat, lng: lng };
+            localStorage.setItem('userLocation', JSON.stringify(userLoc));
+
+            // حساب المواقيت فلكياً بشكل دقيق
+            const times = calculateLocalPrayerTimes(lat, lng);
+            
+            // عرض المواقيت في الواجهة (يجب أن تتأكد أن الدالة renderPrayerTimes موجودة في كودك)
+            if (typeof renderPrayerTimes === 'function') {
+                renderPrayerTimes(times);
+            }
+            
+            if (q) q.innerHTML = '✅ تم تحديد موقعك بنجاح';
+            
+            // تحديث القبلة
+            if (typeof updateQibla === 'function') {
+                updateQibla(lat, lng);
+            }
+        },
+        (error) => {
+            let msg = '❌ فشل تحديد الموقع';
+            if (error.code === 1) msg = '❌ يرجى السماح بالوصول للموقع من إعدادات المتصفح';
+            if (q) q.innerHTML = msg;
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+}
+
+// === دالة حساب المواقيت فلكياً (دقيقة وتضيف الدقائق الاحتياطية) ===
+function calculateLocalPrayerTimes(lat, lng) {
+    const tz = -new Date().getTimezoneOffset() / 60; 
+    const date = new Date();
+    
+    const D = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
+    const g = 357 + 0.9856 * D;
+    const gRad = g * Math.PI / 180;
+    const e = 23.439 - 0.0000004 * D;
+    
+    const RA = Math.atan2(Math.cos(e * Math.PI / 180) * Math.sin(gRad), Math.cos(gRad)) * 180 / Math.PI;
+    const Decl = Math.asin(Math.sin(e * Math.PI / 180) * Math.sin(gRad)) * 180 / Math.PI;
+    
+    const noon = 12 + tz - lng / 15 - (RA / 15);
+    
+    const calcTime = (angle) => {
+        const cosH = (Math.sin(angle * Math.PI / 180) - Math.sin(lat * Math.PI / 180) * Math.sin(Decl * Math.PI / 180)) / (Math.cos(lat * Math.PI / 180) * Math.cos(Decl * Math.PI / 180));
+        if (cosH > 1 || cosH < -1) return null;
+        return (Math.acos(cosH) * 180 / Math.PI) / 15;
+    };
+    
+    const sunrise = noon - calcTime(-0.833);
+    const sunset = noon + calcTime(-0.833);
+    const asr = noon + calcTime(Math.atan(1 / (1 + Math.tan(Math.abs(lat - Decl) * Math.PI / 180))) * 180 / Math.PI);
+    const fajr = noon - calcTime(-18);
+    const isha = noon + calcTime(-17);
+
+    const format = (t, addMinutes = 0) => {
+        if (t === null) return "—";
+        let totalMins = Math.round(t * 60) + addMinutes;
+        let h = Math.floor(totalMins / 60);
+        let m = totalMins % 60;
+        if (h < 0) h += 24;
+        if (h >= 24) h -= 24;
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    };
+
+    return {
+        Fajr: format(fajr, 0),
+        Sunrise: format(sunrise, 0),
+        Dhuhr: format(noon, 2),
+        Asr: format(asr, 0),
+        Maghrib: format(sunset, 3), // +3 دقائق احتياطية للمغرب
+        Isha: format(isha, 0)
+    };
 }
 
 // ============ اتجاه القبلة ============
@@ -1686,6 +1768,96 @@ document.getElementById('surah').addEventListener('change',function(){updateAyah
 loadData();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+</script>
+<script>
+// === إصلاح توقيت المغرب تلقائياً (تجاوز الكود القديم) ===
+document.addEventListener('DOMContentLoaded', () => {
+    // حفظ الدالة القديمة
+    const oldRequestLocation = window.requestLocation;
+    
+    // استبدال دالة تحديد الموقع بدالة دقيقة
+    window.requestLocation = function() {
+        const q = document.getElementById('qStatus');
+        if (q) q.innerHTML = '⏳ جاري تحديد موقعك...';
+
+        if (!navigator.geolocation) {
+            if (q) q.innerHTML = '❌ المتصفح لا يدعم تحديد الموقع';
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                localStorage.setItem('userLocation', JSON.stringify({lat, lng}));
+
+                const tz = -new Date().getTimezoneOffset() / 60; 
+                const date = new Date();
+                const D = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
+                const g = 357 + 0.9856 * D;
+                const gRad = g * Math.PI / 180;
+                const e = 23.439 - 0.0000004 * D;
+                const RA = Math.atan2(Math.cos(e * Math.PI / 180) * Math.sin(gRad), Math.cos(gRad)) * 180 / Math.PI;
+                const Decl = Math.asin(Math.sin(e * Math.PI / 180) * Math.sin(gRad)) * 180 / Math.PI;
+                const noon = 12 + tz - lng / 15 - (RA / 15);
+                
+                const calcTime = (angle) => {
+                    const cosH = (Math.sin(angle * Math.PI / 180) - Math.sin(lat * Math.PI / 180) * Math.sin(Decl * Math.PI / 180)) / (Math.cos(lat * Math.PI / 180) * Math.cos(Decl * Math.PI / 180));
+                    if (cosH > 1 || cosH < -1) return null;
+                    return (Math.acos(cosH) * 180 / Math.PI) / 15;
+                };
+                
+                const sunrise = noon - calcTime(-0.833);
+                const sunset = noon + calcTime(-0.833);
+                const asr = noon + calcTime(Math.atan(1 / (1 + Math.tan(Math.abs(lat - Decl) * Math.PI / 180))) * 180 / Math.PI);
+                const fajr = noon - calcTime(-18);
+                const isha = noon + calcTime(-17);
+
+                const format = (t, addMinutes = 0) => {
+                    if (t === null) return "—";
+                    let totalMins = Math.round(t * 60) + addMinutes;
+                    let h = Math.floor(totalMins / 60);
+                    let m = totalMins % 60;
+                    if (h < 0) h += 24;
+                    if (h >= 24) h -= 24;
+                    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                };
+
+                const times = {
+                    fajr: format(fajr, 0),
+                    sunrise: format(sunrise, 0),
+                    dhuhr: format(noon, 2),
+                    asr: format(asr, 0),
+                    maghrib: format(sunset, 3),  // +3 دقائق احتياطية للمغرب
+                    isha: format(isha, 0)
+                };
+
+                // تحديث الواجهة (باستخدام الكود الموجود في ملفك)
+                const container = document.getElementById('prayerC');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="pdate"><div class="h">${date.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div></div>
+                        <div class="plist">
+                            <div class="pitem"><span class="nm">🌅 الفجر</span><span class="tm">${times.fajr}</span></div>
+                            <div class="pitem"><span class="nm">🌄 الشروق</span><span class="tm">${times.sunrise}</span></div>
+                            <div class="pitem"><span class="nm">☀️ الظهر</span><span class="tm">${times.dhuhr}</span></div>
+                            <div class="pitem"><span class="nm">🌤️ العصر</span><span class="tm">${times.asr}</span></div>
+                            <div class="pitem next"><span class="nm">🌇 المغرب</span><span class="tm">${times.maghrib}</span></div>
+                            <div class="pitem"><span class="nm">🌙 العشاء</span><span class="tm">${times.isha}</span></div>
+                        </div>
+                        <div class="ploc">📍 الموقع: ${lat.toFixed(4)}, ${lng.toFixed(4)}</div>
+                    `;
+                }
+                if (q) q.innerHTML = '✅ تم تحديد موقعك بنجاح';
+                if (typeof updateQibla === 'function') updateQibla(lat, lng);
+            },
+            (error) => {
+                if (q) q.innerHTML = '❌ يرجى السماح بالوصول للموقع';
+            },
+            { enableHighAccuracy: true, timeout: 10000 }
+        );
+    };
+});
 </script>
 </body>
 </html>
